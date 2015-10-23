@@ -7,7 +7,9 @@ let Search = React.createClass({
 
     render: function () {
         return (
-            <input type="search" placeholder="Search"/>
+            <div className="mod-search">
+                <input type="search" placeholder="Search"/>
+            </div>
         )
     }
 

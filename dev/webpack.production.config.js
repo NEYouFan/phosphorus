@@ -1,7 +1,7 @@
 var path = require('path');
 
 var config = {
-    entry: './index.jsx',
+    entry: './app.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js'

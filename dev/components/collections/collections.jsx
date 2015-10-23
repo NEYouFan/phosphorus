@@ -6,8 +6,11 @@ import React from 'react'
 let Collections = React.createClass({
 
     render: function () {
+        let active = this.props.active
         return (
-            <div>Collections</div>
+            <div className={active ? '' : 'hide'}>
+                <div className="mod-collections">collections</div>
+            </div>
         )
     }
 

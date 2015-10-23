@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-    entry: './index.jsx',
+    entry: './app.jsx',
     output: {
         publicPath: 'http://localhost:7070/assets',
         filename: 'index.js'
@@ -10,6 +10,11 @@ module.exports = {
         loaders: [
             {
                 test: /\.jsx?$/,
+                exclude: /(node_modules)/,
+                loader: 'babel'
+            },
+            {
+                test: /\.js?$/,
                 exclude: /(node_modules)/,
                 loader: 'babel'
             },

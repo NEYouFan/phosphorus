@@ -6,8 +6,11 @@ import React from 'react'
 let History = React.createClass({
 
     render() {
+        let active = this.props.active
         return (
-            <div>aaa</div>
+            <div className={active ? '' : 'hide'}>
+                <div className="mod-history">history</div>
+            </div>
         )
     }
 
