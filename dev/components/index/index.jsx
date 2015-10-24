@@ -4,6 +4,7 @@
 import './index.styl'
 import React from 'react'
 import PanelStore from '../../stores/panelstore'
+import ReqTabStore from '../../stores/reqtabstore'
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
@@ -11,7 +12,7 @@ import Collections from '../collections/collections.jsx'
 import ReqTab from '../reqtab/reqtab.jsx'
 
 function getAppStates() {
-    return Object.assign({}, PanelStore.getState())
+    return Object.assign({}, PanelStore.getState(), ReqTabStore.getState())
 }
 
 let Index = React.createClass({
@@ -31,13 +32,13 @@ let Index = React.createClass({
     render() {
         return (
             <div className="main-wrap">
-                <div id="side" className="side">
+                <div className="side">
                     <Search />
                     <SideTab />
-                    <History active={this.state.history} />
-                    <Collections active={!this.state.history} />
+                    <History panel={this.state.panel} />
+                    <Collections panel={this.state.panel} />
                 </div>
-                <div id="body" className="body">
+                <div className="bd">
                     <ReqTab tabs={this.state.reqTabs} />
                 </div>
             </div>

@@ -6,10 +6,21 @@ import React from 'react'
 let ReqTab = React.createClass({
 
     render() {
-        let tabs = this.props.tabs
+        let that = this
+        let tabNodes = that.props.tabs.map(function (tab, index) {
+            let tabClassName = 'mod-reqtab'
+            tab.active && (tabClassName += ' active')
+            tab.id = index
+            return (
+                <div className={tabClassName} key={tab.id}>
+                    <div className="reqtab-box"></div>
+                    <span className="reqtab-name">{tab.name}</span>
+                </div>
+            )
+        })
         return (
-            <div className={tabs ? '' : 'hide'}>
-                <div className="mod-reqtab">reqtab</div>
+            <div className="clr req-tab-wrap">
+                {tabNodes}
             </div>
         )
     }

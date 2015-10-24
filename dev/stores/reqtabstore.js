@@ -8,19 +8,31 @@ import Events from 'events'
 const ADD_EVENT = 'add'
 const REMOVE_EVENT = 'remove'
 
-let tabs = {
-    items: [
+let tabs =
+    [
         {
-            name: 'tab1'
+            name: 'New tab',
+            active: true
+        },
+        {
+            name: 'New tab',
+            active: false
+        },
+        {
+            name: 'New tab',
+            active: false
+        },
+        {
+            name: 'New tab',
+            active: false
         }
     ]
-}
 
 let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getState() {
         return {
-            tabs: tabs
+            reqTabs: tabs
         }
     },
 
@@ -52,4 +64,4 @@ AppDispatcher.register(function (action) {
 
 })
 
-export default PanelStore
+export default ReqTabStore

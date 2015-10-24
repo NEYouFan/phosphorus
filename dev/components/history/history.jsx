@@ -6,7 +6,7 @@ import React from 'react'
 let History = React.createClass({
 
     render() {
-        let active = this.props.active
+        let active = this.props.panel.history
         return (
             <div className={active ? '' : 'hide'}>
                 <div className="mod-history">history</div>

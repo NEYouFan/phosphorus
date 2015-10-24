@@ -18,7 +18,9 @@ function switchPanel(historyState) {
 let PanelStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getState() {
-        return panelState
+        return {
+            panel: panelState
+        }
     },
 
     emitChange() {

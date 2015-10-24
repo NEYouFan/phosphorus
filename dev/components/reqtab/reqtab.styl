@@ -1,3 +1,48 @@
-.mod-history {
+.req-tab-wrap {
+  height: 45px;
+  padding: 0 0 0 0;
+  overflow: visible;
+  border-bottom 1px solid #ccc
+
+  .mod-reqtab {
+    width: 200px;
+    height: 45px;
+    float: left;
+    margin: 0 -15px 0 0;
+    position: relative
+    cursor: pointer
+
+    .reqtab-box {
+      height: 45px;
+      border-radius: 8px 8px 0 0;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      margin: 0 10px 0;
+      background-image: linear-gradient(to bottom, #cccccc, #dddddd 3%, rgba(238, 238, 238, 1));
+      -webkit-transform: perspective(100px) rotateX(30deg);
+    }
+
+    .reqtab-name {
+      position: absolute
+      left: 0;
+      top: 0
+      right: 0
+      bottom: 0
+      line-height: 52px
+      text-indent: 24px
+    }
+
+    &.active {
+      z-index: 40;
+      position: relative;
+      padding-bottom: 1px;
+
+      .reqtab-box {
+        background-size: 100%;
+        background: #fff;
+        height: 46px
+      }
+    }
+  }
 
 }

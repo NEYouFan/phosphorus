@@ -3,13 +3,13 @@
 import './sidetab.styl'
 import React from 'react'
 import AppActions from '../../actions/action'
-import AppStore from '../../stores/panelstore'
+import PanelStore from '../../stores/panelstore'
 
 let SideTab = React.createClass({
 
     getInitialState() {
         return {
-            history: AppStore.getState().history
+            history: PanelStore.getState().panel.history
         }
     },
 
