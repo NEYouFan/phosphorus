@@ -5,57 +5,77 @@ import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
 
-const ADD_EVENT = 'add'
-const REMOVE_EVENT = 'remove'
+const CHANGE_EVENT = 'change'
+const NEW_TAB = 'New tab'
+const DEFAULT_ACTIVE_INDEX = 0
 
-let tabs =
-    [
+let tabs = {
+    items: [
         {
-            name: 'New tab',
-            active: true
-        },
-        {
-            name: 'New tab',
-            active: false
-        },
-        {
-            name: 'New tab',
-            active: false
-        },
-        {
-            name: 'New tab',
-            active: false
+            name: NEW_TAB
         }
-    ]
+    ],
+    activeIndex: DEFAULT_ACTIVE_INDEX
+}
+
+let actions = {
+    changeIndex(activeIndex) {
+        tabs.activeIndex = activeIndex
+    },
+
+    addTab() {
+        tabs.items.push({
+            name: NEW_TAB
+        })
+    },
+
+    removeTab(tabIndex) {
+        tabs.items.splice(tabIndex, 1)
+    }
+}
+
 
 let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
-    getState() {
+    getAll() {
         return {
-            reqTabs: tabs
+            reqTabs: tabs.items
         }
     },
 
-    emitAdd() {
-        this.emit(ADD_EVENT)
+    getActiveTabIndex() {
+        return tabs.activeIndex
     },
 
-    addAddListener(callback) {
-        this.on(ADD_EVENT, callback);
+    emitChange() {
+        this.emit(CHANGE_EVENT)
     },
 
-    removeAddListener(callback) {
-        this.removeListener(ADD_EVENT, callback);
+    addChangeListener(callback) {
+        this.on(CHANGE_EVENT, callback)
+    },
+
+    removeChangeListener(callback) {
+        this.removeListener(CHANGE_EVENT, callback)
     }
 })
 
-AppDispatcher.register(function (action) {
+AppDispatcher.register((action) => {
 
     switch (action.actionType) {
+        case AppConstants.CHANGE_REQ_TAB_ACTIVE_INDEX:
+            actions.changeIndex(action.activeIndex)
+            ReqTabStore.emitChange()
+            break
 
         case AppConstants.ADD_REQ_TAB:
-            switchPanel(action.historyState)
-            PanelStore.emitChange()
+            actions.addTab()
+            ReqTabStore.emitChange()
+            break
+
+        case AppConstants.REMOVE_REQ_TAB:
+            actions.removeTab(action.tabIndex)
+            ReqTabStore.emitChange()
             break
 
         default:

@@ -8,7 +8,7 @@ let Collections = React.createClass({
 
     render: function () {
         let className = classNames({
-            hide: this.props.panel.history
+            hide: this.props.sideTab.activeIndex !== 1
         })
         return (
             <div className={className}>

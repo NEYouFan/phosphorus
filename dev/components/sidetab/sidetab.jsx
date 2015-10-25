@@ -2,30 +2,30 @@
 'use strict'
 import './sidetab.styl'
 import React from 'react'
-import AppActions from '../../actions/action'
-import PanelStore from '../../stores/panelstore'
+import SideTabAction from '../../actions/sidtabaction'
+import SideTabStore from '../../stores/sidetabstore'
 import classNames from 'classnames'
 
 let SideTab = React.createClass({
 
-    getInitialState() {
+    getInitialState: function () {
         return {
-            history: PanelStore.getState().panel.history
+            activeIndex: SideTabStore.getActiveTabIndex()
         }
     },
 
     render() {
         let historyClass = classNames({
-            active: this.state.history
+            active: this.state.activeIndex === 0
         })
         let collectionsClass = classNames({
-            active: !this.state.history
+            active: this.state.activeIndex === 1
         })
         return (
             <div className="mod-tab">
                 <ol className="clr" onClick={this.clickHandler}>
-                    <li className={historyClass}>History</li>
-                    <li className={collectionsClass}>Collections</li>
+                    <li className={historyClass} data-index="0">History</li>
+                    <li className={collectionsClass} data-index="1">Collections</li>
                 </ol>
             </div>
         )
@@ -33,8 +33,11 @@ let SideTab = React.createClass({
 
     clickHandler (e) {
         if (e.target.classList.contains('active')) return
-        this.setState({history: !this.state.history})
-        AppActions.switchPanel(!this.state.history)
+        let activeIndex = Number(e.target.dataset.index)
+        this.setState({
+            activeIndex: activeIndex
+        })
+        SideTabAction.switchTab(activeIndex)
     }
 
 })

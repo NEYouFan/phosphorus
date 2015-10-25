@@ -3,7 +3,7 @@
 
 import './index.styl'
 import React from 'react'
-import PanelStore from '../../stores/panelstore'
+import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
@@ -12,7 +12,7 @@ import Collections from '../collections/collections.jsx'
 import ReqTab from '../reqtab/reqtab.jsx'
 
 function getAppStates() {
-    return Object.assign({}, PanelStore.getState(), ReqTabStore.getState())
+    return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll())
 }
 
 let Index = React.createClass({
@@ -22,11 +22,13 @@ let Index = React.createClass({
     },
 
     componentDidMount() {
-        PanelStore.addChangeListener(this.onChange)
+        SideTabStore.addChangeListener(this.onChange)
+        ReqTabStore.addChangeListener(this.onChange)
     },
 
     componentWillUnmount() {
-        PanelStore.removeChangeListener(this.onChange)
+        SideTabStore.removeChangeListener(this.onChange)
+        ReqTabStore.removeChangeListener(this.onChange)
     },
 
     render() {
@@ -34,9 +36,9 @@ let Index = React.createClass({
             <div className="main-wrap">
                 <div className="side">
                     <Search />
-                    <SideTab />
-                    <History panel={this.state.panel} />
-                    <Collections panel={this.state.panel} />
+                    <SideTab sideTab={this.state.sideTab} />
+                    <History sideTab={this.state.sideTab} />
+                    <Collections sideTab={this.state.sideTab} />
                 </div>
                 <div className="bd">
                     <ReqTab tabs={this.state.reqTabs} />

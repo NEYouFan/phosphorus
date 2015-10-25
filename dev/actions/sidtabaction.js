@@ -4,15 +4,15 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 
-let AppActions = {
+let SideTabAction = {
 
-    switchPanel(historyState) {
+    switchTab(activeIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.SWITCH_PANEL,
-            historyState: historyState
+            actionType: AppConstants.CHANGE_SIDE_TAB_ACTIVE_INDEX,
+            activeIndex: activeIndex
         })
     }
 
 }
 
-export default AppActions
+export default SideTabAction

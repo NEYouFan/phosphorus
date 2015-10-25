@@ -8,7 +8,7 @@ let History = React.createClass({
 
     render() {
         let className = classNames({
-            hide: !this.props.panel.history
+            hide: this.props.sideTab.activeIndex !== 0
         })
         return (
             <div className={className}>

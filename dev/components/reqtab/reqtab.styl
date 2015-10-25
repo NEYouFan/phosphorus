@@ -3,6 +3,7 @@
   padding: 0 0 0 0;
   overflow: visible;
   border-bottom 1px solid #ccc
+  position: relative
 
   .reqtab {
     width: 200px;
@@ -12,7 +13,7 @@
     position: relative
     cursor: pointer
 
-    .reqtab-box {
+    &-box {
       height: 45px;
       border-radius: 8px 8px 0 0;
       border: 1px solid #ccc;
@@ -22,7 +23,7 @@
       -webkit-transform: perspective(100px) rotateX(30deg);
     }
 
-    .reqtab-name {
+    &-name {
       position: absolute
       left: 0;
       top: 0
@@ -30,6 +31,30 @@
       bottom: 0
       line-height: 52px
       text-indent: 24px
+    }
+
+    &-remove {
+      position: absolute
+      right: 16px;
+      top: 14px;
+      font-size: 20px;
+      color: #ccc;
+      font-family: cursive;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border-radius: 50%;
+      visibility hidden
+
+      &:hover {
+        color: #ff8c25
+      }
+    }
+
+    &:hover {
+      .reqtab-remove {
+        visibility: visible
+      }
     }
 
     &.active {
@@ -41,6 +66,33 @@
         background-size: 100%;
         background: #fff;
         height: 46px
+      }
+
+      .reqtab-remove {
+        visibility: visible
+      }
+    }
+
+    &-add {
+      background-image: linear-gradient(to bottom, #ccc, #ddd);
+      border-radius: 100%;
+      color: #fff;
+      text-align: center
+      width: 22px
+      height: 22px
+      line-height: 20px
+      font-size: 23px;
+      float: left
+      margin: 14px 0 0 24px
+      cursor: pointer
+
+      em {
+        display: block
+        margin: -1px 0 0
+      }
+
+      &:hover {
+        background-image: linear-gradient(to bottom, #aaa, #bbb);
       }
     }
   }

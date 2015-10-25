@@ -7,20 +7,24 @@ import Events from 'events'
 
 const CHANGE_EVENT = 'change'
 
-let panelState = {
-    history: true
+let tabs = {
+    activeIndex: 0
 }
 
-function switchPanel(historyState) {
-    panelState.history = historyState
+function changeIndex(activeIndex) {
+    tabs.activeIndex = activeIndex
 }
 
-let PanelStore = Object.assign({}, Events.EventEmitter.prototype, {
+let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
-    getState() {
+    getAll() {
         return {
-            panel: panelState
+            sideTab: tabs
         }
+    },
+
+    getActiveTabIndex() {
+        return tabs.activeIndex
     },
 
     emitChange() {
@@ -36,13 +40,13 @@ let PanelStore = Object.assign({}, Events.EventEmitter.prototype, {
     }
 })
 
-AppDispatcher.register(function (action) {
+AppDispatcher.register((action) => {
 
     switch (action.actionType) {
 
-        case AppConstants.SWITCH_PANEL:
-            switchPanel(action.historyState)
-            PanelStore.emitChange()
+        case AppConstants.CHANGE_SIDE_TAB_ACTIVE_INDEX:
+            changeIndex(action.activeIndex)
+            SideTabStore.emitChange()
             break
 
         default:
@@ -51,4 +55,4 @@ AppDispatcher.register(function (action) {
 
 })
 
-export default PanelStore
+export default SideTabStore
