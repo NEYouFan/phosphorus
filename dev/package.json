@@ -5,12 +5,13 @@
   "scripts": {
     "start": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 6060",
-    "dev": "webpack-dev-server --progress --colors --port 7070",
+    "dev": "webpack-dev-server --inline --devtool inline-source-map --colors --port 7070",
     "deploy": "webpack -p --config webpack.production.config.js"
   },
   "author": "",
   "license": "BSD",
   "dependencies": {
+    "classnames": "^2.2.0",
     "flux": "^2.1.1",
     "keymirror": "^0.1.1",
     "react": "~0.11.2",

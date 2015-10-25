@@ -2,13 +2,16 @@
 'use strict'
 import './history.styl'
 import React from 'react'
+import classNames from 'classnames'
 
 let History = React.createClass({
 
     render() {
-        let active = this.props.panel.history
+        let className = classNames({
+            hide: !this.props.panel.history
+        })
         return (
-            <div className={active ? '' : 'hide'}>
+            <div className={className}>
                 <div className="mod-history">history</div>
             </div>
         )

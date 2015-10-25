@@ -4,6 +4,7 @@ import './sidetab.styl'
 import React from 'react'
 import AppActions from '../../actions/action'
 import PanelStore from '../../stores/panelstore'
+import classNames from 'classnames'
 
 let SideTab = React.createClass({
 
@@ -14,17 +15,23 @@ let SideTab = React.createClass({
     },
 
     render() {
+        let historyClass = classNames({
+            active: this.state.history
+        })
+        let collectionsClass = classNames({
+            active: !this.state.history
+        })
         return (
             <div className="mod-tab">
-                <ol className="clr" onClick={this.handleClick}>
-                    <li className={this.state.history ? 'active' : ''}>History</li>
-                    <li className={this.state.history ? '' : 'active'}>Collections</li>
+                <ol className="clr" onClick={this.clickHandler}>
+                    <li className={historyClass}>History</li>
+                    <li className={collectionsClass}>Collections</li>
                 </ol>
             </div>
         )
     },
 
-    handleClick (e) {
+    clickHandler (e) {
         if (e.target.classList.contains('active')) return
         this.setState({history: !this.state.history})
         AppActions.switchPanel(!this.state.history)

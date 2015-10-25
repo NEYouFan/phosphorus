@@ -2,27 +2,34 @@
 'use strict'
 import './reqtab.styl'
 import React from 'react'
+import classNames from 'classnames'
 
 let ReqTab = React.createClass({
 
     render() {
-        let that = this
-        let tabNodes = that.props.tabs.map(function (tab, index) {
-            let tabClassName = 'mod-reqtab'
-            tab.active && (tabClassName += ' active')
-            tab.id = index
+        let tabNodes = this.props.tabs.map((tab, index) => {
+            let tabClasses = classNames({
+                reqtab: true,
+                active: tab.active
+            })
             return (
-                <div className={tabClassName} key={tab.id}>
+                <div className={tabClasses} key={index}>
                     <div className="reqtab-box"></div>
-                    <span className="reqtab-name">{tab.name}</span>
+                    <span className="reqtab-name" onClick={this.clickHandler.bind(this, index)}>{tab.name}</span>
                 </div>
             )
         })
         return (
-            <div className="clr req-tab-wrap">
+            <div className="clr mod-reqtabs">
                 {tabNodes}
             </div>
         )
+    },
+
+    clickHandler(tabIndex, evt) {
+        let tab = evt.target.parentNode
+        if (tab.classList.contains('active')) return
+
     }
 
 })

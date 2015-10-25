@@ -2,13 +2,16 @@
 'use strict'
 import './collections.styl'
 import React from 'react'
+import classNames from 'classnames'
 
 let Collections = React.createClass({
 
     render: function () {
-        let active = !this.props.panel.history
+        let className = classNames({
+            hide: this.props.panel.history
+        })
         return (
-            <div className={active ? '' : 'hide'}>
+            <div className={className}>
                 <div className="mod-collections">collections</div>
             </div>
         )
