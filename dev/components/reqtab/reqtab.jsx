@@ -6,9 +6,10 @@ import classNames from 'classnames'
 import ReqTabActions from '../../actions/reqtabaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
+/** @namespace this.props.tabs */
 let ReqTab = React.createClass({
 
-    getInitialState: function () {
+    getInitialState() {
         return {
             activeIndex: ReqTabStore.getActiveTabIndex()
         }
