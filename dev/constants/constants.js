@@ -5,15 +5,17 @@ import keyMirror from 'keymirror'
 
 let AppConstants = keyMirror({
     // side tab action
-    CHANGE_SIDE_TAB_ACTIVE_INDEX: null,
+    SIDE_TAB_CHANGE_ACTIVE_INDEX: null,
     // req tab action
-    CHANGE_REQ_TAB_ACTIVE_INDEX: null,
-    ADD_REQ_TAB: null,
-    REMOVE_REQ_TAB: null,
+    REQ_TAB_CHANGE_ACTIVE_INDEX: null,
+    REQ_TAB_ADD: null,
+    REQ_TAB_REMOVE: null,
     // req tab content action
-    CHANGE_REQ_TAB_CONTENT_ACTIVE_INDEX: null,
-    ADD_REQ_TAB_CONTENT: null,
-    REMOVE_REQ_TAB_CONTENT: null,
+    REQ_TAB_CONTENT_CHANGE_ACTIVE_INDEX: null,
+    REQ_TAB_CONTENT_ADD: null,
+    REQ_TAB_CONTENT_REMOVE: null,
+    REQ_TAB_CONTENT_SHOW_METHODS_DD: null,
+    REQ_TAB_CONTENT_HIDE_METHODS_DD: null
 })
 
 export default AppConstants

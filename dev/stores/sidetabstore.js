@@ -44,7 +44,7 @@ AppDispatcher.register((action) => {
 
     switch (action.actionType) {
 
-        case AppConstants.CHANGE_SIDE_TAB_ACTIVE_INDEX:
+        case AppConstants.SIDE_TAB_CHANGE_ACTIVE_INDEX:
             changeIndex(action.activeIndex)
             SideTabStore.emitChange()
             break

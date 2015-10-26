@@ -37,7 +37,7 @@ let Index = React.createClass({
 
     render() {
         return (
-            <div className="main-wrap">
+            <div className="main-wrap" onClick={this.hideReqMethod}>
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab} />
@@ -54,6 +54,13 @@ let Index = React.createClass({
 
     onChange() {
         this.setState(getAppStates())
+    },
+
+    hideReqMethod() {
+        let states = getAppStates()
+        if (!states.reqTabCons.showReqMethodsDropdown) return
+        states.reqTabCons.showReqMethodsDropdown = false
+        this.setState(states)
     }
 
 })

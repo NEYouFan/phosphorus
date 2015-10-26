@@ -1,0 +1,108 @@
+//author @huntbao
+.mod-requrl {
+  display flex
+  height: 60px;
+  line-height: 60px;
+
+  .requrl {
+    &-wrap {
+      display: flex;
+      flex: 1;
+      background-color: #f2f2f2
+      border-radius: 5px
+      position: relative
+
+      &.requrl-show-method {
+        .mod-dropdown-menu {
+          display: block
+        }
+      }
+    }
+
+    &-method {
+      width: 120px
+      text-align: center
+      cursor: pointer
+
+      &-name {
+        display: inline-block
+        margin: 0 3px
+      }
+    }
+
+    &-url {
+      flex: 1;
+      display: flex;
+
+      input {
+        line-height: 30px
+        width: 100%
+        border: none;
+        outline: none
+        background-color: #f2f2f2
+        padding 0 0 0 8px
+        height: 60px
+      }
+    }
+
+    &-params {
+      width: 80px
+      cursor: pointer
+      text-align: center
+      color: #097bec
+    }
+
+    &-send,
+    &-save {
+      font-size: 20px;
+      border: none
+      color: #fff
+      font-weight: bold
+      width: 100px
+      text-align: center
+      border-radius: 5px
+      margin: 1px 0 0 12px
+      cursor: pointer
+      height: 58px
+      outline: none
+    }
+
+    &-send {
+      background-color: #097bec;
+
+      &:hover {
+        background-color: #0263dc
+      }
+
+      &:active {
+        background-color: #004ab3
+      }
+    }
+
+    &-save {
+      background-color: #00c3a5;
+
+      &:hover {
+        background-color: #0ea9a2
+      }
+
+      &:active {
+        background-color: #008585
+      }
+    }
+
+    &-sep {
+      border-left: 1px solid #ccc
+      margin: 11px 0 0 0;
+      height: 40px
+    }
+  }
+
+  .mod-dropdown-menu {
+    position: absolute
+    left: 2px
+    top: 60px
+    width: 116px
+    display: none
+  }
+}

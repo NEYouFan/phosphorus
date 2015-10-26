@@ -8,7 +8,7 @@ let SideTabAction = {
 
     switchTab(activeIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.CHANGE_SIDE_TAB_ACTIVE_INDEX,
+            actionType: AppConstants.SIDE_TAB_CHANGE_ACTIVE_INDEX,
             activeIndex: activeIndex
         })
     }

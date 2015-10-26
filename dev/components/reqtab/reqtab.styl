@@ -20,7 +20,7 @@
       border: 1px solid #ccc;
       border-bottom: none;
       margin: 0 10px 0;
-      background-image: linear-gradient(to bottom, #ccc, #eee 3%, rgba(238, 238, 238, 1));
+      background-image: linear-gradient(to bottom, #ccc, #eee 80%, rgba(238, 238, 238, 1));
       -webkit-transform: perspective(100px) rotateX(30deg);
     }
 
@@ -32,6 +32,14 @@
       bottom: 0
       line-height: 52px
       text-indent: 24px
+
+      em {
+        display: block
+        max-width 82%
+        text-overflow: ellipsis
+        white-space: nowrap
+        overflow: hidden
+      }
     }
 
     &-remove {
@@ -71,7 +79,7 @@
     &-add {
       color: #ccc;
       float: left
-      margin: 14px 0 0 24px
+      margin: 16px 0 0 20px
       cursor: pointer
       font-size: 20px;
       transition all ease .5s

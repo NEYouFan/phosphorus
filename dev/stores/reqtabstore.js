@@ -63,17 +63,17 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 AppDispatcher.register((action) => {
 
     switch (action.actionType) {
-        case AppConstants.CHANGE_REQ_TAB_ACTIVE_INDEX:
+        case AppConstants.REQ_TAB_CHANGE_ACTIVE_INDEX:
             actions.changeIndex(action.activeIndex)
             ReqTabStore.emitChange()
             break
 
-        case AppConstants.ADD_REQ_TAB:
+        case AppConstants.REQ_TAB_ADD:
             actions.addTab()
             ReqTabStore.emitChange()
             break
 
-        case AppConstants.REMOVE_REQ_TAB:
+        case AppConstants.REQ_TAB_REMOVE:
             actions.removeTab(action.tabIndex)
             ReqTabStore.emitChange()
             break

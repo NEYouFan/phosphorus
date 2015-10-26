@@ -18,7 +18,7 @@ let ReqTab = React.createClass({
     render() {
         let removeBtnClasses = classNames({
             'glyphicon glyphicon-remove reqtab-remove': true,
-            hide: this.props.tabs.length === 1
+            'hide': this.props.tabs.length === 1
         })
         let tabNodes = this.props.tabs.map((tab, index) => {
             let tabClasses = classNames({
@@ -28,7 +28,9 @@ let ReqTab = React.createClass({
             return (
                 <div className={tabClasses} key={index} title={tab.name}>
                     <div className="reqtab-box"></div>
-                    <span className="reqtab-name" onClick={this.click.bind(this, index)}>{tab.name}</span>
+                    <span className="reqtab-name" onClick={this.click.bind(this, index)}>
+                        <em>{tab.name}</em>
+                    </span>
                     <span className={removeBtnClasses} onClick={this.remove.bind(this, index)}></span>
                 </div>
             )

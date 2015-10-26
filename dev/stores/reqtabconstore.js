@@ -15,7 +15,9 @@ let tabCons = {
             name: NEW_TAB_CONTENT
         }
     ],
-    activeIndex: DEFAULT_ACTIVE_INDEX
+    activeIndex: DEFAULT_ACTIVE_INDEX,
+    reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
+    showReqMethodsDropdown: false
 }
 
 let actions = {
@@ -31,6 +33,14 @@ let actions = {
 
     removeTabCon(tabIndex) {
         tabCons.items.splice(tabIndex, 1)
+    },
+
+    hideReqMethodsDD() {
+        tabCons.showReqMethodsDropdown = false
+    },
+
+    showReqMethodsDD() {
+        tabCons.showReqMethodsDropdown = true
     }
 }
 
@@ -39,7 +49,11 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getAll() {
         return {
-            reqTabCons: tabCons.items
+            reqTabCons: {
+                reqCons: tabCons.items,
+                reqMethods: tabCons.reqMethods,
+                showReqMethodsDropdown: tabCons.showReqMethodsDropdown
+            }
         }
     },
 
@@ -59,18 +73,28 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 AppDispatcher.register((action) => {
 
     switch (action.actionType) {
-        case AppConstants.CHANGE_REQ_TAB_CONTENT_ACTIVE_INDEX:
+        case AppConstants.REQ_TAB_CONTENT_CHANGE_ACTIVE_INDEX:
             actions.changeIndex(action.activeIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.ADD_REQ_TAB_CONTENT:
+        case AppConstants.REQ_TAB_CONTENT_ADD:
             actions.addTabCon()
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REMOVE_REQ_TAB_CONTENT:
+        case AppConstants.REQ_TAB_CONTENT_REMOVE:
             actions.removeTabCon(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_SHOW_METHODS_DD:
+            actions.showReqMethodsDD()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_HIDE_METHODS_DD:
+            actions.hideReqMethodsDD()
             ReqTabConStore.emitChange()
             break
 

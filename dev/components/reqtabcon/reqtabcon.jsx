@@ -1,17 +1,16 @@
 //author @huntbao
 'use strict'
+
 import './reqtabcon.styl'
 import React from 'react'
 import classNames from 'classnames'
 import ReqTabActions from '../../actions/reqtabaction'
 import ReqTabStore from '../../stores/reqtabstore'
+import ReqTabConStore from '../../stores/reqtabconstore'
+import ReqURL from '../requrl/requrl.jsx'
 
 /** @namespace this.props.tabCons */
 let ReqTabCon = React.createClass({
-
-    getInitialState() {
-        return {}
-    },
 
     render() {
         let activeTabIndex = ReqTabStore.getActiveTabIndex()
@@ -20,10 +19,9 @@ let ReqTabCon = React.createClass({
                 'reqtab-con': true,
                 'hide': activeTabIndex !== index
             })
-            let tabContent = this.props.tabCons[index].name
             return (
                 <div className={tabConClasses} key={index}>
-                    {tabContent}
+                    <ReqURL tabCons={this.props.tabCons} />
                 </div>
             )
         })

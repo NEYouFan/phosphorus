@@ -8,31 +8,31 @@ let ReqTabAction = {
 
     switchTab(activeIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.CHANGE_REQ_TAB_ACTIVE_INDEX,
+            actionType: AppConstants.REQ_TAB_CHANGE_ACTIVE_INDEX,
             activeIndex: activeIndex
         })
         AppDispatcher.dispatch({
-            actionType: AppConstants.CHANGE_REQ_TAB_CONTENT_ACTIVE_INDEX,
+            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_ACTIVE_INDEX,
             activeIndex: activeIndex
         })
     },
 
     addTab() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.ADD_REQ_TAB
+            actionType: AppConstants.REQ_TAB_ADD
         })
         AppDispatcher.dispatch({
-            actionType: AppConstants.ADD_REQ_TAB_CONTENT
+            actionType: AppConstants.REQ_TAB_CONTENT_ADD
         })
     },
 
     removeTab(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REMOVE_REQ_TAB,
+            actionType: AppConstants.REQ_TAB_REMOVE,
             tabIndex: tabIndex
         })
         AppDispatcher.dispatch({
-            actionType: AppConstants.REMOVE_REQ_TAB_CONTENT,
+            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE,
             tabIndex: tabIndex
         })
     }
