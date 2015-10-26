@@ -6,7 +6,6 @@ import classNames from 'classnames'
 import ReqTabActions from '../../actions/reqtabaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
-/** @namespace this.props.tabs */
 let ReqTab = React.createClass({
 
     getInitialState() {
@@ -17,7 +16,7 @@ let ReqTab = React.createClass({
 
     render() {
         let removeBtnClasses = classNames({
-            'reqtab-remove': true,
+            'glyphicon glyphicon-remove reqtab-remove': true,
             hide: this.props.tabs.length === 1
         })
         let tabNodes = this.props.tabs.map((tab, index) => {
@@ -26,14 +25,14 @@ let ReqTab = React.createClass({
                 active: this.state.activeIndex === index
             })
             return (
-                <div className={tabClasses} key={index}>
+                <div className={tabClasses} key={index} title={tab.name}>
                     <div className="reqtab-box"></div>
                     <span className="reqtab-name" onClick={this.click.bind(this, index)}>{tab.name}</span>
-                    <span className={removeBtnClasses} onClick={this.remove.bind(this, index)}>x</span>
+                    <span className={removeBtnClasses} onClick={this.remove.bind(this, index)}></span>
                 </div>
             )
         })
-        let addButton = <div className="reqtab-add" onClick={this.add}><em>+</em></div>
+        let addButton = <div className="glyphicon glyphicon-plus-sign reqtab-add" onClick={this.add}></div>
         return (
             <div className="clr mod-reqtabs">
                 {tabNodes}

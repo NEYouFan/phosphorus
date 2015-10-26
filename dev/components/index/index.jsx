@@ -10,6 +10,7 @@ import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
 import Collections from '../collections/collections.jsx'
 import ReqTab from '../reqtab/reqtab.jsx'
+import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 
 function getAppStates() {
     return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll())
@@ -42,6 +43,7 @@ let Index = React.createClass({
                 </div>
                 <div className="bd">
                     <ReqTab tabs={this.state.reqTabs} />
+                    <ReqTabCon tabs={this.state.reqTabs} />
                 </div>
             </div>
         )
