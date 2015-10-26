@@ -5,6 +5,7 @@ import './index.styl'
 import React from 'react'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
+import ReqTabConStore from '../../stores/reqtabconstore'
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
@@ -13,7 +14,7 @@ import ReqTab from '../reqtab/reqtab.jsx'
 import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 
 function getAppStates() {
-    return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll())
+    return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
 }
 
 let Index = React.createClass({
@@ -25,11 +26,13 @@ let Index = React.createClass({
     componentDidMount() {
         SideTabStore.addChangeListener(this.onChange)
         ReqTabStore.addChangeListener(this.onChange)
+        ReqTabConStore.addChangeListener(this.onChange)
     },
 
     componentWillUnmount() {
         SideTabStore.removeChangeListener(this.onChange)
         ReqTabStore.removeChangeListener(this.onChange)
+        ReqTabConStore.removeChangeListener(this.onChange)
     },
 
     render() {
@@ -43,7 +46,7 @@ let Index = React.createClass({
                 </div>
                 <div className="bd">
                     <ReqTab tabs={this.state.reqTabs} />
-                    <ReqTabCon tabs={this.state.reqTabs} />
+                    <ReqTabCon tabs={this.state.reqTabs} tabCons={this.state.reqTabCons} />
                 </div>
             </div>
         )

@@ -1,3 +1,4 @@
+//author @huntbao
 .mod-reqtabs {
   height: 45px;
   padding: 0 0 0 0;
@@ -19,7 +20,7 @@
       border: 1px solid #ccc;
       border-bottom: none;
       margin: 0 10px 0;
-      background-image: linear-gradient(to bottom, #ccc, #ddd 3%, rgba(238, 238, 238, 1));
+      background-image: linear-gradient(to bottom, #ccc, #eee 3%, rgba(238, 238, 238, 1));
       -webkit-transform: perspective(100px) rotateX(30deg);
     }
 
@@ -55,12 +56,11 @@
     &.active {
       z-index: 40;
       position: relative;
-      padding-bottom: 1px;
 
       .reqtab-box {
         background-size: 100%;
         background: #fff;
-        height: 46px
+        border-bottom: 1px solid #fff;
       }
 
       .reqtab-remove {
