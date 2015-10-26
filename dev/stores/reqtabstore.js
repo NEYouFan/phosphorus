@@ -6,13 +6,13 @@ import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
 
 const CHANGE_EVENT = 'change'
-const NEW_TAB = 'New tab'
+const DEFAULT_TAB_NAME = 'New tab'
 const DEFAULT_ACTIVE_INDEX = 0
 
 let tabs = {
     items: [
         {
-            name: NEW_TAB
+            name: DEFAULT_TAB_NAME
         }
     ],
     activeIndex: DEFAULT_ACTIVE_INDEX
@@ -25,12 +25,16 @@ let actions = {
 
     addTab() {
         tabs.items.push({
-            name: NEW_TAB
+            name: DEFAULT_TAB_NAME
         })
     },
 
     removeTab(tabIndex) {
         tabs.items.splice(tabIndex, 1)
+    },
+
+    changeTabName(tabName, tabIndex) {
+        tabs.items[tabIndex].name = tabName || DEFAULT_TAB_NAME
     }
 }
 
@@ -75,6 +79,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_REMOVE:
             actions.removeTab(action.tabIndex)
+            ReqTabStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CHANGE_NAME:
+            actions.changeTabName(action.tabName, action.tabIndex)
             ReqTabStore.emitChange()
             break
 

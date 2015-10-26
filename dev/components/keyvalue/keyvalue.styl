@@ -1,0 +1,49 @@
+//author @huntbao
+.mod-kv {
+  margin: 12px
+  font-size: 12px
+
+  .kv-row {
+    display: flex
+
+    .input-wrap {
+      flex: 1;
+
+      &.active {
+        background-color: #e8f2fe;
+      }
+    }
+
+    input {
+      width: 49%
+      margin: 0 1% 0 0
+      border: none
+      outline: none
+      text-indent: 4px
+      background-color: transparent
+      height: 30px
+      line-height: 30px
+      border-bottom: 1px solid #eee
+      transition all ease .5s;
+
+      &:focus {
+        border-bottom-color: #ccc
+      }
+    }
+
+    .glyphicon {
+      font-size: 20px
+      cursor: pointer
+      margin: 5px 4px 0;
+      color: #eee
+
+      &:hover {
+        color: #ccc
+      }
+        
+      &.checked {
+        color: #53a2f2
+      }  
+    }
+  }
+}

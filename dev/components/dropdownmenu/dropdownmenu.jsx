@@ -3,19 +3,21 @@
 
 import './dropdownmenu.styl'
 import React from 'react'
-import classNames from 'classnames'
+
+let ReactPropTypes = React.PropTypes
 
 /** @namespace this.props.onClickItem */
 /** @namespace this.props.menus */
 let DropDownMenu = React.createClass({
 
+    propTypes: {
+        onClickItem: ReactPropTypes.func.isRequired
+    },
+
     render() {
         let nodes = this.props.menus.map((menu, index) => {
-            let menuClasses = classNames({
-                'menu-item': true
-            })
             return (
-                <li className={menuClasses} key={index} onClick={this.onClickItem.bind(this, menu)}>{menu}</li>
+                <li key={index} onClick={this.onClickItem.bind(this, menu)}>{menu}</li>
             )
         })
         return (

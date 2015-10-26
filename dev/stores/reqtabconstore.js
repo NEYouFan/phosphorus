@@ -6,33 +6,24 @@ import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
 
 const CHANGE_EVENT = 'change'
-const NEW_TAB_CONTENT = 'New Content'
 const DEFAULT_ACTIVE_INDEX = 0
+const DEFAULT_KEY_PLACEHOLDER = 'URL Parameter Key'
+const DEFAULT_VALUE_PLACEHOLDER = 'Value'
+const DEFAULT_PARAMS_KV = {
+    keyPlaceholder: DEFAULT_KEY_PLACEHOLDER,
+    valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER
+}
 
 let tabCons = {
-    items: [
-        {
-            name: NEW_TAB_CONTENT
-        }
-    ],
     activeIndex: DEFAULT_ACTIVE_INDEX,
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
-    showReqMethodsDropdown: false
+    showReqMethodsDropdown: false,
+    paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
 }
 
 let actions = {
     changeIndex(activeIndex) {
         tabCons.activeIndex = activeIndex
-    },
-
-    addTabCon() {
-        tabCons.items.push({
-            name: NEW_TAB_CONTENT
-        })
-    },
-
-    removeTabCon(tabIndex) {
-        tabCons.items.splice(tabIndex, 1)
     },
 
     hideReqMethodsDD() {
@@ -41,6 +32,14 @@ let actions = {
 
     showReqMethodsDD() {
         tabCons.showReqMethodsDropdown = true
+    },
+
+    addParamsKVRow() {
+        tabCons.paramsKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
+    },
+
+    removeParamsKVRow(rowIndex) {
+        tabCons.paramsKVs.splice(rowIndex, 1)
     }
 }
 
@@ -52,7 +51,8 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
             reqTabCons: {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
-                showReqMethodsDropdown: tabCons.showReqMethodsDropdown
+                showReqMethodsDropdown: tabCons.showReqMethodsDropdown,
+                paramsKVs: tabCons.paramsKVs
             }
         }
     },
@@ -78,16 +78,6 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_ADD:
-            actions.addTabCon()
-            ReqTabConStore.emitChange()
-            break
-
-        case AppConstants.REQ_TAB_CONTENT_REMOVE:
-            actions.removeTabCon(action.tabIndex)
-            ReqTabConStore.emitChange()
-            break
-
         case AppConstants.REQ_TAB_CONTENT_SHOW_METHODS_DD:
             actions.showReqMethodsDD()
             ReqTabConStore.emitChange()
@@ -95,6 +85,16 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_CONTENT_HIDE_METHODS_DD:
             actions.hideReqMethodsDD()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW:
+            actions.addParamsKVRow()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW:
+            actions.removeParamsKVRow(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 

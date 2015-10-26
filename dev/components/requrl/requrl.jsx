@@ -11,7 +11,8 @@ let ReqURL = React.createClass({
 
     getInitialState: function () {
         return {
-            method: 'GET'
+            method: 'GET',
+            url: ''
         }
     },
 
@@ -27,10 +28,14 @@ let ReqURL = React.createClass({
                         <span className="requrl-method-name">{this.state.method}</span>
                         <span className="glyphicon glyphicon-chevron-down"></span>
                     </div>
-                    <DropDownMenu menus={this.props.tabCons.reqMethods} onClickItem={this.onSelectMethod} />
+                    <DropDownMenu menus={this.props.tabCons.reqMethods} onClickItem={this.onSelectMethod}/>
+
                     <div className="requrl-sep"></div>
                     <div className="requrl-url">
-                        <input type="url" placeholder="Enter request URL here" onMouseOver={this.focusInput}/>
+                        <input onInput={this.onInput}
+                               value={this.state.url}
+                               type="url"
+                               placeholder="Enter request URL here"/>
                     </div>
                     <div className="requrl-sep"></div>
                     <div className="requrl-params">Params</div>
@@ -50,8 +55,12 @@ let ReqURL = React.createClass({
         }
     },
 
-    focusInput(evt) {
-        evt.target.focus()
+    onInput(evt) {
+        let url = evt.target.value
+        this.setState({
+            url: url
+        })
+        ReqTabConAction.changeTabName(url, this.props.index)
     },
 
     onSelectMethod(methodName) {

@@ -16,6 +16,27 @@ let ReqTabConAction = {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CONTENT_HIDE_METHODS_DD
         })
+    },
+
+    changeTabName(tabName, tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CHANGE_NAME,
+            tabName: tabName,
+            tabIndex: tabIndex
+        })
+    },
+
+    addParamsKVRow() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW
+        })
+    },
+
+    removeParamsKVRow(rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW,
+            rowIndex: rowIndex
+        })
     }
 
 }
