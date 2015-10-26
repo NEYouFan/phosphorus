@@ -61,6 +61,7 @@ let ReqURL = React.createClass({
             url: url
         })
         ReqTabConAction.changeTabName(url, this.props.index)
+        ReqTabConAction.fillParams(url, this.props.index)
     },
 
     onSelectMethod(methodName) {

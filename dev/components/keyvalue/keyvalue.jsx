@@ -20,7 +20,7 @@ let KeyValue = React.createClass({
         let obj = {
             checkStates: []
         }
-        this.props.kvs.map((kv, index) => {
+        this.props.kvs.map(() => {
             obj.checkStates.push(true)
         })
         return obj
@@ -45,15 +45,15 @@ let KeyValue = React.createClass({
                         <input placeholder={kv.valuePlaceholder}/>
                     </div>
                     {index === total - 1 ?
-                        (<div className="glyphicon glyphicon-edit"
+                        <div className="glyphicon glyphicon-edit"
                               onClick={this.editKV}
                             >
-                        </div>)
+                        </div>
                         :
-                        (<div className="glyphicon glyphicon-remove"
+                        <div className="glyphicon glyphicon-remove"
                               onClick={this.removeRow.bind(this, index)}
                             >
-                        </div>)
+                        </div>
                     }
                 </div>
             )

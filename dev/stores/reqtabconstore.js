@@ -4,6 +4,7 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
+import URL from 'url'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
@@ -40,6 +41,11 @@ let actions = {
 
     removeParamsKVRow(rowIndex) {
         tabCons.paramsKVs.splice(rowIndex, 1)
+    },
+
+    fillParams(tabUrl, tabIndex) {
+        let result = URL.parse(tabUrl)
+        console.log(result)
     }
 }
 
@@ -95,6 +101,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW:
             actions.removeParamsKVRow(action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_FILL_PARAMS:
+            actions.fillParams(action.tabUrl, action.tabIndex)
             ReqTabConStore.emitChange()
             break
 

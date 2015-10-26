@@ -17,6 +17,7 @@ let AppConstants = keyMirror({
     REQ_TAB_CONTENT_HIDE_METHODS_DD: null,
     REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW: null,
     REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW: null,
+    REQ_TAB_CONTENT_FILL_PARAMS: null,
 })
 
 export default AppConstants

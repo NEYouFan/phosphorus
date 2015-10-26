@@ -37,6 +37,14 @@ let ReqTabConAction = {
             actionType: AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW,
             rowIndex: rowIndex
         })
+    },
+
+    fillParams(tabUrl, tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_FILL_PARAMS,
+            tabUrl: tabUrl,
+            tabIndex: tabIndex
+        })
     }
 
 }
