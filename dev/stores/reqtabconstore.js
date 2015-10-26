@@ -4,7 +4,6 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
-import URL from 'url'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
@@ -12,19 +11,32 @@ const DEFAULT_KEY_PLACEHOLDER = 'URL Parameter Key'
 const DEFAULT_VALUE_PLACEHOLDER = 'Value'
 const DEFAULT_PARAMS_KV = {
     keyPlaceholder: DEFAULT_KEY_PLACEHOLDER,
-    valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER
+    valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER,
+    checked: true
 }
 
 let tabCons = {
     activeIndex: DEFAULT_ACTIVE_INDEX,
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
     showReqMethodsDropdown: false,
-    paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
+    items: [{
+        paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
+    }]
 }
 
 let actions = {
     changeIndex(activeIndex) {
         tabCons.activeIndex = activeIndex
+    },
+
+    addCon() {
+        tabCons.items.push({
+            paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
+        })
+    },
+
+    removeCon(tabIndex) {
+        tabCons.items.splice(tabIndex, 1)
     },
 
     hideReqMethodsDD() {
@@ -35,17 +47,16 @@ let actions = {
         tabCons.showReqMethodsDropdown = true
     },
 
-    addParamsKVRow() {
-        tabCons.paramsKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
+    toggleCheckParam(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].paramsKVs[rowIndex].checked = !tabCons.items[tabIndex].paramsKVs[rowIndex].checked
     },
 
-    removeParamsKVRow(rowIndex) {
-        tabCons.paramsKVs.splice(rowIndex, 1)
+    addParamsKVRow(tabIndex) {
+        tabCons.items[tabIndex].paramsKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
     },
 
-    fillParams(tabUrl, tabIndex) {
-        let result = URL.parse(tabUrl)
-        console.log(result)
+    removeParamsKVRow(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].paramsKVs.splice(rowIndex, 1)
     }
 }
 
@@ -57,8 +68,7 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
             reqTabCons: {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
-                showReqMethodsDropdown: tabCons.showReqMethodsDropdown,
-                paramsKVs: tabCons.paramsKVs
+                showReqMethodsDropdown: tabCons.showReqMethodsDropdown
             }
         }
     },
@@ -84,6 +94,16 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
 
+        case AppConstants.REQ_TAB_CONTENT_ADD:
+            actions.addCon()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_REMOVE:
+            actions.removeCon(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+
         case AppConstants.REQ_TAB_CONTENT_SHOW_METHODS_DD:
             actions.showReqMethodsDD()
             ReqTabConStore.emitChange()
@@ -94,18 +114,18 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
 
+        case AppConstants.REQ_TAB_CONTENT_TOGGLE_CHECK_PARAM:
+            actions.toggleCheckParam(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
         case AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW:
-            actions.addParamsKVRow()
+            actions.addParamsKVRow(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW:
-            actions.removeParamsKVRow(action.rowIndex)
-            ReqTabConStore.emitChange()
-            break
-
-        case AppConstants.REQ_TAB_CONTENT_FILL_PARAMS:
-            actions.fillParams(action.tabUrl, action.tabIndex)
+            actions.removeParamsKVRow(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 

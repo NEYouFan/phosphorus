@@ -11,19 +11,10 @@ let ReactPropTypes = React.PropTypes
 let KeyValue = React.createClass({
 
     propTypes: {
+        toggleCheck: ReactPropTypes.func.isRequired,
         addKVRow: ReactPropTypes.func.isRequired,
         removeKVRow: ReactPropTypes.func.isRequired,
         editKV: ReactPropTypes.func.isRequired
-    },
-
-    getInitialState: function () {
-        let obj = {
-            checkStates: []
-        }
-        this.props.kvs.map(() => {
-            obj.checkStates.push(true)
-        })
-        return obj
     },
 
     render() {
@@ -31,7 +22,7 @@ let KeyValue = React.createClass({
         let nodes = this.props.kvs.map((kv, index) => {
             let okSignClasses = classNames({
                 'glyphicon glyphicon-ok-sign': true,
-                'checked': this.state.checkStates[index] !== false
+                'checked': kv.checked
             })
             return (
                 <div className="kv-row" key={index}>
@@ -39,21 +30,15 @@ let KeyValue = React.createClass({
                     <div className="input-wrap"
                          onClick={this.clickRow.bind(this, index)}
                          onFocus={this.focusRow.bind(this, index)}
-                         onBlur={this.blurRow.bind(this, index)}
+                         onBlur={this.blurRow}
                         >
                         <input placeholder={kv.keyPlaceholder}/>
                         <input placeholder={kv.valuePlaceholder}/>
                     </div>
                     {index === total - 1 ?
-                        <div className="glyphicon glyphicon-edit"
-                              onClick={this.editKV}
-                            >
-                        </div>
+                        <div className="glyphicon glyphicon-edit" onClick={this.editKV}></div>
                         :
-                        <div className="glyphicon glyphicon-remove"
-                              onClick={this.removeRow.bind(this, index)}
-                            >
-                        </div>
+                        <div className="glyphicon glyphicon-remove" onClick={this.removeRow.bind(this, index)}></div>
                     }
                 </div>
             )
@@ -65,15 +50,13 @@ let KeyValue = React.createClass({
         )
     },
 
-    toggleCheck(rowIndex, evt) {
-        let checkStates = this.state.checkStates
-        checkStates[rowIndex] = typeof(checkStates[rowIndex]) === 'undefined' ? false : (!checkStates[rowIndex])
-        this.setState(this.state)
+    toggleCheck(rowIndex) {
+        this.props.toggleCheck(this.props.tabIndex, rowIndex)
     },
 
     clickRow(rowIndex) {
         if (rowIndex === this.props.kvs.length - 1) {
-            this.props.addKVRow()
+            this.props.addKVRow(this.props.tabIndex)
         }
     },
 
@@ -82,14 +65,12 @@ let KeyValue = React.createClass({
         evt.currentTarget.classList.add('active')
     },
 
-    blurRow(rowIndex, evt) {
+    blurRow(evt) {
         evt.currentTarget.classList.remove('active')
     },
 
-    removeRow(rowIndex, evt) {
-        this.state.checkStates.splice(rowIndex, 1)
-        this.setState(this.state)
-        this.props.removeKVRow(rowIndex)
+    removeRow(rowIndex) {
+        this.props.removeKVRow(this.props.tabIndex, rowIndex)
     },
 
     editKV() {

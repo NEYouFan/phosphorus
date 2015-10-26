@@ -6,6 +6,19 @@ import AppDispatcher from '../dispatcher/dispatcher'
 
 let ReqTabConAction = {
 
+    addCon() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_ADD
+        })
+    },
+
+    removeCon(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE,
+            tabIndex: tabIndex
+        })
+    },
+
     showMethodsDropDown() {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CONTENT_SHOW_METHODS_DD
@@ -18,33 +31,31 @@ let ReqTabConAction = {
         })
     },
 
-    changeTabName(tabName, tabIndex) {
+    toggleCheckParam(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CHANGE_NAME,
-            tabName: tabName,
-            tabIndex: tabIndex
-        })
-    },
-
-    addParamsKVRow() {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW
-        })
-    },
-
-    removeParamsKVRow(rowIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW,
+            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_CHECK_PARAM,
+            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     },
 
-    fillParams(tabUrl, tabIndex) {
+    addParamsKVRow(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_FILL_PARAMS,
-            tabUrl: tabUrl,
+            actionType: AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW,
             tabIndex: tabIndex
         })
+    },
+
+    removeParamsKVRow(tabIndex, rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    editKV() {
+        //todo, bulk edit
     }
 
 }

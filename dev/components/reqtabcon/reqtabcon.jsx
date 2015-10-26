@@ -23,10 +23,11 @@ let ReqTabCon = React.createClass({
             })
             return (
                 <div className={tabConClasses} key={index}>
-                    <ReqURL tabCons={this.props.tabCons} index={index}/>
+                    <ReqURL tab={tab} tabCons={this.props.tabCons} index={index}/>
                     <KeyValue
-                        kvs={this.props.tabCons.paramsKVs}
-                        index={index}
+                        kvs={this.props.tabCons.reqCons[index].paramsKVs}
+                        tabIndex={index}
+                        toggleCheck={this.toggleCheckParam}
                         addKVRow={this.addParamsKVRow}
                         removeKVRow={this.removeParamsKVRow}
                         editKV={this.editKV}
@@ -41,12 +42,16 @@ let ReqTabCon = React.createClass({
         )
     },
 
-    addParamsKVRow() {
-        ReqTabConActions.addParamsKVRow()
+    toggleCheckParam(tabIndex, rowIndex) {
+        ReqTabConActions.toggleCheckParam(tabIndex, rowIndex)
     },
 
-    removeParamsKVRow(rowIndex) {
-        ReqTabConActions.removeParamsKVRow(rowIndex)
+    addParamsKVRow(tabIndex) {
+        ReqTabConActions.addParamsKVRow(tabIndex)
+    },
+
+    removeParamsKVRow(tabIndex, rowIndex) {
+        ReqTabConActions.removeParamsKVRow(tabIndex, rowIndex)
     },
 
     editKV() {

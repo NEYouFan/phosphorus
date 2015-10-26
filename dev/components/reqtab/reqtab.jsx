@@ -4,6 +4,7 @@ import './reqtab.styl'
 import React from 'react'
 import classNames from 'classnames'
 import ReqTabActions from '../../actions/reqtabaction'
+import ReqTabConActions from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
 /** @namespace this.props.tabs */
@@ -52,6 +53,7 @@ let ReqTab = React.createClass({
 
     add() {
         ReqTabActions.addTab()
+        ReqTabConActions.addCon()
         this.switchTab(this.props.tabs.length - 1)
     },
 
@@ -64,6 +66,7 @@ let ReqTab = React.createClass({
 
     remove(tabIndex, evt) {
         ReqTabActions.removeTab(tabIndex)
+        ReqTabConActions.removeCon(tabIndex)
         let isActive = evt.target.parentNode.classList.contains('active')
         this.switchTab(isActive ? Math.max(0, tabIndex - 1) : this.state.activeIndex - 1)
     }

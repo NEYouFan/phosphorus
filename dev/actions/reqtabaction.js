@@ -17,6 +17,14 @@ let ReqTabAction = {
         })
     },
 
+    changeTab(tab, tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CHANGE,
+            tab: tab,
+            tabIndex: tabIndex
+        })
+    },
+
     addTab() {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_ADD
@@ -26,6 +34,13 @@ let ReqTabAction = {
     removeTab(tabIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_REMOVE,
+            tabIndex: tabIndex
+        })
+    },
+
+    fillParams(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_FILL_PARAMS,
             tabIndex: tabIndex
         })
     }

@@ -12,6 +12,7 @@ import History from '../history/history.jsx'
 import Collections from '../collections/collections.jsx'
 import ReqTab from '../reqtab/reqtab.jsx'
 import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
+import ReqTabConAction from '../../actions/reqtabconaction'
 
 function getAppStates() {
     return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
@@ -57,10 +58,9 @@ let Index = React.createClass({
     },
 
     hideReqMethod() {
-        let states = getAppStates()
-        if (!states.reqTabCons.showReqMethodsDropdown) return
-        states.reqTabCons.showReqMethodsDropdown = false
-        this.setState(states)
+        let reqTabConStates = ReqTabConStore.getAll()
+        if (!reqTabConStates.reqTabCons.showReqMethodsDropdown) return
+        ReqTabConAction.hideMethodsDropDown()
     }
 
 })

@@ -4,17 +4,18 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
+import URL from 'url'
 
 const CHANGE_EVENT = 'change'
-const DEFAULT_TAB_NAME = 'New tab'
 const DEFAULT_ACTIVE_INDEX = 0
+const DEFAULT_ITEMS = {
+    url: '',
+    method: 'GET',
+    name: 'New tab'
+}
 
 let tabs = {
-    items: [
-        {
-            name: DEFAULT_TAB_NAME
-        }
-    ],
+    items: [Object.assign({}, DEFAULT_ITEMS)],
     activeIndex: DEFAULT_ACTIVE_INDEX
 }
 
@@ -24,17 +25,22 @@ let actions = {
     },
 
     addTab() {
-        tabs.items.push({
-            name: DEFAULT_TAB_NAME
-        })
+        tabs.items.push(Object.assign({}, DEFAULT_ITEMS))
     },
 
     removeTab(tabIndex) {
         tabs.items.splice(tabIndex, 1)
     },
 
-    changeTabName(tabName, tabIndex) {
-        tabs.items[tabIndex].name = tabName || DEFAULT_TAB_NAME
+    changeTab(tab, tabIndex) {
+        tab.name = tab.name || DEFAULT_ITEMS.name
+        tabs.items[tabIndex] = tab
+    },
+
+    fillParams(tabIndex) {
+        let url = tabs.items[tabIndex].url
+        let result = URL.parse(url)
+        console.log(result)
     }
 }
 
@@ -82,8 +88,13 @@ AppDispatcher.register((action) => {
             ReqTabStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CHANGE_NAME:
-            actions.changeTabName(action.tabName, action.tabIndex)
+        case AppConstants.REQ_TAB_CHANGE:
+            actions.changeTab(action.tab, action.tabIndex)
+            ReqTabStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_FILL_PARAMS:
+            actions.fillParams(action.tabIndex)
             ReqTabStore.emitChange()
             break
 
