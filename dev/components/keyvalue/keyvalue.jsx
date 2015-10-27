@@ -4,20 +4,11 @@
 import './keyvalue.styl'
 import React from 'react'
 import classNames from 'classnames'
-
-let ReactPropTypes = React.PropTypes
+import ReqTabAction from '../../actions/reqtabaction'
+import ReqTabConAction from '../../actions/reqtabconaction'
 
 /** @namespace this.props.kvs */
 let KeyValue = React.createClass({
-
-    propTypes: {
-        toggleCheck: ReactPropTypes.func.isRequired,
-        addKVRow: ReactPropTypes.func.isRequired,
-        removeKVRow: ReactPropTypes.func.isRequired,
-        editKV: ReactPropTypes.func.isRequired,
-        keyChange: ReactPropTypes.func.isRequired,
-        valueChange: ReactPropTypes.func.isRequired
-    },
 
     render() {
         let total = this.props.kvs.length
@@ -60,7 +51,7 @@ let KeyValue = React.createClass({
         })
         let kvClassess = classNames({
             'mod-kv': true,
-            'hide': !this.props.tabCons.showKV
+            'hide': !this.props.tabCons.reqCons[this.props.tabIndex].showKV
         })
         return (
             <div className={kvClassess}>
@@ -70,12 +61,12 @@ let KeyValue = React.createClass({
     },
 
     toggleCheck(rowIndex) {
-        this.props.toggleCheck(rowIndex)
+        ReqTabConAction.toggleCheckParam(this.props.tabIndex, rowIndex)
     },
 
     clickRow(rowIndex) {
         if (rowIndex === this.props.kvs.length - 1) {
-            this.props.addKVRow()
+            ReqTabConAction.addParamsKVRow(this.props.tabIndex)
         }
     },
 
@@ -89,21 +80,21 @@ let KeyValue = React.createClass({
     },
 
     removeRow(rowIndex) {
-        this.props.removeKVRow(rowIndex)
+        ReqTabConAction.removeParamsKVRow(this.props.tabIndex, rowIndex)
     },
 
     editKV() {
-        this.props.editKV()
+        ReqTabConAction.editKV()
     },
 
     onKeyChange(rowIndex, evt) {
         let value = evt.target.value
-        this.props.keyChange(rowIndex, value)
+        ReqTabConAction.changeKey(this.props.tabIndex, rowIndex, value)
     },
 
     onValueChange(rowIndex, evt) {
         let value = evt.target.value
-        this.props.valueChange(rowIndex, value)
+        ReqTabConAction.changeValue(this.props.tabIndex, rowIndex, value)
     }
 
 })

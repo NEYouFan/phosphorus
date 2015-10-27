@@ -8,18 +8,12 @@ import classNames from 'classnames'
 
 let ReqBuilderTab = React.createClass({
 
-    getInitialState() {
-        return {
-            activeIndex: ReqTabConStore.getActiveBuilderIndex()
-        }
-    },
-
     render() {
         let headerClass = classNames({
-            active: this.state.activeIndex === 0
+            active: this.props.tabCon.activeBuilderIndex === 0
         })
         let bodyClass = classNames({
-            active: this.state.activeIndex === 1
+            active: this.props.tabCon.activeBuilderIndex === 1
         })
         return (
             <div className="mod-reqbuilder-tab">
@@ -35,10 +29,7 @@ let ReqBuilderTab = React.createClass({
         let target = evt.target
         if (target.classList.contains('active')) return
         let activeIndex = Number(target.dataset.index)
-        this.setState({
-            activeIndex: activeIndex
-        })
-        ReqTabConAction.switchBuilderTab(activeIndex)
+        ReqTabConAction.switchBuilderTab(this.props.tabIndex, activeIndex)
     }
 
 })

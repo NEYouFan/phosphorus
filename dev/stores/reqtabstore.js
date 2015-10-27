@@ -31,7 +31,7 @@ let actions = {
         tabs.items.splice(tabIndex, 1)
     },
 
-    changeTab(tab, tabIndex) {
+    changeTab(tabIndex, tab) {
         tab.name = tab.name || DEFAULT_ITEMS.name
         tabs.items[tabIndex] = tab
     }

@@ -42,13 +42,13 @@ let ReqURL = React.createClass({
 
     toggleMethodMenu(evt) {
         evt.stopPropagation()
-        ReqTabConAction.toggleMethodsDropDown()
+        ReqTabConAction.toggleMethodMenu()
     },
 
     toggleKV(evt) {
         evt.stopPropagation()
-        ReqTabConAction.toggleKV()
         evt.target.classList.toggle('active')
+        ReqTabConAction.toggleKV(this.props.tabIndex)
     },
 
     onChange(evt) {
@@ -56,14 +56,14 @@ let ReqURL = React.createClass({
         let tab = this.props.tab
         tab.name = url
         tab.url = url
-        ReqTabAction.changeTab(tab, this.props.index)
-        ReqTabConAction.fillParams(this.props.index)
+        ReqTabAction.changeTab(this.props.tabIndex, tab)
+        ReqTabConAction.fillParams(this.props.tabIndex)
     },
 
     onSelectMethod(methodName) {
         let tab = this.props.tab
         tab.method = methodName
-        ReqTabAction.changeTab(tab, this.props.index)
+        ReqTabAction.changeTab(this.props.tabIndex, tab)
     }
 
 })

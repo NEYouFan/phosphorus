@@ -19,16 +19,21 @@ const DEFAULT_PARAMS_KV = {
     key: BLANK_STR,
     value: BLANK_STR
 }
+const DEFAULT_CON_ITEM = {
+    paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
+    activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
+    showKV: true
+}
 
 let tabCons = {
     activeIndex: DEFAULT_ACTIVE_INDEX,
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
     showReqMethodsDropdown: false,
-    showKV: true,
     items: [{
-        paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
-    }],
-    activeBuilderIndex: 0
+        paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
+        activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
+        showKV: true
+    }]
 }
 
 let actions = {
@@ -38,7 +43,9 @@ let actions = {
 
     addCon() {
         tabCons.items.push({
-            paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
+            paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
+            activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
+            showKV: true
         })
     },
 
@@ -50,8 +57,8 @@ let actions = {
         tabCons.showReqMethodsDropdown = !tabCons.showReqMethodsDropdown
     },
 
-    toggleKV() {
-        tabCons.showKV = !tabCons.showKV
+    toggleKV(tabIndex) {
+        tabCons.items[tabIndex].showKV = !tabCons.items[tabIndex].showKV
     },
 
     toggleCheckParam(tabIndex, rowIndex) {
@@ -103,6 +110,10 @@ let actions = {
         let params = tabCons.items[tabIndex].paramsKVs
         let newUrl = Util.setUrlQuery(tabUrl, params)
         ReqTabStore.setTabUrl(tabIndex, newUrl)
+    },
+
+    switchBuilderTab(tabIndex, activeIndex) {
+        tabCons.items[tabIndex].activeBuilderIndex = activeIndex
     }
 }
 
@@ -114,8 +125,7 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
             reqTabCons: {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
-                showReqMethodsDropdown: tabCons.showReqMethodsDropdown,
-                showKV: tabCons.showKV
+                showReqMethodsDropdown: tabCons.showReqMethodsDropdown
             }
         }
     },
@@ -161,7 +171,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_TAB_CONTENT_TOGGLE_KV:
-            actions.toggleKV()
+            actions.toggleKV(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
@@ -192,6 +202,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_CONTENT_CHANGE_VALUE:
             actions.changeValue(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_SWITCH_BUILDER_TAB:
+            actions.switchBuilderTab(action.tabIndex, action.activeIndex)
             ReqTabConStore.emitChange()
             break
 

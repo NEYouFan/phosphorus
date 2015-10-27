@@ -25,9 +25,10 @@ let ReqTabConAction = {
         })
     },
 
-    toggleKV() {
+    toggleKV(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_KV
+            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_KV,
+            tabIndex: tabIndex
         })
     },
 
@@ -83,9 +84,10 @@ let ReqTabConAction = {
         })
     },
 
-    switchBuilderTab(activeIndex) {
+    switchBuilderTab(tabIndex, activeIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CONTENT_SWITCH_BUILDER_TAB,
+            tabIndex: tabIndex,
             activeIndex: activeIndex
         })
     }

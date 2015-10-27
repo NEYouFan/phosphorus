@@ -4,13 +4,15 @@
 import './reqtabcon.styl'
 import React from 'react'
 import classNames from 'classnames'
-import ReqTabActions from '../../actions/reqtabaction'
-import ReqTabConActions from '../../actions/reqtabconaction'
+import ReqTabAction from '../../actions/reqtabaction'
+import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
 import ReqURL from '../requrl/requrl.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqBuilderTab from '../reqbuildertab/reqbuildertab'
+import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader'
+import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody'
 
 /** @namespace this.props.tabCons */
 let ReqTabCon = React.createClass({
@@ -24,18 +26,19 @@ let ReqTabCon = React.createClass({
             })
             return (
                 <div className={tabConClasses} key={index}>
-                    <ReqURL tab={tab} tabCons={this.props.tabCons} index={index}/>
+                    <ReqURL
+                        tab={tab}
+                        tabCons={this.props.tabCons}
+                        tabIndex={index}
+                        />
                     <KeyValue
+                        tabIndex={index}
                         tabCons={this.props.tabCons}
                         kvs={this.props.tabCons.reqCons[index].paramsKVs}
-                        toggleCheck={(rowIndex) => {this.toggleCheckParam(index, rowIndex)}}
-                        addKVRow={() => {this.addParamsKVRow(index)}}
-                        removeKVRow={(rowIndex) => {this.removeParamsKVRow(index, rowIndex)}}
-                        editKV={this.editKV}
-                        keyChange={(rowIndex, value) => {this.keyChange(index, rowIndex, value)}}
-                        valueChange={(rowIndex, value) => {this.valueChange(index, rowIndex, value)}}
                         />
-                    <ReqBuilderTab/>
+                    <ReqBuilderTab tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>
+                    <ReqBuilderHeader tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>
+                    <ReqBuilderBody tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>
                 </div>
             )
         })
@@ -44,30 +47,6 @@ let ReqTabCon = React.createClass({
                 {tabConNodes}
             </div>
         )
-    },
-
-    toggleCheckParam(tabIndex, rowIndex) {
-        ReqTabConActions.toggleCheckParam(tabIndex, rowIndex)
-    },
-
-    addParamsKVRow(tabIndex) {
-        ReqTabConActions.addParamsKVRow(tabIndex)
-    },
-
-    removeParamsKVRow(tabIndex, rowIndex) {
-        ReqTabConActions.removeParamsKVRow(tabIndex, rowIndex)
-    },
-
-    editKV() {
-        ReqTabConActions.editKV()
-    },
-
-    keyChange(tabIndex, rowIndex, value) {
-        ReqTabConActions.changeKey(tabIndex, rowIndex, value)
-    },
-
-    valueChange(tabIndex, rowIndex, value) {
-        ReqTabConActions.changeValue(tabIndex, rowIndex, value)
     }
 
 })
