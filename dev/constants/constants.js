@@ -11,9 +11,10 @@ let AppConstants = keyMirror({
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,
     REQ_TAB_CHANGE: null,
-    REQ_TAB_CONTENT_FILL_PARAMS: null,
     // req tab content action
     REQ_TAB_CONTENT_CHANGE_ACTIVE_INDEX: null,
+    REQ_TAB_CONTENT_CHANGE_METHOD: null,
+    REQ_TAB_CONTENT_FILL_PARAMS: null,
     REQ_TAB_CONTENT_ADD: null,
     REQ_TAB_CONTENT_REMOVE: null,
     REQ_TAB_CONTENT_TOGGLE_KV: null,

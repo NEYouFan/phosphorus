@@ -8,7 +8,7 @@ let ReqBuilderHeader = React.createClass({
 
     render() {
         let className = classNames({
-            hide: this.props.tabCon.activeBuilderIndex !== 0
+            hide: this.props.builders.activeIndex !== 0
         })
         return (
             <div className={className}>

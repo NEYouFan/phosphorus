@@ -49,6 +49,10 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
         }
     },
 
+    getTab(tabIndex) {
+        return tabs.items[tabIndex]
+    },
+
     getTabUrl(tabIndex) {
         return tabs.items[tabIndex].url
     },

@@ -64,6 +64,7 @@ let ReqURL = React.createClass({
         let tab = this.props.tab
         tab.method = methodName
         ReqTabAction.changeTab(this.props.tabIndex, tab)
+        ReqTabConAction.changeMethod(this.props.tabIndex)
     }
 
 })

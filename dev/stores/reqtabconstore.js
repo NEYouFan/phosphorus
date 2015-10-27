@@ -31,7 +31,19 @@ let tabCons = {
     showReqMethodsDropdown: false,
     items: [{
         paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
-        activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
+        builders: {
+            items: [
+                {
+                    name: 'Headers(0)',
+                    disabled: false
+                },
+                {
+                    name: 'Body',
+                    disabled: true
+                }
+            ],
+            activeIndex: 0
+        },
         showKV: true
     }]
 }
@@ -55,6 +67,15 @@ let actions = {
 
     toggleReqMethodsDD() {
         tabCons.showReqMethodsDropdown = !tabCons.showReqMethodsDropdown
+    },
+
+    changeMethod(tabIndex) {
+        let tab = ReqTabStore.getTab(tabIndex)
+        let builders = tabCons.items[tabIndex].builders
+        builders.items[1].disabled = tab.method.toLowerCase() === 'get'
+        if (builders.activeIndex === 1) {
+            builders.activeIndex = 0
+        }
     },
 
     toggleKV(tabIndex) {
@@ -113,7 +134,7 @@ let actions = {
     },
 
     switchBuilderTab(tabIndex, activeIndex) {
-        tabCons.items[tabIndex].activeBuilderIndex = activeIndex
+        tabCons.items[tabIndex].builders.activeIndex = activeIndex
     }
 }
 
@@ -167,6 +188,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_CONTENT_TOGGLE_METHODS_DD:
             actions.toggleReqMethodsDD()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_CONTENT_CHANGE_METHOD:
+            actions.changeMethod(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 

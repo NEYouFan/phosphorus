@@ -59,6 +59,13 @@ let ReqTabConAction = {
         //todo, bulk edit
     },
 
+    changeMethod(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_METHOD,
+            tabIndex: tabIndex
+        })
+    },
+
     fillParams(tabIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CONTENT_FILL_PARAMS,

@@ -36,9 +36,18 @@ let ReqTabCon = React.createClass({
                         tabCon={this.props.tabCons.reqCons[index]}
                         kvs={this.props.tabCons.reqCons[index].paramsKVs}
                         />
-                    <ReqBuilderTab tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>
-                    <ReqBuilderHeader tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>
-                    <ReqBuilderBody tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>
+                    <ReqBuilderTab
+                        tabIndex={index}
+                        builders={this.props.tabCons.reqCons[index].builders}
+                        />
+                    <ReqBuilderHeader
+                        tabIndex={index}
+                        builders={this.props.tabCons.reqCons[index].builders}
+                        />
+                    <ReqBuilderBody
+                        tabIndex={index}
+                        builders={this.props.tabCons.reqCons[index].builders}
+                        />
                 </div>
             )
         })
