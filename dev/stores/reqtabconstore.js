@@ -24,6 +24,7 @@ const DEFAULT_CON_ITEM = {
     activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
     showKV: true
 }
+const BODY_BUILDER_INDEX = 1
 
 let tabCons = {
     activeIndex: DEFAULT_ACTIVE_INDEX,
@@ -42,7 +43,7 @@ let tabCons = {
                     disabled: true
                 }
             ],
-            activeIndex: 0
+            activeIndex: DEFAULT_ACTIVE_INDEX
         },
         showKV: true
     }]
@@ -72,9 +73,9 @@ let actions = {
     changeMethod(tabIndex) {
         let tab = ReqTabStore.getTab(tabIndex)
         let builders = tabCons.items[tabIndex].builders
-        builders.items[1].disabled = tab.method.toLowerCase() === 'get'
-        if (builders.activeIndex === 1) {
-            builders.activeIndex = 0
+        builders.items[BODY_BUILDER_INDEX].disabled = tab.method.toLowerCase() === 'get'
+        if (builders.activeIndex === BODY_BUILDER_INDEX) {
+            builders.activeIndex = DEFAULT_ACTIVE_INDEX
         }
     },
 
