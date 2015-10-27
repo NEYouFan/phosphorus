@@ -26,11 +26,12 @@ let ReqTabCon = React.createClass({
                     <ReqURL tab={tab} tabCons={this.props.tabCons} index={index}/>
                     <KeyValue
                         kvs={this.props.tabCons.reqCons[index].paramsKVs}
-                        tabIndex={index}
-                        toggleCheck={this.toggleCheckParam}
-                        addKVRow={this.addParamsKVRow}
-                        removeKVRow={this.removeParamsKVRow}
+                        toggleCheck={(rowIndex) => {this.toggleCheckParam(index, rowIndex)}}
+                        addKVRow={() => {this.addParamsKVRow(index)}}
+                        removeKVRow={(rowIndex) => {this.removeParamsKVRow(index, rowIndex)}}
                         editKV={this.editKV}
+                        keyChange={(rowIndex, value) => {this.keyChange(index, rowIndex, value)}}
+                        valueChange={(rowIndex, value) => {this.valueChange(index, rowIndex, value)}}
                         />
                 </div>
             )
@@ -56,6 +57,14 @@ let ReqTabCon = React.createClass({
 
     editKV() {
         ReqTabConActions.editKV()
+    },
+
+    keyChange(tabIndex, rowIndex, value) {
+        ReqTabConActions.changeKey(tabIndex, rowIndex, value)
+    },
+
+    valueChange(tabIndex, rowIndex, value) {
+        ReqTabConActions.changeValue(tabIndex, rowIndex, value)
     }
 
 })

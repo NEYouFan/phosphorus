@@ -36,13 +36,6 @@ let ReqTabAction = {
             actionType: AppConstants.REQ_TAB_REMOVE,
             tabIndex: tabIndex
         })
-    },
-
-    fillParams(tabIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_FILL_PARAMS,
-            tabIndex: tabIndex
-        })
     }
 
 }

@@ -4,8 +4,8 @@
 import './requrl.styl'
 import React from 'react'
 import classNames from 'classnames'
-import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqTabAction from '../../actions/reqtabaction'
+import ReqTabConAction from '../../actions/reqtabconaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 
 let ReqURL = React.createClass({
@@ -26,7 +26,7 @@ let ReqURL = React.createClass({
 
                     <div className="requrl-sep"></div>
                     <div className="requrl-url">
-                        <input onInput={this.onInput}
+                        <input onChange={this.onChange}
                                value={this.props.tab.url}
                                type="url"
                                placeholder="Enter request URL here"/>
@@ -49,13 +49,13 @@ let ReqURL = React.createClass({
         }
     },
 
-    onInput(evt) {
+    onChange(evt) {
         let url = evt.target.value
         let tab = this.props.tab
         tab.name = url
         tab.url = url
         ReqTabAction.changeTab(tab, this.props.index)
-        ReqTabAction.fillParams(this.props.index)
+        ReqTabConAction.fillParams(this.props.index)
     },
 
     onSelectMethod(methodName) {

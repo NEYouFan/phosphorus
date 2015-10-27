@@ -4,7 +4,6 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
-import URL from 'url'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
@@ -35,12 +34,6 @@ let actions = {
     changeTab(tab, tabIndex) {
         tab.name = tab.name || DEFAULT_ITEMS.name
         tabs.items[tabIndex] = tab
-    },
-
-    fillParams(tabIndex) {
-        let url = tabs.items[tabIndex].url
-        let result = URL.parse(url)
-        console.log(result)
     }
 }
 
@@ -55,6 +48,14 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getActiveTabIndex() {
         return tabs.activeIndex
+    },
+
+    getTabUrl(tabIndex) {
+        return tabs.items[tabIndex].url
+    },
+
+    setTabUrl(tabIndex, tabUrl) {
+        tabs.items[tabIndex].url = tabUrl
     },
 
     emitChange() {
@@ -90,11 +91,6 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_CHANGE:
             actions.changeTab(action.tab, action.tabIndex)
-            ReqTabStore.emitChange()
-            break
-
-        case AppConstants.REQ_TAB_FILL_PARAMS:
-            actions.fillParams(action.tabIndex)
             ReqTabStore.emitChange()
             break
 

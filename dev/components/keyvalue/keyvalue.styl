@@ -29,6 +29,10 @@
       &:focus {
         border-bottom-color: #ccc
       }
+        
+      &:read-only {
+        cursor: not-allowed;
+      }  
     }
 
     .glyphicon {
@@ -44,6 +48,16 @@
       &.checked {
         color: #53a2f2
       }  
+    }
+
+    .glyphicon-remove {
+      visibility hidden
+    }
+
+    &.removable {
+      .glyphicon-remove {
+        visibility visible
+      }
     }
   }
 }

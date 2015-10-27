@@ -56,6 +56,31 @@ let ReqTabConAction = {
 
     editKV() {
         //todo, bulk edit
+    },
+
+    fillParams(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_FILL_PARAMS,
+            tabIndex: tabIndex
+        })
+    },
+
+    changeKey(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_KEY,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
+    },
+
+    changeValue(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_VALUE,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
     }
 
 }
