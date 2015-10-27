@@ -41,13 +41,20 @@ let Index = React.createClass({
             <div className="main-wrap" onClick={this.hideReqMethod}>
                 <div className="side">
                     <Search />
-                    <SideTab sideTab={this.state.sideTab} />
-                    <History sideTab={this.state.sideTab} />
-                    <Collections sideTab={this.state.sideTab} />
+                    <SideTab sideTab={this.state.sideTab}/>
+                    <History sideTab={this.state.sideTab}/>
+                    <Collections sideTab={this.state.sideTab}/>
                 </div>
                 <div className="bd">
-                    <ReqTab tabs={this.state.reqTabs} />
-                    <ReqTabCon tabs={this.state.reqTabs} tabCons={this.state.reqTabCons} />
+                    <ReqTab
+                        tabs={this.state.reqTabs.tabs}
+                        activeIndex={this.state.reqTabs.activeIndex}
+                        />
+                    <ReqTabCon
+                        reqTabs={this.state.reqTabs.tabs}
+                        activeTabIndex={this.state.reqTabs.activeIndex}
+                        tabCons={this.state.reqTabCons}
+                        />
                 </div>
             </div>
         )
@@ -60,7 +67,7 @@ let Index = React.createClass({
     hideReqMethod() {
         let reqTabConStates = ReqTabConStore.getAll()
         if (!reqTabConStates.reqTabCons.showReqMethodsDropdown) return
-        ReqTabConAction.toggleMethodsDropDown()
+        ReqTabConAction.toggleMethodMenu()
     }
 
 })

@@ -19,7 +19,7 @@ let ReqTabConAction = {
         })
     },
 
-    toggleMethodsDropDown() {
+    toggleMethodMenu() {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_METHODS_DD
         })

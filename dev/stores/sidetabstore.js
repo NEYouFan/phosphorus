@@ -23,10 +23,6 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
         }
     },
 
-    getActiveTabIndex() {
-        return tabs.activeIndex
-    },
-
     emitChange() {
         this.emit(CHANGE_EVENT)
     },

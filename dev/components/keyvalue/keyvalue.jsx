@@ -51,7 +51,7 @@ let KeyValue = React.createClass({
         })
         let kvClassess = classNames({
             'mod-kv': true,
-            'hide': !this.props.tabCons.reqCons[this.props.tabIndex].showKV
+            'hide': !this.props.tabCon.showKV
         })
         return (
             <div className={kvClassess}>

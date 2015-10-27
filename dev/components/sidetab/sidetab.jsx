@@ -8,18 +8,12 @@ import classNames from 'classnames'
 
 let SideTab = React.createClass({
 
-    getInitialState() {
-        return {
-            activeIndex: SideTabStore.getActiveTabIndex()
-        }
-    },
-
     render() {
         let historyClass = classNames({
-            active: this.state.activeIndex === 0
+            active: this.props.sideTab.activeIndex === 0
         })
         let collectionsClass = classNames({
-            active: this.state.activeIndex === 1
+            active: this.props.sideTab.activeIndex === 1
         })
         return (
             <div className="mod-tab">
@@ -34,9 +28,6 @@ let SideTab = React.createClass({
     clickHandler (e) {
         if (e.target.classList.contains('active')) return
         let activeIndex = Number(e.target.dataset.index)
-        this.setState({
-            activeIndex: activeIndex
-        })
         SideTabAction.switchTab(activeIndex)
     }
 

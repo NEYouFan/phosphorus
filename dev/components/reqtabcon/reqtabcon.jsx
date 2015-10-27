@@ -18,8 +18,8 @@ import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody'
 let ReqTabCon = React.createClass({
 
     render() {
-        let activeTabIndex = ReqTabStore.getActiveTabIndex()
-        let tabConNodes = this.props.tabs.map((tab, index) => {
+        let activeTabIndex = this.props.activeTabIndex
+        let tabConNodes = this.props.reqTabs.map((tab, index) => {
             let tabConClasses = classNames({
                 'reqtab-con': true,
                 'hide': activeTabIndex !== index
@@ -27,13 +27,13 @@ let ReqTabCon = React.createClass({
             return (
                 <div className={tabConClasses} key={index}>
                     <ReqURL
+                        tabIndex={index}
                         tab={tab}
                         tabCons={this.props.tabCons}
-                        tabIndex={index}
                         />
                     <KeyValue
                         tabIndex={index}
-                        tabCons={this.props.tabCons}
+                        tabCon={this.props.tabCons.reqCons[index]}
                         kvs={this.props.tabCons.reqCons[index].paramsKVs}
                         />
                     <ReqBuilderTab tabIndex={index} tabCon={this.props.tabCons.reqCons[index]}/>

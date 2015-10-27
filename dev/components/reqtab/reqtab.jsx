@@ -10,12 +10,6 @@ import ReqTabStore from '../../stores/reqtabstore'
 /** @namespace this.props.tabs */
 let ReqTab = React.createClass({
 
-    getInitialState() {
-        return {
-            activeIndex: ReqTabStore.getActiveTabIndex()
-        }
-    },
-
     render() {
         let removeBtnClasses = classNames({
             'glyphicon glyphicon-remove reqtab-remove': true,
@@ -24,7 +18,7 @@ let ReqTab = React.createClass({
         let tabNodes = this.props.tabs.map((tab, index) => {
             let tabClasses = classNames({
                 reqtab: true,
-                active: this.state.activeIndex === index
+                active: this.props.activeIndex === index
             })
             return (
                 <div className={tabClasses} key={index} title={tab.name}>
@@ -58,9 +52,6 @@ let ReqTab = React.createClass({
     },
 
     switchTab(activeIndex) {
-        this.setState({
-            activeIndex: activeIndex
-        })
         ReqTabActions.switchTab(activeIndex)
     },
 
@@ -68,7 +59,7 @@ let ReqTab = React.createClass({
         ReqTabActions.removeTab(tabIndex)
         ReqTabConActions.removeCon(tabIndex)
         let isActive = evt.target.parentNode.classList.contains('active')
-        this.switchTab(isActive ? Math.max(0, tabIndex - 1) : this.state.activeIndex - 1)
+        this.switchTab(isActive ? Math.max(0, tabIndex - 1) : this.props.activeIndex - 1)
     }
 
 })

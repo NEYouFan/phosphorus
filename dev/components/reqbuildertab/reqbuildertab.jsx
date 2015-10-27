@@ -3,7 +3,6 @@
 import './reqbuildertab.styl'
 import React from 'react'
 import ReqTabConAction from '../../actions/reqtabconaction'
-import ReqTabConStore from '../../stores/reqtabconstore'
 import classNames from 'classnames'
 
 let ReqBuilderTab = React.createClass({

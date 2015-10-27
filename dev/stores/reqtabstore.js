@@ -42,12 +42,11 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getAll() {
         return {
-            reqTabs: tabs.items
+            reqTabs: {
+                tabs: tabs.items,
+                activeIndex: tabs.activeIndex
+            }
         }
-    },
-
-    getActiveTabIndex() {
-        return tabs.activeIndex
     },
 
     getTabUrl(tabIndex) {
