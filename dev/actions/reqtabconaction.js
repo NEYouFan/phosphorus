@@ -81,6 +81,13 @@ let ReqTabConAction = {
             rowIndex: rowIndex,
             value: value
         })
+    },
+
+    switchBuilderTab(activeIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_CONTENT_SWITCH_BUILDER_TAB,
+            activeIndex: activeIndex
+        })
     }
 
 }

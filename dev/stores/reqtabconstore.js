@@ -27,7 +27,8 @@ let tabCons = {
     showKV: true,
     items: [{
         paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
-    }]
+    }],
+    activeBuilderIndex: 0
 }
 
 let actions = {
@@ -117,6 +118,10 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 showKV: tabCons.showKV
             }
         }
+    },
+
+    getActiveBuilderIndex() {
+        return tabCons.activeBuilderIndex
     },
 
     emitChange() {

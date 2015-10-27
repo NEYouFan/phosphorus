@@ -8,7 +8,7 @@ import classNames from 'classnames'
 
 let SideTab = React.createClass({
 
-    getInitialState: function () {
+    getInitialState() {
         return {
             activeIndex: SideTabStore.getActiveTabIndex()
         }

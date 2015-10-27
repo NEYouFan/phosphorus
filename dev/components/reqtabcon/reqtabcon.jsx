@@ -10,6 +10,7 @@ import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
 import ReqURL from '../requrl/requrl.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
+import ReqBuilderTab from '../reqbuildertab/reqbuildertab'
 
 /** @namespace this.props.tabCons */
 let ReqTabCon = React.createClass({
@@ -34,6 +35,7 @@ let ReqTabCon = React.createClass({
                         keyChange={(rowIndex, value) => {this.keyChange(index, rowIndex, value)}}
                         valueChange={(rowIndex, value) => {this.valueChange(index, rowIndex, value)}}
                         />
+                    <ReqBuilderTab/>
                 </div>
             )
         })

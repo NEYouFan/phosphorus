@@ -23,6 +23,7 @@ let AppConstants = keyMirror({
     REQ_TAB_CONTENT_TOGGLE_CHECK_PARAM: null,
     REQ_TAB_CONTENT_CHANGE_KEY: null,
     REQ_TAB_CONTENT_CHANGE_VALUE: null,
+    REQ_TAB_CONTENT_SWITCH_BUILDER_TAB: null,
 })
 
 export default AppConstants
