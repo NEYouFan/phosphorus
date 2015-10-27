@@ -32,7 +32,7 @@ let ReqURL = React.createClass({
                                placeholder="Enter request URL here"/>
                     </div>
                     <div className="requrl-sep"></div>
-                    <div className="requrl-params">Params</div>
+                    <div className="requrl-params active" onClick={this.toggleKV}>Params</div>
                 </div>
                 <button className="requrl-send">Send</button>
                 <button className="requrl-save">Save</button>
@@ -42,11 +42,13 @@ let ReqURL = React.createClass({
 
     toggleMethodMenu(evt) {
         evt.stopPropagation()
-        if (this.props.tabCons.showReqMethodsDropdown) {
-            ReqTabConAction.hideMethodsDropDown()
-        } else {
-            ReqTabConAction.showMethodsDropDown()
-        }
+        ReqTabConAction.toggleMethodsDropDown()
+    },
+
+    toggleKV(evt) {
+        evt.stopPropagation()
+        ReqTabConAction.toggleKV()
+        evt.target.classList.toggle('active')
     },
 
     onChange(evt) {

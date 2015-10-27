@@ -58,8 +58,12 @@ let KeyValue = React.createClass({
                 </div>
             )
         })
+        let kvClassess = classNames({
+            'mod-kv': true,
+            'hide': !this.props.tabCons.showKV
+        })
         return (
-            <div className="mod-kv">
+            <div className={kvClassess}>
                 {nodes}
             </div>
         )

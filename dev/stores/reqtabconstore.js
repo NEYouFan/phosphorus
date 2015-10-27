@@ -24,9 +24,9 @@ let tabCons = {
     activeIndex: DEFAULT_ACTIVE_INDEX,
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
     showReqMethodsDropdown: false,
+    showKV: true,
     items: [{
-        paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
-        tabUrl: BLANK_STR
+        paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)]
     }]
 }
 
@@ -45,16 +45,19 @@ let actions = {
         tabCons.items.splice(tabIndex, 1)
     },
 
-    hideReqMethodsDD() {
-        tabCons.showReqMethodsDropdown = false
+    toggleReqMethodsDD() {
+        tabCons.showReqMethodsDropdown = !tabCons.showReqMethodsDropdown
     },
 
-    showReqMethodsDD() {
-        tabCons.showReqMethodsDropdown = true
+    toggleKV() {
+        tabCons.showKV = !tabCons.showKV
     },
 
     toggleCheckParam(tabIndex, rowIndex) {
-        tabCons.items[tabIndex].paramsKVs[rowIndex].checked = !tabCons.items[tabIndex].paramsKVs[rowIndex].checked
+        let kv = tabCons.items[tabIndex].paramsKVs[rowIndex]
+        if (kv.pathVariable) return
+        kv.checked = !tabCons.items[tabIndex].paramsKVs[rowIndex].checked
+        this.updateUrl(tabIndex)
     },
 
     addParamsKVRow(tabIndex) {
@@ -63,6 +66,7 @@ let actions = {
 
     removeParamsKVRow(tabIndex, rowIndex) {
         tabCons.items[tabIndex].paramsKVs.splice(rowIndex, 1)
+        this.updateUrl(tabIndex)
     },
 
     fillParams(tabIndex) {
@@ -84,13 +88,18 @@ let actions = {
     },
 
     changeKV(tabIndex, rowIndex, value, type) {
-        let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = tabCons.items[tabIndex].paramsKVs
         params.forEach((param, index) => {
             if (index === rowIndex) {
                 param[type] = value
             }
         })
+        this.updateUrl(tabIndex)
+    },
+
+    updateUrl(tabIndex) {
+        let tabUrl = ReqTabStore.getTabUrl(tabIndex)
+        let params = tabCons.items[tabIndex].paramsKVs
         let newUrl = Util.setUrlQuery(tabUrl, params)
         ReqTabStore.setTabUrl(tabIndex, newUrl)
     }
@@ -104,7 +113,8 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
             reqTabCons: {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
-                showReqMethodsDropdown: tabCons.showReqMethodsDropdown
+                showReqMethodsDropdown: tabCons.showReqMethodsDropdown,
+                showKV: tabCons.showKV
             }
         }
     },
@@ -140,13 +150,13 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_SHOW_METHODS_DD:
-            actions.showReqMethodsDD()
+        case AppConstants.REQ_TAB_CONTENT_TOGGLE_METHODS_DD:
+            actions.toggleReqMethodsDD()
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_HIDE_METHODS_DD:
-            actions.hideReqMethodsDD()
+        case AppConstants.REQ_TAB_CONTENT_TOGGLE_KV:
+            actions.toggleKV()
             ReqTabConStore.emitChange()
             break
 

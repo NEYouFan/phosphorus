@@ -60,7 +60,7 @@ let Index = React.createClass({
     hideReqMethod() {
         let reqTabConStates = ReqTabConStore.getAll()
         if (!reqTabConStates.reqTabCons.showReqMethodsDropdown) return
-        ReqTabConAction.hideMethodsDropDown()
+        ReqTabConAction.toggleMethodsDropDown()
     }
 
 })

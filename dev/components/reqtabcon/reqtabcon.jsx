@@ -25,6 +25,7 @@ let ReqTabCon = React.createClass({
                 <div className={tabConClasses} key={index}>
                     <ReqURL tab={tab} tabCons={this.props.tabCons} index={index}/>
                     <KeyValue
+                        tabCons={this.props.tabCons}
                         kvs={this.props.tabCons.reqCons[index].paramsKVs}
                         toggleCheck={(rowIndex) => {this.toggleCheckParam(index, rowIndex)}}
                         addKVRow={() => {this.addParamsKVRow(index)}}

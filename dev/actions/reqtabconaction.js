@@ -19,15 +19,15 @@ let ReqTabConAction = {
         })
     },
 
-    showMethodsDropDown() {
+    toggleMethodsDropDown() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_SHOW_METHODS_DD
+            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_METHODS_DD
         })
     },
 
-    hideMethodsDropDown() {
+    toggleKV() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_HIDE_METHODS_DD
+            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_KV
         })
     },
 

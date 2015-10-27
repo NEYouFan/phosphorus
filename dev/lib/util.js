@@ -79,7 +79,7 @@ let Util = {
         let query = {}
         params.map((param, index) => {
             if (param.pathVariable) return
-            if (!param.key && !param.value) return
+            if ((!param.key && !param.value) || !param.checked) return
             if (!query[param.key]) {
                 query[param.key]= []
             }
