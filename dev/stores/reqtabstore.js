@@ -59,6 +59,7 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     setTabUrl(tabIndex, tabUrl) {
         tabs.items[tabIndex].url = tabUrl
+        tabs.items[tabIndex].name = tabUrl || DEFAULT_ITEMS.name
     },
 
     emitChange() {

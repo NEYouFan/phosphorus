@@ -77,9 +77,10 @@ let tabConActions = {
 
     changeMethod(tabIndex) {
         let tab = ReqTabStore.getTab(tabIndex)
+        let isGetMethod = tab.method.toLowerCase() === 'get'
         let builders = tabCons.items[tabIndex].builders
-        builders.items[BODY_BUILDER_INDEX].disabled = tab.method.toLowerCase() === 'get'
-        if (builders.activeIndex === BODY_BUILDER_INDEX) {
+        builders.items[BODY_BUILDER_INDEX].disabled = isGetMethod
+        if (isGetMethod && builders.activeIndex === BODY_BUILDER_INDEX) {
             builders.activeIndex = DEFAULT_ACTIVE_INDEX
         }
     },

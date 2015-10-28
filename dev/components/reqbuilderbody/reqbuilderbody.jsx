@@ -15,8 +15,8 @@ let ReqBuilderBody = React.createClass({
             let isChecked = type === bodyType.name
             let rawTypeClasses = classNames({
                 'reqbuilder-body-rawtype': true,
-                'show-value': isChecked,
-                'show-list': this.props.showRawTypeList
+                'show-raw-value': isChecked,
+                'show-raw-list': this.props.showRawTypeList
             })
             return (
                 <li key={index}>
