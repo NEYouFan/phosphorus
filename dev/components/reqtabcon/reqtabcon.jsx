@@ -32,9 +32,14 @@ let ReqTabCon = React.createClass({
                         tabCons={this.props.tabCons}
                         />
                     <KeyValue
-                        tabIndex={index}
-                        tabCon={this.props.tabCons.reqCons[index]}
+                        showKV={this.props.tabCons.reqCons[index].showKV}
                         kvs={this.props.tabCons.reqCons[index].paramKVs}
+                        toggleKV={(rowIndex) => {this.toggleKV(index, rowIndex)}}
+                        addKV={() => {this.addKV(index)}}
+                        removeKV={(rowIndex) => {this.removeKV(index, rowIndex)}}
+                        editKV={() => {this.editKV(index)}}
+                        changeKVKey={(rowIndex, value) => {this.changeKVKey(index, rowIndex, value)}}
+                        changeKVValue={(rowIndex, value) => {this.changeKVValue(index, rowIndex, value)}}
                         />
                     <ReqBuilderTab
                         tabIndex={index}
@@ -56,6 +61,30 @@ let ReqTabCon = React.createClass({
                 {tabConNodes}
             </div>
         )
+    },
+
+    toggleKV(tabIndex, rowIndex) {
+        ReqTabConAction.toggleCheckParam(tabIndex, rowIndex)
+    },
+
+    addKV(tabIndex) {
+        ReqTabConAction.addParamRow(tabIndex)
+    },
+
+    removeKV(tabIndex, rowIndex) {
+        ReqTabConAction.removeParamRow(tabIndex, rowIndex)
+    },
+
+    editKV(tabIndex) {
+        ReqTabConAction.editParam(tabIndex)
+    },
+
+    changeKVKey(tabIndex, rowIndex, value) {
+        ReqTabConAction.changeParamKey(tabIndex, rowIndex, value)
+    },
+
+    changeKVValue(tabIndex, rowIndex, value) {
+        ReqTabConAction.changeParamValue(tabIndex, rowIndex, value)
     }
 
 })

@@ -4,8 +4,6 @@
 import './keyvalue.styl'
 import React from 'react'
 import classNames from 'classnames'
-import ReqTabAction from '../../actions/reqtabaction'
-import ReqTabConAction from '../../actions/reqtabconaction'
 
 /** @namespace this.props.kvs */
 let KeyValue = React.createClass({
@@ -23,78 +21,71 @@ let KeyValue = React.createClass({
             })
             return (
                 <div className={rowClasses} key={index}>
-                    <div className={okSignClasses} onClick={this.toggleCheck.bind(this, index)}></div>
+                    <div className={okSignClasses} onClick={this.toggle.bind(this, index)}></div>
                     <div className="input-wrap"
-                         onClick={this.clickRow.bind(this, index)}
-                         onFocus={this.focusRow.bind(this, index)}
-                         onBlur={this.blurRow}
+                         onFocus={this.focus.bind(this, index)}
+                         onBlur={this.blur}
                         >
                         <input
                             placeholder={kv.keyPlaceholder}
                             value={kv.key}
                             readOnly={kv.pathVariable}
-                            onChange={this.onKeyChange.bind(this, index)}
+                            onChange={this.changeKey.bind(this, index)}
                             />
                         <input
                             placeholder={kv.valuePlaceholder}
                             value={kv.value}
-                            onChange={this.onValueChange.bind(this, index)}
+                            onChange={this.changeValue.bind(this, index)}
                             />
                     </div>
                     {index === total - 1 ?
-                        <div className="glyphicon glyphicon-edit" onClick={this.editKV}></div>
+                        <div className="glyphicon glyphicon-edit" onClick={this.edit}></div>
                         :
-                        <div className="glyphicon glyphicon-remove" onClick={this.removeRow.bind(this, index)}></div>
+                        <div className="glyphicon glyphicon-remove" onClick={this.remove.bind(this, index)}></div>
                     }
                 </div>
             )
         })
-        let kvClassess = classNames({
+        let kvClasses = classNames({
             'mod-kv': true,
-            'hide': !this.props.tabCon.showKV
+            'hide': !this.props.showKV
         })
         return (
-            <div className={kvClassess}>
+            <div className={kvClasses}>
                 {nodes}
             </div>
         )
     },
 
-    toggleCheck(rowIndex) {
-        ReqTabConAction.toggleCheckParam(this.props.tabIndex, rowIndex)
+    toggle(rowIndex) {
+        this.props.toggleKV(rowIndex)
     },
 
-    clickRow(rowIndex) {
+    focus(rowIndex, evt) {
         if (rowIndex === this.props.kvs.length - 1) {
-            ReqTabConAction.addParamsKVRow(this.props.tabIndex)
+            this.props.addKV(rowIndex)
         }
-    },
-
-    focusRow(rowIndex, evt) {
-        this.clickRow(rowIndex)
         evt.currentTarget.classList.add('active')
     },
 
-    blurRow(evt) {
+    blur(evt) {
         evt.currentTarget.classList.remove('active')
     },
 
-    removeRow(rowIndex) {
-        ReqTabConAction.removeParamsKVRow(this.props.tabIndex, rowIndex)
+    remove(rowIndex) {
+        this.props.removeKV(rowIndex)
     },
 
-    editKV() {
-        ReqTabConAction.editKV()
+    edit() {
+        this.props.editKV()
     },
 
-    onKeyChange(rowIndex, evt) {
-        let value = evt.target.value
-        ReqTabConAction.changeKey(this.props.tabIndex, rowIndex, value)
+    changeKey(rowIndex, evt) {
+        this.props.changeKVKey(rowIndex, evt.target.value)
     },
 
-    onValueChange(rowIndex, evt) {
-        let value = evt.target.value
-        ReqTabConAction.changeValue(this.props.tabIndex, rowIndex, value)
+    changeValue(rowIndex, evt) {
+        this.props.changeKVValue(rowIndex, evt.target.value)
     }
 
 })

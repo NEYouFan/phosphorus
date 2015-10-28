@@ -8,83 +8,83 @@ let ReqTabConAction = {
 
     addCon() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_ADD
+            actionType: AppConstants.REQ_CONTENT_ADD
         })
     },
 
     removeCon(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE,
+            actionType: AppConstants.REQ_CONTENT_REMOVE,
             tabIndex: tabIndex
         })
     },
 
     toggleMethodMenu() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_METHODS_DD
+            actionType: AppConstants.REQ_CONTENT_TOGGLE_METHODS_DD
         })
     },
 
-    toggleKV(tabIndex) {
+    toggleParamsKV(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_KV,
+            actionType: AppConstants.REQ_CONTENT_TOGGLE_PARAMS,
             tabIndex: tabIndex
         })
     },
 
     toggleCheckParam(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_TOGGLE_CHECK_PARAM,
+            actionType: AppConstants.REQ_PARAM_TOGGLE_CHECK,
             tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     },
 
-    addParamsKVRow(tabIndex) {
+    addParamRow(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW,
+            actionType: AppConstants.REQ_PARAM_ADD_ROW,
             tabIndex: tabIndex
         })
     },
 
-    removeParamsKVRow(tabIndex, rowIndex) {
+    removeParamRow(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW,
+            actionType: AppConstants.REQ_PARAM_REMOVE_ROW,
             tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     },
 
-    editKV() {
+    editParam(tabIndex) {
         //todo, bulk edit
     },
 
     changeMethod(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_METHOD,
+            actionType: AppConstants.REQ_CONTENT_CHANGE_METHOD,
             tabIndex: tabIndex
         })
     },
 
     fillParams(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_FILL_PARAMS,
+            actionType: AppConstants.REQ_CONTENT_FILL_PARAMS,
             tabIndex: tabIndex
         })
     },
 
-    changeKey(tabIndex, rowIndex, value) {
+    changeParamKey(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_KEY,
+            actionType: AppConstants.REQ_PARAM_CHANGE_KEY,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     },
 
-    changeValue(tabIndex, rowIndex, value) {
+    changeParamValue(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_CHANGE_VALUE,
+            actionType: AppConstants.REQ_PARAM_CHANGE_VALUE,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
@@ -93,7 +93,7 @@ let ReqTabConAction = {
 
     switchBuilderTab(tabIndex, activeIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_CONTENT_SWITCH_BUILDER_TAB,
+            actionType: AppConstants.REQ_BUILDER_SWITCH_TAB,
             tabIndex: tabIndex,
             activeIndex: activeIndex
         })

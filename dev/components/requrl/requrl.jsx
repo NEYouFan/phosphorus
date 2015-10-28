@@ -48,7 +48,7 @@ let ReqURL = React.createClass({
     toggleKV(evt) {
         evt.stopPropagation()
         evt.target.classList.toggle('active')
-        ReqTabConAction.toggleKV(this.props.tabIndex)
+        ReqTabConAction.toggleParamsKV(this.props.tabIndex)
     },
 
     onChange(evt) {

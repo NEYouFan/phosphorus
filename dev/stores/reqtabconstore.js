@@ -10,30 +10,35 @@ import Util from '../lib/util'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
-const DEFAULT_KEY_PLACEHOLDER = 'URL Parameter Key'
+const DEFAULT_KEY_PLACEHOLDER = 'Key'
 const DEFAULT_VALUE_PLACEHOLDER = 'Value'
 const BLANK_STR = ''
-const DEFAULT_PARAMS_KV = {
+const DEFAULT_HEADERS_KV = {
     keyPlaceholder: DEFAULT_KEY_PLACEHOLDER,
     valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER,
     checked: true,
     key: BLANK_STR,
     value: BLANK_STR
 }
+const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_HEADERS_KV, {
+    keyPlaceholder: 'URL Parameter Key'
+})
+
 const DEFAULT_CON_ITEM = {
-    paramKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
+    paramKVs: [DEFAULT_PARAMS_KV],
     builders: {
         items: [
             {
-                name: 'Headers(0)',
+                name: 'Headers',
                 disabled: false
             },
             {
                 name: 'Body',
-                disabled: true
+                disabled: false
             }
         ],
-        activeIndex: DEFAULT_ACTIVE_INDEX
+        activeIndex: DEFAULT_ACTIVE_INDEX,
+        headerKVs: [DEFAULT_HEADERS_KV]
     },
     showKV: true
 }
@@ -41,12 +46,12 @@ const BODY_BUILDER_INDEX = 1
 
 let tabCons = {
     activeIndex: DEFAULT_ACTIVE_INDEX,
-    reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
+    reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
     showReqMethodsDropdown: false,
-    items: [DEFAULT_CON_ITEM]
+    items: [_.cloneDeep(DEFAULT_CON_ITEM)]
 }
 
-let actions = {
+let tabConActions = {
     changeIndex(activeIndex) {
         tabCons.activeIndex = activeIndex
     },
@@ -72,24 +77,31 @@ let actions = {
         }
     },
 
-    toggleKV(tabIndex) {
+    toggleParamsKV(tabIndex) {
         tabCons.items[tabIndex].showKV = !tabCons.items[tabIndex].showKV
     },
+
+    switchBuilderTab(tabIndex, activeIndex) {
+        tabCons.items[tabIndex].builders.activeIndex = activeIndex
+    }
+}
+
+let paramActions = {
 
     toggleCheckParam(tabIndex, rowIndex) {
         let kv = tabCons.items[tabIndex].paramKVs[rowIndex]
         if (kv.pathVariable) return
         kv.checked = !tabCons.items[tabIndex].paramKVs[rowIndex].checked
-        this.updateUrl(tabIndex)
+        this.updateTabUrl(tabIndex)
     },
 
-    addParamsKVRow(tabIndex) {
+    addParamRow(tabIndex) {
         tabCons.items[tabIndex].paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
     },
 
-    removeParamsKVRow(tabIndex, rowIndex) {
+    removeParamRow(tabIndex, rowIndex) {
         tabCons.items[tabIndex].paramKVs.splice(rowIndex, 1)
-        this.updateUrl(tabIndex)
+        this.updateTabUrl(tabIndex)
     },
 
     fillParams(tabIndex) {
@@ -102,35 +114,67 @@ let actions = {
         tabCons.items[tabIndex].paramKVs = params
     },
 
-    changeKey (tabIndex, rowIndex, value) {
-        this.changeKV(tabIndex, rowIndex, value, 'key')
+    changeParamKey (tabIndex, rowIndex, value) {
+        this.changeParam(tabIndex, rowIndex, value, 'key')
     },
 
-    changeValue (tabIndex, rowIndex, value) {
-        this.changeKV(tabIndex, rowIndex, value, 'value')
+    changeParamValue (tabIndex, rowIndex, value) {
+        this.changeParam(tabIndex, rowIndex, value, 'value')
     },
 
-    changeKV(tabIndex, rowIndex, value, type) {
+    changeParam(tabIndex, rowIndex, value, type) {
         let params = tabCons.items[tabIndex].paramKVs
         params.forEach((param, index) => {
             if (index === rowIndex) {
                 param[type] = value
             }
         })
-        this.updateUrl(tabIndex)
+        this.updateTabUrl(tabIndex)
     },
 
-    updateUrl(tabIndex) {
+    updateTabUrl(tabIndex) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = tabCons.items[tabIndex].paramKVs
         let newUrl = Util.setUrlQuery(tabUrl, params)
         ReqTabStore.setTabUrl(tabIndex, newUrl)
-    },
-
-    switchBuilderTab(tabIndex, activeIndex) {
-        tabCons.items[tabIndex].builders.activeIndex = activeIndex
     }
 }
+
+let headerActions = {
+
+    toggleCheckHeader(tabIndex, rowIndex) {
+        let kv = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
+        if (kv.pathVariable) return
+        kv.checked = !tabCons.items[tabIndex].builders.headerKVs[rowIndex].checked
+    },
+
+    addHeaderRow(tabIndex) {
+        tabCons.items[tabIndex].builders.headerKVs.push(Object.assign({}, DEFAULT_HEADERS_KV))
+    },
+
+    removeHeaderRow(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].builders.headerKVs.splice(rowIndex, 1)
+    },
+
+    changeHeaderKey (tabIndex, rowIndex, value) {
+        this.changeHeader(tabIndex, rowIndex, value, 'key')
+    },
+
+    changeHeaderValue (tabIndex, rowIndex, value) {
+        this.changeHeader(tabIndex, rowIndex, value, 'value')
+    },
+
+    changeHeader(tabIndex, rowIndex, value, type) {
+        let headers = tabCons.items[tabIndex].builders.headerKVs
+        headers.forEach((header, index) => {
+            if (index === rowIndex) {
+                header[type] = value
+            }
+        })
+    }
+}
+
+let actions = Object.assign({}, tabConActions, paramActions, headerActions)
 
 
 let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
@@ -161,70 +205,103 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 AppDispatcher.register((action) => {
 
     switch (action.actionType) {
-        case AppConstants.REQ_TAB_CONTENT_CHANGE_ACTIVE_INDEX:
+        // req content action --->
+        case AppConstants.REQ_CONTENT_CHANGE_ACTIVE_INDEX:
             actions.changeIndex(action.activeIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_ADD:
+        case AppConstants.REQ_CONTENT_ADD:
             actions.addCon()
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_REMOVE:
+        case AppConstants.REQ_CONTENT_REMOVE:
             actions.removeCon(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_TOGGLE_METHODS_DD:
+        case AppConstants.REQ_CONTENT_TOGGLE_METHODS_DD:
             actions.toggleReqMethodsDD()
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_CHANGE_METHOD:
+        case AppConstants.REQ_CONTENT_CHANGE_METHOD:
             actions.changeMethod(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_TOGGLE_KV:
-            actions.toggleKV(action.tabIndex)
+        case AppConstants.REQ_CONTENT_TOGGLE_PARAMS:
+            actions.toggleParamsKV(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_TOGGLE_CHECK_PARAM:
+        case AppConstants.REQ_CONTENT_FILL_PARAMS:
+            actions.fillParams(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+        // req content action <---
+
+        // req param action --->
+        case AppConstants.REQ_PARAM_TOGGLE_CHECK:
             actions.toggleCheckParam(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_ADD_PARAMS_KV_ROW:
-            actions.addParamsKVRow(action.tabIndex)
+        case AppConstants.REQ_PARAM_ADD_ROW:
+            actions.addParamRow(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_REMOVE_PARAMS_KV_ROW:
-            actions.removeParamsKVRow(action.tabIndex, action.rowIndex)
+        case AppConstants.REQ_PARAM_REMOVE_ROW:
+            actions.removeParamRow(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_FILL_PARAMS:
-            actions.fillParams(action.tabIndex)
+        case AppConstants.REQ_PARAM_CHANGE_KEY:
+            actions.changeParamKey(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_TAB_CONTENT_CHANGE_KEY:
-            actions.changeKey(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_PARAM_CHANGE_VALUE:
+            actions.changeParamValue(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
+        // req param action <---
 
-        case AppConstants.REQ_TAB_CONTENT_CHANGE_VALUE:
-            actions.changeValue(action.tabIndex, action.rowIndex, action.value)
-            ReqTabConStore.emitChange()
-            break
-
-        case AppConstants.REQ_TAB_CONTENT_SWITCH_BUILDER_TAB:
+        // req builder action --->
+        case AppConstants.REQ_BUILDER_SWITCH_TAB:
             actions.switchBuilderTab(action.tabIndex, action.activeIndex)
             ReqTabConStore.emitChange()
             break
+        // req builder action <---
+
+        // req header action --->
+        case AppConstants.REQ_HEADER_TOGGLE_CHECK:
+            actions.toggleCheckHeader(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_HEADER_ADD_ROW:
+            actions.addHeaderRow(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_HEADER_REMOVE_ROW:
+            actions.removeHeaderRow(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_HEADER_CHANGE_KEY:
+            actions.changeHeaderKey(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_HEADER_CHANGE_VALUE:
+            actions.changeHeaderValue(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+        // req header action <---
 
         default:
             break

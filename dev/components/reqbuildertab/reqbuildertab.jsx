@@ -4,6 +4,7 @@ import './reqbuildertab.styl'
 import React from 'react'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import classNames from 'classnames'
+import _ from 'lodash'
 
 let ReqBuilderTab = React.createClass({
 
@@ -14,11 +15,17 @@ let ReqBuilderTab = React.createClass({
                 active: index === activeIndex,
                 disabled: builder.disabled
             })
+            let builderName = builder.name
+            if (builderName.toLowerCase() === 'headers') {
+                builderName += '(' + this.getValidHeadersNum() + ')'
+            }
             return (
                 <li
                     className={classes}
                     onClick={this.clickHandler.bind(this, index)}
-                    key={index}>{builder.name}
+                    key={index}
+                    >
+                    {builderName}
                 </li>
             )
         })
@@ -36,6 +43,13 @@ let ReqBuilderTab = React.createClass({
         if (target.classList.contains('active')) return
         if (target.classList.contains('disabled')) return
         ReqTabConAction.switchBuilderTab(this.props.tabIndex, index)
+    },
+
+    getValidHeadersNum() {
+        let result = _.filter(this.props.builders.headerKVs, (kv) => {
+            return kv.key
+        })
+        return result.length
     }
 
 })
