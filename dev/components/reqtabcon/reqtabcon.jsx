@@ -29,10 +29,12 @@ let ReqTabCon = React.createClass({
                     <ReqURL
                         tabIndex={index}
                         tab={tab}
-                        tabCons={this.props.tabCons}
+                        tabCon={this.props.tabCons[index]}
+                        reqMethods={this.props.tabCons.reqMethods}
+                        showMethodList={this.props.tabCons.reqCons[index].showReqMethodList}
                         />
                     <KeyValue
-                        showKV={this.props.tabCons.reqCons[index].showKV}
+                        showKV={this.props.tabCons.reqCons[index].showParamKV}
                         kvs={this.props.tabCons.reqCons[index].paramKVs}
                         toggleKV={(rowIndex) => {this.toggleKV(index, rowIndex)}}
                         addKV={() => {this.addKV(index)}}
@@ -51,7 +53,10 @@ let ReqTabCon = React.createClass({
                         />
                     <ReqBuilderBody
                         tabIndex={index}
+                        bodyTypes={this.props.tabCons.bodyTypes}
+                        rawTypes={this.props.tabCons.rawTypes}
                         builders={this.props.tabCons.reqCons[index].builders}
+                        showRawTypeList={this.props.tabCons.reqCons[index].showBodyRawTypeList}
                         />
                 </div>
             )

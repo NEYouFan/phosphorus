@@ -35,26 +35,33 @@ const DEFAULT_CON_ITEM = {
             {
                 name: 'Body',
                 disabled: false
+            },
+            {
+                name: 'Response Checker',
+                disabled: false
             }
         ],
-        activeIndex: DEFAULT_ACTIVE_INDEX,
-        headerKVs: [DEFAULT_HEADERS_KV]
+        activeIndex: 1,
+        headerKVs: [DEFAULT_HEADERS_KV],
+        bodyType: {
+            name: 'raw',
+            value: 'Text'
+        }
     },
-    showKV: true
+    showParamKV: true,
+    showBodyRawTypeList: false,
+    showReqMethodList: false
 }
 const BODY_BUILDER_INDEX = 1
 
 let tabCons = {
-    activeIndex: DEFAULT_ACTIVE_INDEX,
+    bodyTypes: ['form-data', 'x-www-form-urlencoded', 'binary', 'raw'],
+    rawTypes: ['Text', 'Text(text/plain)', 'JSON(application/json)', 'Javascript(application/javascript)', 'XML(application/xml)', 'XML(text/xml)', 'HTML(text/html)'],
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
-    showReqMethodsDropdown: false,
     items: [_.cloneDeep(DEFAULT_CON_ITEM)]
 }
 
 let tabConActions = {
-    changeIndex(activeIndex) {
-        tabCons.activeIndex = activeIndex
-    },
 
     addCon() {
         tabCons.items.push(_.cloneDeep(DEFAULT_CON_ITEM))
@@ -64,8 +71,8 @@ let tabConActions = {
         tabCons.items.splice(tabIndex, 1)
     },
 
-    toggleReqMethodsDD() {
-        tabCons.showReqMethodsDropdown = !tabCons.showReqMethodsDropdown
+    toggleReqMethodsList(tabIndex) {
+        tabCons.items[tabIndex].showReqMethodList = !tabCons.items[tabIndex].showReqMethodList
     },
 
     changeMethod(tabIndex) {
@@ -78,7 +85,7 @@ let tabConActions = {
     },
 
     toggleParamsKV(tabIndex) {
-        tabCons.items[tabIndex].showKV = !tabCons.items[tabIndex].showKV
+        tabCons.items[tabIndex].showParamKV = !tabCons.items[tabIndex].showParamKV
     },
 
     switchBuilderTab(tabIndex, activeIndex) {
@@ -174,17 +181,31 @@ let headerActions = {
     }
 }
 
-let actions = Object.assign({}, tabConActions, paramActions, headerActions)
+let bodyActions = {
+    changeBodyType(tabIndex, bodyType) {
+        tabCons.items[tabIndex].builders.bodyType.name = bodyType
+    },
 
+    changeBodyTypeValue(tabIndex, bodyTypeValue) {
+        tabCons.items[tabIndex].builders.bodyType.value = bodyTypeValue
+    },
+
+    toggleBodyTypeList(tabIndex) {
+        tabCons.items[tabIndex].showBodyRawTypeList = !tabCons.items[tabIndex].showBodyRawTypeList
+    },
+}
+
+let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions)
 
 let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getAll() {
         return {
-            reqTabCons: {
+            reqTabCon: {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
-                showReqMethodsDropdown: tabCons.showReqMethodsDropdown
+                bodyTypes: tabCons.bodyTypes,
+                rawTypes: tabCons.rawTypes
             }
         }
     },
@@ -206,11 +227,6 @@ AppDispatcher.register((action) => {
 
     switch (action.actionType) {
         // req content action --->
-        case AppConstants.REQ_CONTENT_CHANGE_ACTIVE_INDEX:
-            actions.changeIndex(action.activeIndex)
-            ReqTabConStore.emitChange()
-            break
-
         case AppConstants.REQ_CONTENT_ADD:
             actions.addCon()
             ReqTabConStore.emitChange()
@@ -221,8 +237,8 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_CONTENT_TOGGLE_METHODS_DD:
-            actions.toggleReqMethodsDD()
+        case AppConstants.REQ_CONTENT_TOGGLE_METHODS_LIST:
+            actions.toggleReqMethodsList(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
@@ -241,6 +257,7 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
         // req content action <---
+
 
         // req param action --->
         case AppConstants.REQ_PARAM_TOGGLE_CHECK:
@@ -269,12 +286,14 @@ AppDispatcher.register((action) => {
             break
         // req param action <---
 
+
         // req builder action --->
         case AppConstants.REQ_BUILDER_SWITCH_TAB:
             actions.switchBuilderTab(action.tabIndex, action.activeIndex)
             ReqTabConStore.emitChange()
             break
         // req builder action <---
+
 
         // req header action --->
         case AppConstants.REQ_HEADER_TOGGLE_CHECK:
@@ -302,6 +321,24 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
         // req header action <---
+
+
+        // req body action --->
+        case AppConstants.REQ_BODY_CHANGE_TYPE:
+            actions.changeBodyType(action.tabIndex, action.bodyType)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_CHANGE_TYPE_VALUE:
+            actions.changeBodyTypeValue(action.tabIndex, action.bodyTypeValue)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_TOGGLE_TYPE_LIST:
+            actions.toggleBodyTypeList(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+        // req body action <---
 
         default:
             break

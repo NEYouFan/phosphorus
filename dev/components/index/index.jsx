@@ -13,6 +13,7 @@ import Collections from '../collections/collections.jsx'
 import ReqTab from '../reqtab/reqtab.jsx'
 import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 import ReqTabConAction from '../../actions/reqtabconaction'
+import ReqBodyAction from '../../actions/reqbodyaction'
 
 function getAppStates() {
     return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
@@ -38,7 +39,7 @@ let Index = React.createClass({
 
     render() {
         return (
-            <div className="main-wrap" onClick={this.hideReqMethod}>
+            <div className="main-wrap" onClick={this.hideDropdownMenu}>
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab}/>
@@ -47,13 +48,13 @@ let Index = React.createClass({
                 </div>
                 <div className="bd">
                     <ReqTab
-                        tabs={this.state.reqTabs.tabs}
-                        activeIndex={this.state.reqTabs.activeIndex}
+                        tabs={this.state.reqTab.tabs}
+                        activeIndex={this.state.reqTab.activeIndex}
                         />
                     <ReqTabCon
-                        reqTabs={this.state.reqTabs.tabs}
-                        activeTabIndex={this.state.reqTabs.activeIndex}
-                        tabCons={this.state.reqTabCons}
+                        reqTabs={this.state.reqTab.tabs}
+                        activeTabIndex={this.state.reqTab.activeIndex}
+                        tabCons={this.state.reqTabCon}
                         />
                 </div>
             </div>
@@ -64,10 +65,15 @@ let Index = React.createClass({
         this.setState(getAppStates())
     },
 
-    hideReqMethod() {
-        let reqTabConStates = ReqTabConStore.getAll()
-        if (!reqTabConStates.reqTabCons.showReqMethodsDropdown) return
-        ReqTabConAction.toggleMethodMenu()
+    hideDropdownMenu() {
+        let appStates = getAppStates()
+        let tabIndex = appStates.reqTab.activeIndex
+        if (appStates.reqTabCon.reqCons[tabIndex].showReqMethodList) {
+            ReqTabConAction.toggleMethodList(tabIndex)
+        }
+        if (appStates.reqTabCon.reqCons[tabIndex].showBodyRawTypeList) {
+            ReqBodyAction.toggleRawTypeList(tabIndex)
+        }
     }
 
 })

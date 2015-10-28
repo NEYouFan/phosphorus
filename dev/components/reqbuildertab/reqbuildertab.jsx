@@ -46,10 +46,10 @@ let ReqBuilderTab = React.createClass({
     },
 
     getValidHeadersNum() {
-        let result = _.filter(this.props.builders.headerKVs, (kv) => {
+        let results = _.filter(this.props.builders.headerKVs, (kv) => {
             return kv.key
         })
-        return result.length
+        return results.length
     }
 
 })

@@ -1,4 +1,53 @@
 //author @huntbao
 .mod-reqbuilder-body {
+  .type-tabs {
+    margin: 20px
+    display: flex
 
+    >li {
+      margin: 0 60px 0 0
+      display: flex
+
+      .reqbuilder-body-rawtype {
+        font-size: 12px
+        position: relative
+        margin: -3px 0 0 24px;
+        cursor: pointer
+        color: #06c
+        visibility hidden
+
+        .rawtype-wrap {
+          margin: -3px 0 0
+        }
+
+        .mod-dropdown-menu {
+          position: absolute
+          display: none
+        }
+
+        &.show-list {
+          .mod-dropdown-menu {
+            display block
+          }
+        }
+
+        &.show-value {
+          visibility: visible
+        }
+      }
+    }
+
+    label {
+      display: flex
+      cursor: pointer
+
+      input {
+        cursor: pointer
+      }
+
+      span {
+        margin: -5px 0 0 8px
+      }
+    }
+  }
 }

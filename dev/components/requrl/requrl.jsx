@@ -8,21 +8,22 @@ import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 
+/** @namespace this.props.showMethodList */
 let ReqURL = React.createClass({
 
     render() {
         let reqWrapClasses = classNames({
             'requrl-wrap': true,
-            'requrl-show-method': this.props.tabCons.showReqMethodsDropdown
+            'requrl-show-method': this.props.showMethodList
         })
         return (
             <div className="mod-requrl">
                 <div className={reqWrapClasses}>
-                    <div className="requrl-method" onClick={this.toggleMethodMenu}>
+                    <div className="requrl-method" onClick={this.toggleMethodList}>
                         <span className="requrl-method-name">{this.props.tab.method}</span>
                         <span className="glyphicon glyphicon-chevron-down"></span>
                     </div>
-                    <DropDownMenu menus={this.props.tabCons.reqMethods} onClickItem={this.onSelectMethod}/>
+                    <DropDownMenu menus={this.props.reqMethods} onClickItem={this.onSelectMethod}/>
 
                     <div className="requrl-sep"></div>
                     <div className="requrl-url">
@@ -40,9 +41,9 @@ let ReqURL = React.createClass({
         )
     },
 
-    toggleMethodMenu(evt) {
+    toggleMethodList(evt) {
         evt.stopPropagation()
-        ReqTabConAction.toggleMethodMenu()
+        ReqTabConAction.toggleMethodList(this.props.tabIndex)
     },
 
     toggleKV(evt) {

@@ -11,10 +11,6 @@ let ReqTabAction = {
             actionType: AppConstants.REQ_TAB_CHANGE_ACTIVE_INDEX,
             activeIndex: activeIndex
         })
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_CHANGE_ACTIVE_INDEX,
-            activeIndex: activeIndex
-        })
     },
 
     changeTab(tab, tabIndex) {

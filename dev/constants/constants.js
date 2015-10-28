@@ -7,7 +7,6 @@ let AppConstants = keyMirror({
     // side tab action
     SIDE_TAB_CHANGE_ACTIVE_INDEX: null,
     // req tab action
-    REQ_TAB_CHANGE_ACTIVE_INDEX: null,
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,
     REQ_TAB_CHANGE: null,
@@ -18,7 +17,7 @@ let AppConstants = keyMirror({
     REQ_CONTENT_ADD: null,
     REQ_CONTENT_REMOVE: null,
     REQ_CONTENT_TOGGLE_PARAMS: null,
-    REQ_CONTENT_TOGGLE_METHODS_DD: null,
+    REQ_CONTENT_TOGGLE_METHODS_LIST: null,
     // params kv action
     REQ_PARAM_ADD_ROW: null,
     REQ_PARAM_REMOVE_ROW: null,
@@ -33,6 +32,10 @@ let AppConstants = keyMirror({
     REQ_HEADER_REMOVE_ROW: null,
     REQ_HEADER_CHANGE_KEY: null,
     REQ_HEADER_CHANGE_VALUE: null,
+    // body action
+    REQ_BODY_CHANGE_TYPE: null,
+    REQ_BODY_CHANGE_TYPE_VALUE: null,
+    REQ_BODY_TOGGLE_TYPE_LIST: null,
 })
 
 export default AppConstants

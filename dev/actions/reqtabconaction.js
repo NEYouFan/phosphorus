@@ -19,9 +19,10 @@ let ReqTabConAction = {
         })
     },
 
-    toggleMethodMenu() {
+    toggleMethodList(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_TOGGLE_METHODS_DD
+            actionType: AppConstants.REQ_CONTENT_TOGGLE_METHODS_LIST,
+            tabIndex: tabIndex
         })
     },
 
