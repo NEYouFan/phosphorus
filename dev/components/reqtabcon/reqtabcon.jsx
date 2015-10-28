@@ -34,7 +34,7 @@ let ReqTabCon = React.createClass({
                     <KeyValue
                         tabIndex={index}
                         tabCon={this.props.tabCons.reqCons[index]}
-                        kvs={this.props.tabCons.reqCons[index].paramsKVs}
+                        kvs={this.props.tabCons.reqCons[index].paramKVs}
                         />
                     <ReqBuilderTab
                         tabIndex={index}

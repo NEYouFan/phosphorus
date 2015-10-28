@@ -59,7 +59,16 @@ let ReqTab = React.createClass({
         ReqTabActions.removeTab(tabIndex)
         ReqTabConActions.removeCon(tabIndex)
         let isActive = evt.target.parentNode.classList.contains('active')
-        this.switchTab(isActive ? Math.max(0, tabIndex - 1) : this.props.activeIndex - 1)
+        let currentActiveIndex = this.props.activeIndex
+        let nextActiveIndex
+        if (isActive) {
+            nextActiveIndex = Math.max(0, tabIndex - 1)
+        } else if (tabIndex > currentActiveIndex) {
+            nextActiveIndex = currentActiveIndex
+        } else {
+            nextActiveIndex = currentActiveIndex - 1
+        }
+        this.switchTab(nextActiveIndex)
     }
 
 })

@@ -1,9 +1,10 @@
 //author @huntbao
 'use strict'
 
+import Events from 'events'
+import _ from 'lodash'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
-import Events from 'events'
 import ReqTabStore from './reqtabstore'
 import Util from '../lib/util'
 
@@ -20,8 +21,20 @@ const DEFAULT_PARAMS_KV = {
     value: BLANK_STR
 }
 const DEFAULT_CON_ITEM = {
-    paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
-    activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
+    paramKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
+    builders: {
+        items: [
+            {
+                name: 'Headers(0)',
+                disabled: false
+            },
+            {
+                name: 'Body',
+                disabled: true
+            }
+        ],
+        activeIndex: DEFAULT_ACTIVE_INDEX
+    },
     showKV: true
 }
 const BODY_BUILDER_INDEX = 1
@@ -30,23 +43,7 @@ let tabCons = {
     activeIndex: DEFAULT_ACTIVE_INDEX,
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'],
     showReqMethodsDropdown: false,
-    items: [{
-        paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
-        builders: {
-            items: [
-                {
-                    name: 'Headers(0)',
-                    disabled: false
-                },
-                {
-                    name: 'Body',
-                    disabled: true
-                }
-            ],
-            activeIndex: DEFAULT_ACTIVE_INDEX
-        },
-        showKV: true
-    }]
+    items: [DEFAULT_CON_ITEM]
 }
 
 let actions = {
@@ -55,11 +52,7 @@ let actions = {
     },
 
     addCon() {
-        tabCons.items.push({
-            paramsKVs: [Object.assign({}, DEFAULT_PARAMS_KV)],
-            activeBuilderIndex: DEFAULT_ACTIVE_INDEX,
-            showKV: true
-        })
+        tabCons.items.push(_.cloneDeep(DEFAULT_CON_ITEM))
     },
 
     removeCon(tabIndex) {
@@ -84,29 +77,29 @@ let actions = {
     },
 
     toggleCheckParam(tabIndex, rowIndex) {
-        let kv = tabCons.items[tabIndex].paramsKVs[rowIndex]
+        let kv = tabCons.items[tabIndex].paramKVs[rowIndex]
         if (kv.pathVariable) return
-        kv.checked = !tabCons.items[tabIndex].paramsKVs[rowIndex].checked
+        kv.checked = !tabCons.items[tabIndex].paramKVs[rowIndex].checked
         this.updateUrl(tabIndex)
     },
 
     addParamsKVRow(tabIndex) {
-        tabCons.items[tabIndex].paramsKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
+        tabCons.items[tabIndex].paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
     },
 
     removeParamsKVRow(tabIndex, rowIndex) {
-        tabCons.items[tabIndex].paramsKVs.splice(rowIndex, 1)
+        tabCons.items[tabIndex].paramKVs.splice(rowIndex, 1)
         this.updateUrl(tabIndex)
     },
 
     fillParams(tabIndex) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = Util.getUrlParams(tabUrl)
-        params = params.map((param, index) => {
+        params = params.map((param) => {
             return Object.assign({}, DEFAULT_PARAMS_KV, param)
         })
         params.push(Object.assign({}, DEFAULT_PARAMS_KV))
-        tabCons.items[tabIndex].paramsKVs = params
+        tabCons.items[tabIndex].paramKVs = params
     },
 
     changeKey (tabIndex, rowIndex, value) {
@@ -118,7 +111,7 @@ let actions = {
     },
 
     changeKV(tabIndex, rowIndex, value, type) {
-        let params = tabCons.items[tabIndex].paramsKVs
+        let params = tabCons.items[tabIndex].paramKVs
         params.forEach((param, index) => {
             if (index === rowIndex) {
                 param[type] = value
@@ -129,7 +122,7 @@ let actions = {
 
     updateUrl(tabIndex) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
-        let params = tabCons.items[tabIndex].paramsKVs
+        let params = tabCons.items[tabIndex].paramKVs
         let newUrl = Util.setUrlQuery(tabUrl, params)
         ReqTabStore.setTabUrl(tabIndex, newUrl)
     },
@@ -150,10 +143,6 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 showReqMethodsDropdown: tabCons.showReqMethodsDropdown
             }
         }
-    },
-
-    getActiveBuilderIndex() {
-        return tabCons.activeBuilderIndex
     },
 
     emitChange() {
