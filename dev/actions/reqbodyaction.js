@@ -81,6 +81,51 @@ let ReqBodyAction = {
             rowIndex: rowIndex,
             value: value
         })
+    },
+
+    toggleBodyXFormKV(tabIndex, rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_XFORM_TOGGLE_KV,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    addBodyXFormKV(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_XFORM_ADD_KV,
+            tabIndex: tabIndex
+        })
+    },
+
+    removeBodyXFormKV(tabIndex, rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_XFORM_REMOVE_KV,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    editBodyXFormKV(tabIndex) {
+        //todo, bulk edit
+    },
+
+    changeBodyXFormKVKey(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_XFORM_CHANGE_KV_KEY,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
+    },
+
+    changeBodyXFormKVValue(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_XFORM_CHANGE_KV_VALUE,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
     }
 
 }

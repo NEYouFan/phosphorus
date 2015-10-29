@@ -31,6 +31,7 @@ const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_KV, {
 const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'text'
 })
+const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 
 const DEFAULT_CON_ITEM = {
     paramKVs: [DEFAULT_PARAMS_KV],
@@ -55,7 +56,8 @@ const DEFAULT_CON_ITEM = {
             name: 'form-data',
             value: 'Text'
         },
-        bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV]
+        bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
+        bodyXFormKVs: [DEFAULT_BODY_XFORM_KV]
     },
     showParamKV: true,
     showBodyRawTypeList: false,
@@ -203,6 +205,7 @@ let bodyActions = {
         tabCons.items[tabIndex].showBodyRawTypeList = !tabCons.items[tabIndex].showBodyRawTypeList
     },
 
+    // body form data kv action
     toggleBodyFormDataKV(tabIndex, rowIndex) {
         let kv = tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex]
         if (kv.readonly) return
@@ -232,6 +235,34 @@ let bodyActions = {
 
     changeBodyFormDataKVValueType(tabIndex, rowIndex, value) {
         tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].valueType = value
+    },
+
+    // body x form kv action
+    toggleBodyXFormKV(tabIndex, rowIndex) {
+        let kv = tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex]
+        if (kv.readonly) return
+        kv.checked = !tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex].checked
+    },
+
+    addBodyXFormKV(tabIndex) {
+        tabCons.items[tabIndex].builders.bodyXFormKVs.push(Object.assign({}, DEFAULT_BODY_XFORM_KV))
+    },
+
+    removeBodyXFormKV(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].builders.bodyXFormKVs.splice(rowIndex, 1)
+    },
+
+    changeBodyXFormKVKey(tabIndex, rowIndex, value) {
+        this.changeBodyFormData(tabIndex, rowIndex, value, 'key')
+    },
+
+    changeBodyXFormKVValue(tabIndex, rowIndex, value) {
+        this.changeBodyFormData(tabIndex, rowIndex, value, 'value')
+    },
+
+    changeBodyXForm(tabIndex, rowIndex, value, type) {
+        let kv = tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex]
+        kv[type] = value
     }
 
 }
@@ -379,6 +410,7 @@ AppDispatcher.register((action) => {
             actions.toggleBodyTypeList(action.tabIndex)
             ReqTabConStore.emitChange()
             break
+        // body form data kv action
         case AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV:
             actions.toggleBodyFormDataKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
@@ -406,6 +438,32 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE:
             actions.changeBodyFormDataKVValueType(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        //body x form kv action
+        case AppConstants.REQ_BODY_XFORM_TOGGLE_KV:
+            actions.toggleBodyXFormKV(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_XFORM_ADD_KV:
+            actions.addBodyXFormKV(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_XFORM_REMOVE_KV:
+            actions.removeBodyXFormKV(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_XFORM_CHANGE_KV_KEY:
+            actions.changeBodyXFormKVKey(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_XFORM_CHANGE_KV_VALUE:
+            actions.changeBodyXFormKVValue(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req body action <---
