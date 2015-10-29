@@ -29,6 +29,60 @@ let ReqBodyAction = {
         })
     },
 
+    toggleBodyFormDataKV(tabIndex, rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    addBodyFormDataKV(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_ADD_KV,
+            tabIndex: tabIndex
+        })
+    },
+
+    removeBodyFormDataKV(tabIndex, rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_REMOVE_KV,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    editBodyFormDataKV(tabIndex) {
+        //todo, bulk edit
+    },
+
+    changeBodyFormDataKVKey(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_KEY,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
+    },
+
+    changeBodyFormDataKVValue(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
+    },
+
+    changeBodyFormDataKVValueType(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex,
+            value: value
+        })
+    }
+
 }
 
 export default ReqBodyAction

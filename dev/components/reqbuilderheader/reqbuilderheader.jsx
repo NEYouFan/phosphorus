@@ -19,40 +19,40 @@ let ReqBuilderHeader = React.createClass({
                     <KeyValue
                         showKV={true}
                         kvs={this.props.builders.headerKVs}
-                        toggleKV={(rowIndex) => {this.toggleKV(tabIndex, rowIndex)}}
-                        addKV={() => {this.addKV(tabIndex)}}
-                        removeKV={(rowIndex) => {this.removeKV(tabIndex, rowIndex)}}
-                        editKV={() => {this.editKV(tabIndex)}}
-                        changeKVKey={(rowIndex, value) => {this.changeKVKey(tabIndex, rowIndex, value)}}
-                        changeKVValue={(rowIndex, value) => {this.changeKVValue(tabIndex, rowIndex, value)}}
+                        toggleKV={(rowIndex) => {this.toggleHeaderKV(tabIndex, rowIndex)}}
+                        addKV={() => {this.addHeaderKV(tabIndex)}}
+                        removeKV={(rowIndex) => {this.removeHeaderKV(tabIndex, rowIndex)}}
+                        editKV={() => {this.editHeaderKV(tabIndex)}}
+                        changeKVKey={(rowIndex, value) => {this.changeHeaderKVKey(tabIndex, rowIndex, value)}}
+                        changeKVValue={(rowIndex, value) => {this.changeHeaderKVValue(tabIndex, rowIndex, value)}}
                         />
                 </div>
             </div>
         )
     },
 
-    toggleKV(tabIndex, rowIndex) {
-        ReqHeaderAction.toggleCheckHeader(tabIndex, rowIndex)
+    toggleHeaderKV(tabIndex, rowIndex) {
+        ReqHeaderAction.toggleHeaderKV(tabIndex, rowIndex)
     },
 
-    addKV(tabIndex) {
-        ReqHeaderAction.addHeaderRow(tabIndex)
+    addHeaderKV(tabIndex) {
+        ReqHeaderAction.addHeaderKV(tabIndex)
     },
 
-    removeKV(tabIndex, rowIndex) {
-        ReqHeaderAction.removeHeaderRow(tabIndex, rowIndex)
+    removeHeaderKV(tabIndex, rowIndex) {
+        ReqHeaderAction.removeHeaderKV(tabIndex, rowIndex)
     },
 
-    editKV(tabIndex) {
-        ReqHeaderAction.editHeader(tabIndex)
+    editHeaderKV(tabIndex) {
+        ReqHeaderAction.editHeaderKV(tabIndex)
     },
 
-    changeKVKey(tabIndex, rowIndex, value) {
-        ReqHeaderAction.changeHeaderKey(tabIndex, rowIndex, value)
+    changeHeaderKVKey(tabIndex, rowIndex, value) {
+        ReqHeaderAction.changeHeaderKVKey(tabIndex, rowIndex, value)
     },
 
-    changeKVValue(tabIndex, rowIndex, value) {
-        ReqHeaderAction.changeHeaderValue(tabIndex, rowIndex, value)
+    changeHeaderKVValue(tabIndex, rowIndex, value) {
+        ReqHeaderAction.changeHeaderKVValue(tabIndex, rowIndex, value)
     }
 
 })

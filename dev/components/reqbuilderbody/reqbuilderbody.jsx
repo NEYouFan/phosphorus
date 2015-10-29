@@ -3,11 +3,11 @@
 import './reqbuilderbody.styl'
 import React from 'react'
 import classNames from 'classnames'
-import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import ReqBodyAction from '../../actions/reqbodyaction'
+import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
+import KeyValueX from '../keyvalue/keyvaluex.jsx'
 
-/** @namespace this.props.showRawTypeList */
-let ReqBuilderBody = React.createClass({
+class ReqBuilderBody extends React.Component{
 
     render() {
         let bodyType = this.props.builders.bodyType
@@ -44,31 +44,74 @@ let ReqBuilderBody = React.createClass({
             hide: this.props.builders.activeIndex !== 1
         })
 
+        let isFormDataType = bodyType.name === 'form-data'
+
         return (
             <div className={modClassName}>
                 <div className="mod-reqbuilder-body">
                     <form>
                         <ol className="type-tabs">{typeNodes}</ol>
                     </form>
+                    {isFormDataType ?
+                    <KeyValueX
+                        showKV={true}
+                        kvs={this.props.builders.bodyFormDataKVs}
+                        toggleKV={(rowIndex) => {this.toggleBodyFormDataKV(rowIndex)}}
+                        addKV={() => {this.addBodyFormDataKV()}}
+                        removeKV={(rowIndex) => {this.removeBodyFormDataKV(rowIndex)}}
+                        editKV={() => {this.editBodyFormDataKV()}}
+                        changeKVKey={(rowIndex, value) => {this.changeBodyFormDataKVKey(rowIndex, value)}}
+                        changeKVValue={(rowIndex, value) => {this.changeBodyFormDataKVValue(rowIndex, value)}}
+                        changeKVValueType={(rowIndex, value) => {this.changeBodyFormDataKVValueType(rowIndex, value)}}
+                        />
+                        : ''}
                 </div>
             </div>
         )
-    },
+    }
 
     onChange(evt) {
         ReqBodyAction.changeBodyType(this.props.tabIndex, evt.target.value)
-    },
+    }
 
     toggleRawTypeList(evt) {
         evt.stopPropagation()
         ReqBodyAction.toggleRawTypeList(this.props.tabIndex)
-    },
+    }
 
     onSelectRawType(bodyTypeValue) {
         ReqBodyAction.changeBodyTypeValue(this.props.tabIndex, bodyTypeValue)
     }
 
-})
+    toggleBodyFormDataKV(rowIndex) {
+        ReqBodyAction.toggleBodyFormDataKV(this.props.tabIndex, rowIndex)
+    }
+
+    addBodyFormDataKV() {
+        ReqBodyAction.addBodyFormDataKV(this.props.tabIndex)
+    }
+
+    removeBodyFormDataKV(rowIndex) {
+        ReqBodyAction.removeBodyFormDataKV(this.props.tabIndex, rowIndex)
+    }
+
+    editBodyFormDataKV() {
+        ReqBodyAction.editBodyFormDataKV(this.props.tabIndex)
+    }
+
+    changeBodyFormDataKVKey(rowIndex, value) {
+        ReqBodyAction.changeBodyFormDataKVKey(this.props.tabIndex, rowIndex, value)
+    }
+
+    changeBodyFormDataKVValue(rowIndex, value) {
+        ReqBodyAction.changeBodyFormDataKVValue(this.props.tabIndex, rowIndex, value)
+    }
+
+    changeBodyFormDataKVValueType(rowIndex, value) {
+        ReqBodyAction.changeBodyFormDataKVValueType(this.props.tabIndex, rowIndex, value)
+    }
+
+}
 
 
 export default ReqBuilderBody

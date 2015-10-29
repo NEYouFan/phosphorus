@@ -26,38 +26,11 @@ let ReqTabConAction = {
         })
     },
 
-    toggleParamsKV(tabIndex) {
+    toggleParams(tabIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_CONTENT_TOGGLE_PARAMS,
             tabIndex: tabIndex
         })
-    },
-
-    toggleCheckParam(tabIndex, rowIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_PARAM_TOGGLE_CHECK,
-            tabIndex: tabIndex,
-            rowIndex: rowIndex
-        })
-    },
-
-    addParamRow(tabIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_PARAM_ADD_ROW,
-            tabIndex: tabIndex
-        })
-    },
-
-    removeParamRow(tabIndex, rowIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_PARAM_REMOVE_ROW,
-            tabIndex: tabIndex,
-            rowIndex: rowIndex
-        })
-    },
-
-    editParam(tabIndex) {
-        //todo, bulk edit
     },
 
     changeMethod(tabIndex) {
@@ -74,18 +47,45 @@ let ReqTabConAction = {
         })
     },
 
-    changeParamKey(tabIndex, rowIndex, value) {
+    toggleParamKV(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_PARAM_CHANGE_KEY,
+            actionType: AppConstants.REQ_PARAM_TOGGLE_KV,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    addParamKV(tabIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_PARAM_ADD_KV,
+            tabIndex: tabIndex
+        })
+    },
+
+    removeParamKV(tabIndex, rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_PARAM_REMOVE_KV,
+            tabIndex: tabIndex,
+            rowIndex: rowIndex
+        })
+    },
+
+    editParamKV(tabIndex) {
+        //todo, bulk edit
+    },
+
+    changeParamKVKey(tabIndex, rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_PARAM_CHANGE_KV_KEY,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     },
 
-    changeParamValue(tabIndex, rowIndex, value) {
+    changeParamKVValue(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_PARAM_CHANGE_VALUE,
+            actionType: AppConstants.REQ_PARAM_CHANGE_KV_VALUE,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value

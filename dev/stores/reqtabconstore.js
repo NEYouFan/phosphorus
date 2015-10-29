@@ -13,18 +13,23 @@ const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_KEY_PLACEHOLDER = 'Key'
 const DEFAULT_VALUE_PLACEHOLDER = 'Value'
 const BLANK_STR = ''
-const DEFAULT_HEADERS_KV = {
+const DEFAULT_KV = {
     keyPlaceholder: DEFAULT_KEY_PLACEHOLDER,
     valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER,
     checked: true,
     key: BLANK_STR,
     value: BLANK_STR,
-    keyDataList: 'reqheadersdatalist',
+    keyDataList: '',
     valueDataList: ''
 }
-const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_HEADERS_KV, {
-    keyPlaceholder: 'URL Parameter Key',
-    keyDataList: ''
+const DEFAULT_HEADERS_KV = Object.assign({}, DEFAULT_KV, {
+    keyDataList: 'reqheadersdatalist'
+})
+const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_KV, {
+    keyPlaceholder: 'URL Parameter Key'
+})
+const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
+    valueType: 'text'
 })
 
 const DEFAULT_CON_ITEM = {
@@ -47,9 +52,10 @@ const DEFAULT_CON_ITEM = {
         activeIndex: 1,
         headerKVs: [DEFAULT_HEADERS_KV],
         bodyType: {
-            name: 'raw',
+            name: 'form-data',
             value: 'Text'
-        }
+        },
+        bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV]
     },
     showParamKV: true,
     showBodyRawTypeList: false,
@@ -88,7 +94,7 @@ let tabConActions = {
         }
     },
 
-    toggleParamsKV(tabIndex) {
+    toggleParams(tabIndex) {
         tabCons.items[tabIndex].showParamKV = !tabCons.items[tabIndex].showParamKV
     },
 
@@ -98,22 +104,6 @@ let tabConActions = {
 }
 
 let paramActions = {
-
-    toggleCheckParam(tabIndex, rowIndex) {
-        let kv = tabCons.items[tabIndex].paramKVs[rowIndex]
-        if (kv.readonly) return
-        kv.checked = !tabCons.items[tabIndex].paramKVs[rowIndex].checked
-        this.updateTabUrl(tabIndex)
-    },
-
-    addParamRow(tabIndex) {
-        tabCons.items[tabIndex].paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
-    },
-
-    removeParamRow(tabIndex, rowIndex) {
-        tabCons.items[tabIndex].paramKVs.splice(rowIndex, 1)
-        this.updateTabUrl(tabIndex)
-    },
 
     fillParams(tabIndex) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
@@ -125,21 +115,33 @@ let paramActions = {
         tabCons.items[tabIndex].paramKVs = params
     },
 
-    changeParamKey (tabIndex, rowIndex, value) {
+    toggleParamKV(tabIndex, rowIndex) {
+        let kv = tabCons.items[tabIndex].paramKVs[rowIndex]
+        if (kv.readonly) return
+        kv.checked = !tabCons.items[tabIndex].paramKVs[rowIndex].checked
+        this.updateTabUrl(tabIndex)
+    },
+
+    addParamKV(tabIndex) {
+        tabCons.items[tabIndex].paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
+    },
+
+    removeParamKV(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].paramKVs.splice(rowIndex, 1)
+        this.updateTabUrl(tabIndex)
+    },
+
+    changeParamKVKey (tabIndex, rowIndex, value) {
         this.changeParam(tabIndex, rowIndex, value, 'key')
     },
 
-    changeParamValue (tabIndex, rowIndex, value) {
+    changeParamKVValue (tabIndex, rowIndex, value) {
         this.changeParam(tabIndex, rowIndex, value, 'value')
     },
 
     changeParam(tabIndex, rowIndex, value, type) {
-        let params = tabCons.items[tabIndex].paramKVs
-        params.forEach((param, index) => {
-            if (index === rowIndex) {
-                param[type] = value
-            }
-        })
+        let param = tabCons.items[tabIndex].paramKVs[rowIndex]
+        param[type] = value
         this.updateTabUrl(tabIndex)
     },
 
@@ -153,42 +155,38 @@ let paramActions = {
 
 let headerActions = {
 
-    toggleCheckHeader(tabIndex, rowIndex) {
+    toggleHeaderKV(tabIndex, rowIndex) {
         let kv = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
         if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].builders.headerKVs[rowIndex].checked
     },
 
-    addHeaderRow(tabIndex) {
+    addHeaderKV(tabIndex) {
         tabCons.items[tabIndex].builders.headerKVs.push(Object.assign({}, DEFAULT_HEADERS_KV))
     },
 
-    removeHeaderRow(tabIndex, rowIndex) {
+    removeHeaderKV(tabIndex, rowIndex) {
         tabCons.items[tabIndex].builders.headerKVs.splice(rowIndex, 1)
     },
 
-    changeHeaderKey (tabIndex, rowIndex, value) {
+    changeHeaderKVKey(tabIndex, rowIndex, value) {
         this.changeHeader(tabIndex, rowIndex, value, 'key')
     },
 
-    changeHeaderValue (tabIndex, rowIndex, value) {
+    changeHeaderKVValue(tabIndex, rowIndex, value) {
         this.changeHeader(tabIndex, rowIndex, value, 'value')
     },
 
     changeHeader(tabIndex, rowIndex, value, type) {
-        let headers = tabCons.items[tabIndex].builders.headerKVs
-        headers.forEach((header, index) => {
-            if (index === rowIndex) {
-                header[type] = value
-                if (type === 'key' && header['keyDataList']) {
-                    if (value.toLowerCase() === 'content-type') {
-                        header.valueDataList = 'mediatypsdatalist'
-                    } else {
-                        header.valueDataList = ''
-                    }
-                }
+        let header = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
+        header[type] = value
+        if (type === 'key' && header['keyDataList']) {
+            if (value.toLowerCase() === 'content-type') {
+                header.valueDataList = 'mediatypsdatalist'
+            } else {
+                header.valueDataList = ''
             }
-        })
+        }
     }
 }
 
@@ -204,6 +202,38 @@ let bodyActions = {
     toggleBodyTypeList(tabIndex) {
         tabCons.items[tabIndex].showBodyRawTypeList = !tabCons.items[tabIndex].showBodyRawTypeList
     },
+
+    toggleBodyFormDataKV(tabIndex, rowIndex) {
+        let kv = tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex]
+        if (kv.readonly) return
+        kv.checked = !tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].checked
+    },
+
+    addBodyFormDataKV(tabIndex) {
+        tabCons.items[tabIndex].builders.bodyFormDataKVs.push(Object.assign({}, DEFAULT_BODY_FORMDATA_KV))
+    },
+
+    removeBodyFormDataKV(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].builders.bodyFormDataKVs.splice(rowIndex, 1)
+    },
+
+    changeBodyFormDataKVKey(tabIndex, rowIndex, value) {
+        this.changeBodyFormData(tabIndex, rowIndex, value, 'key')
+    },
+
+    changeBodyFormDataKVValue(tabIndex, rowIndex, value) {
+        this.changeBodyFormData(tabIndex, rowIndex, value, 'value')
+    },
+
+    changeBodyFormData(tabIndex, rowIndex, value, type) {
+        let kv = tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex]
+        kv[type] = value
+    },
+
+    changeBodyFormDataKVValueType(tabIndex, rowIndex, value) {
+        tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].valueType = value
+    }
+
 }
 
 let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions)
@@ -259,7 +289,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_CONTENT_TOGGLE_PARAMS:
-            actions.toggleParamsKV(action.tabIndex)
+            actions.toggleParams(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
@@ -271,28 +301,28 @@ AppDispatcher.register((action) => {
 
 
         // req param action --->
-        case AppConstants.REQ_PARAM_TOGGLE_CHECK:
-            actions.toggleCheckParam(action.tabIndex, action.rowIndex)
+        case AppConstants.REQ_PARAM_TOGGLE_KV:
+            actions.toggleParamKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_ADD_ROW:
-            actions.addParamRow(action.tabIndex)
+        case AppConstants.REQ_PARAM_ADD_KV:
+            actions.addParamKV(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_REMOVE_ROW:
-            actions.removeParamRow(action.tabIndex, action.rowIndex)
+        case AppConstants.REQ_PARAM_REMOVE_KV:
+            actions.removeParamKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_CHANGE_KEY:
-            actions.changeParamKey(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_PARAM_CHANGE_KV_KEY:
+            actions.changeParamKVKey(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_CHANGE_VALUE:
-            actions.changeParamValue(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_PARAM_CHANGE_KV_VALUE:
+            actions.changeParamKVValue(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req param action <---
@@ -307,28 +337,28 @@ AppDispatcher.register((action) => {
 
 
         // req header action --->
-        case AppConstants.REQ_HEADER_TOGGLE_CHECK:
-            actions.toggleCheckHeader(action.tabIndex, action.rowIndex)
+        case AppConstants.REQ_HEADER_TOGGLE_KV:
+            actions.toggleHeaderKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_HEADER_ADD_ROW:
-            actions.addHeaderRow(action.tabIndex)
+        case AppConstants.REQ_HEADER_ADD_KV:
+            actions.addHeaderKV(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_HEADER_REMOVE_ROW:
-            actions.removeHeaderRow(action.tabIndex, action.rowIndex)
+        case AppConstants.REQ_HEADER_REMOVE_KV:
+            actions.removeHeaderKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_HEADER_CHANGE_KEY:
-            actions.changeHeaderKey(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_HEADER_CHANGE_KV_KEY:
+            actions.changeHeaderKVKey(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_HEADER_CHANGE_VALUE:
-            actions.changeHeaderValue(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_HEADER_CHANGE_KV_VALUE:
+            actions.changeHeaderKVValue(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req header action <---
@@ -347,6 +377,35 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_BODY_TOGGLE_TYPE_LIST:
             actions.toggleBodyTypeList(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+        case AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV:
+            actions.toggleBodyFormDataKV(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_FORMDATA_ADD_KV:
+            actions.addBodyFormDataKV(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_FORMDATA_REMOVE_KV:
+            actions.removeBodyFormDataKV(action.tabIndex, action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_KEY:
+            actions.changeBodyFormDataKVKey(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE:
+            actions.changeBodyFormDataKVValue(action.tabIndex, action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE:
+            actions.changeBodyFormDataKVValueType(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req body action <---

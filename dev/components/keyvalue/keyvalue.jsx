@@ -6,7 +6,7 @@ import React from 'react'
 import classNames from 'classnames'
 
 /** @namespace this.props.kvs */
-let KeyValue = React.createClass({
+class KeyValue extends React.Component {
 
     render() {
         let total = this.props.kvs.length
@@ -32,18 +32,13 @@ let KeyValue = React.createClass({
                 onChange: this.changeValue.bind(this, index),
                 list: kv.valueDataList
             }
+            let inputs = this.getInputs(kv, index, keyInputProps, valueInputProps)
             return (
                 <div className={rowClasses} key={index}>
                     <div className={okSignClasses} onClick={this.toggle.bind(this, index)}></div>
-                    <div className="input-wrap"
-                         onFocus={this.focus.bind(this, index)}
-                         onBlur={this.blur}
-                        >
-                        <input {...keyInputProps} />
-                        <input {...valueInputProps}/>
-                    </div>
+                    {inputs}
                     {index === total - 1 ?
-                        <div className="glyphicon glyphicon-edit" onClick={this.edit}></div>
+                        <div className="glyphicon glyphicon-edit" onClick={this.edit.bind(this)}></div>
                         :
                         <div className="glyphicon glyphicon-remove" onClick={this.remove.bind(this, index)}></div>
                     }
@@ -59,40 +54,53 @@ let KeyValue = React.createClass({
                 {nodes}
             </div>
         )
-    },
+    }
+
+    getInputs(kv, rowIndex, keyInputProps, valueInputProps) {
+        return (
+            <div className="input-wrap" onFocus={this.focus.bind(this, rowIndex)} onBlur={this.blur}>
+                <input {...keyInputProps} />
+                <input {...valueInputProps}/>
+            </div>
+        )
+    }
+
+    getXColumn(kv, rowIndex) {
+        // for extend column use
+    }
 
     toggle(rowIndex) {
         this.props.toggleKV(rowIndex)
-    },
+    }
 
     focus(rowIndex, evt) {
         if (rowIndex === this.props.kvs.length - 1) {
             this.props.addKV(rowIndex)
         }
         evt.currentTarget.classList.add('active')
-    },
+    }
 
     blur(evt) {
         evt.currentTarget.classList.remove('active')
-    },
+    }
 
     remove(rowIndex) {
         this.props.removeKV(rowIndex)
-    },
+    }
 
     edit() {
         this.props.editKV()
-    },
+    }
 
     changeKey(rowIndex, evt) {
         this.props.changeKVKey(rowIndex, evt.target.value)
-    },
+    }
 
     changeValue(rowIndex, evt) {
         this.props.changeKVValue(rowIndex, evt.target.value)
     }
 
-})
+}
 
 
 export default KeyValue

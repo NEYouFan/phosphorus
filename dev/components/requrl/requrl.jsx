@@ -33,7 +33,7 @@ let ReqURL = React.createClass({
                                placeholder="Enter request URL here"/>
                     </div>
                     <div className="requrl-sep"></div>
-                    <div className="requrl-params active" onClick={this.toggleKV}>Params</div>
+                    <div className="requrl-params active" onClick={this.toggleParams}>Params</div>
                 </div>
                 <button className="requrl-send">Send</button>
                 <button className="requrl-save">Save</button>
@@ -46,10 +46,10 @@ let ReqURL = React.createClass({
         ReqTabConAction.toggleMethodList(this.props.tabIndex)
     },
 
-    toggleKV(evt) {
+    toggleParams(evt) {
         evt.stopPropagation()
         evt.target.classList.toggle('active')
-        ReqTabConAction.toggleParamsKV(this.props.tabIndex)
+        ReqTabConAction.toggleParams(this.props.tabIndex)
     },
 
     onChange(evt) {

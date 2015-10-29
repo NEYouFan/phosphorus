@@ -6,45 +6,45 @@ import AppDispatcher from '../dispatcher/dispatcher'
 
 let ReqHeaderAction = {
 
-    toggleCheckHeader(tabIndex, rowIndex) {
+    toggleHeaderKV(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_HEADER_TOGGLE_CHECK,
+            actionType: AppConstants.REQ_HEADER_TOGGLE_KV,
             tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     },
 
-    addHeaderRow(tabIndex) {
+    addHeaderKV(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_HEADER_ADD_ROW,
+            actionType: AppConstants.REQ_HEADER_ADD_KV,
             tabIndex: tabIndex
         })
     },
 
-    removeHeaderRow(tabIndex, rowIndex) {
+    removeHeaderKV(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_HEADER_REMOVE_ROW,
+            actionType: AppConstants.REQ_HEADER_REMOVE_KV,
             tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     },
 
-    editHeader(tabIndex) {
+    editHeaderKV(tabIndex) {
         //todo, bulk edit
     },
 
-    changeHeaderKey(tabIndex, rowIndex, value) {
+    changeHeaderKVKey(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_HEADER_CHANGE_KEY,
+            actionType: AppConstants.REQ_HEADER_CHANGE_KV_KEY,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     },
 
-    changeHeaderValue(tabIndex, rowIndex, value) {
+    changeHeaderKVValue(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_HEADER_CHANGE_VALUE,
+            actionType: AppConstants.REQ_HEADER_CHANGE_KV_VALUE,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value

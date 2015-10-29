@@ -36,12 +36,12 @@ let ReqTabCon = React.createClass({
                     <KeyValue
                         showKV={this.props.tabCons.reqCons[index].showParamKV}
                         kvs={this.props.tabCons.reqCons[index].paramKVs}
-                        toggleKV={(rowIndex) => {this.toggleKV(index, rowIndex)}}
-                        addKV={() => {this.addKV(index)}}
-                        removeKV={(rowIndex) => {this.removeKV(index, rowIndex)}}
-                        editKV={() => {this.editKV(index)}}
-                        changeKVKey={(rowIndex, value) => {this.changeKVKey(index, rowIndex, value)}}
-                        changeKVValue={(rowIndex, value) => {this.changeKVValue(index, rowIndex, value)}}
+                        toggleKV={(rowIndex) => {this.toggleParamKV(index, rowIndex)}}
+                        addKV={() => {this.addParamKV(index)}}
+                        removeKV={(rowIndex) => {this.removeParamKV(index, rowIndex)}}
+                        editKV={() => {this.editParamKV(index)}}
+                        changeKVKey={(rowIndex, value) => {this.changeParamKVKey(index, rowIndex, value)}}
+                        changeKVValue={(rowIndex, value) => {this.changeParamKVValue(index, rowIndex, value)}}
                         />
                     <ReqBuilderTab
                         tabIndex={index}
@@ -68,28 +68,28 @@ let ReqTabCon = React.createClass({
         )
     },
 
-    toggleKV(tabIndex, rowIndex) {
-        ReqTabConAction.toggleCheckParam(tabIndex, rowIndex)
+    toggleParamKV(tabIndex, rowIndex) {
+        ReqTabConAction.toggleParamKV(tabIndex, rowIndex)
     },
 
-    addKV(tabIndex) {
-        ReqTabConAction.addParamRow(tabIndex)
+    addParamKV(tabIndex) {
+        ReqTabConAction.addParamKV(tabIndex)
     },
 
-    removeKV(tabIndex, rowIndex) {
-        ReqTabConAction.removeParamRow(tabIndex, rowIndex)
+    removeParamKV(tabIndex, rowIndex) {
+        ReqTabConAction.removeParamKV(tabIndex, rowIndex)
     },
 
-    editKV(tabIndex) {
-        ReqTabConAction.editParam(tabIndex)
+    editParamKV(tabIndex) {
+        ReqTabConAction.editParamKV(tabIndex)
     },
 
-    changeKVKey(tabIndex, rowIndex, value) {
-        ReqTabConAction.changeParamKey(tabIndex, rowIndex, value)
+    changeParamKVKey(tabIndex, rowIndex, value) {
+        ReqTabConAction.changeParamKVKey(tabIndex, rowIndex, value)
     },
 
-    changeKVValue(tabIndex, rowIndex, value) {
-        ReqTabConAction.changeParamValue(tabIndex, rowIndex, value)
+    changeParamKVValue(tabIndex, rowIndex, value) {
+        ReqTabConAction.changeParamKVValue(tabIndex, rowIndex, value)
     }
 
 })

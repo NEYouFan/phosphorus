@@ -10,6 +10,8 @@
       flex: 1;
       transition all ease .2s
       display: flex
+      height 31px
+      overflow: hidden;
 
       &.active {
         background-color: #e8f2fe;
@@ -31,10 +33,10 @@
       &:focus {
         border-bottom-color: #ccc
       }
-        
+
       &:read-only {
         cursor: not-allowed;
-      }  
+      }
     }
 
     .glyphicon {
@@ -47,10 +49,10 @@
       &:hover {
         color: #ccc
       }
-        
+
       &.checked {
         color: #53a2f2
-      }  
+      }
     }
 
     .glyphicon-remove {
@@ -61,6 +63,30 @@
       .glyphicon-remove {
         visibility visible
       }
+    }
+
+    // keyvalue x
+    select {
+      border: none;
+      border-bottom: 1px solid #eee;
+      height: 31px;
+      outline: none;
+      background-color: transparent
+    }
+
+    input[type=file] {
+      display: none
+    }
+
+    .file-value-type {
+      input[type=file] {
+        display: block
+      }
+
+      .value-text-inp {
+        display: none
+      }
+
     }
   }
 }

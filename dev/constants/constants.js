@@ -19,23 +19,30 @@ let AppConstants = keyMirror({
     REQ_CONTENT_TOGGLE_PARAMS: null,
     REQ_CONTENT_TOGGLE_METHODS_LIST: null,
     // params kv action
-    REQ_PARAM_ADD_ROW: null,
-    REQ_PARAM_REMOVE_ROW: null,
-    REQ_PARAM_TOGGLE_CHECK: null,
-    REQ_PARAM_CHANGE_KEY: null,
-    REQ_PARAM_CHANGE_VALUE: null,
+    REQ_PARAM_ADD_KV: null,
+    REQ_PARAM_REMOVE_KV: null,
+    REQ_PARAM_TOGGLE_KV: null,
+    REQ_PARAM_CHANGE_KV_KEY: null,
+    REQ_PARAM_CHANGE_KV_VALUE: null,
     // builder
     REQ_BUILDER_SWITCH_TAB: null,
     // header kv action
-    REQ_HEADER_TOGGLE_CHECK: null,
-    REQ_HEADER_ADD_ROW: null,
-    REQ_HEADER_REMOVE_ROW: null,
-    REQ_HEADER_CHANGE_KEY: null,
-    REQ_HEADER_CHANGE_VALUE: null,
+    REQ_HEADER_TOGGLE_KV: null,
+    REQ_HEADER_ADD_KV: null,
+    REQ_HEADER_REMOVE_KV: null,
+    REQ_HEADER_CHANGE_KV_KEY: null,
+    REQ_HEADER_CHANGE_KV_VALUE: null,
     // body action
     REQ_BODY_CHANGE_TYPE: null,
     REQ_BODY_CHANGE_TYPE_VALUE: null,
     REQ_BODY_TOGGLE_TYPE_LIST: null,
+    // body form data kv action
+    REQ_BODY_FORMDATA_TOGGLE_KV: null,
+    REQ_BODY_FORMDATA_ADD_KV: null,
+    REQ_BODY_FORMDATA_REMOVE_KV: null,
+    REQ_BODY_FORMDATA_CHANGE_KV_KEY: null,
+    REQ_BODY_FORMDATA_CHANGE_KV_VALUE: null,
+    REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE: null,
 })
 
 export default AppConstants
