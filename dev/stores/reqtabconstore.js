@@ -223,7 +223,7 @@ let headerActions = {
                 header.valueDataList = BLANK_STR
             }
         }
-        // change body's raw type
+        // change to body's raw type and update it's value
         if (header.key === CONTENT_TYPE_STR) {
             let rawType = _.find(tabCons.rawTypes, (rawType) => {
                 return rawType.value === header.value
@@ -248,10 +248,11 @@ let bodyActions = {
         })
         tabCons.items[tabIndex].builders.bodyType.value = bodyType.name
         if (!isTextType) {
-            // clear header `Content-type`
             if (contentType) {
+                // update header `Content-type`
                 contentType.value = bodyType.value
             } else {
+                // add header `Content-type`
                 headers.unshift(Object.assign({}, DEFAULT_HEADERS_KV, {
                     key: CONTENT_TYPE_STR,
                     value: bodyType.value,
@@ -259,6 +260,7 @@ let bodyActions = {
                 }))
             }
         } else if(contentType) {
+            // clear header `Content-type`
             _.remove(headers, (header) => {
                 return header.key === CONTENT_TYPE_STR
             })
