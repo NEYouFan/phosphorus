@@ -13,7 +13,7 @@ let MediaTypesDataList = React.createClass({
             )
         })
         return (
-            <datalist id="mediatypsdatalist">
+            <datalist id="mediatypesdatalist">
                 {nodes}
             </datalist>
         )

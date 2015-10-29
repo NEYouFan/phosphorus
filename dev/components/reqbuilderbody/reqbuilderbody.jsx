@@ -23,7 +23,7 @@ class ReqBuilderBody extends React.Component {
                         <span className="rawtype-name">{bodyType.value}</span>
                         <span className="glyphicon glyphicon-chevron-down"></span>
                     </span>
-                    <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawType(v)}}/>
+                    <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawTypeValue(v)}}/>
                 </span>
         )
     }
@@ -114,7 +114,7 @@ class ReqBuilderBody extends React.Component {
 
     getBinaryCon() {
         return (
-            <input type="file" name="binaryData"/>
+            <input type="file" className="binary-file" name="binaryData" onChange={(e)=>{this.changeBinaryData(e)}}/>
         )
     }
 
@@ -133,8 +133,8 @@ class ReqBuilderBody extends React.Component {
         ReqBodyAction.toggleRawTypeList(this.props.tabIndex)
     }
 
-    onSelectRawType(bodyTypeValue) {
-        ReqBodyAction.changeBodyTypeValue(this.props.tabIndex, bodyTypeValue)
+    onSelectRawTypeValue(bodyType) {
+        ReqBodyAction.changeBodyTypeValue(this.props.tabIndex, bodyType)
     }
 
     toggleBodyFormDataKV(rowIndex) {
@@ -187,6 +187,10 @@ class ReqBuilderBody extends React.Component {
 
     changeBodyXFormKVValue(rowIndex, value) {
         ReqBodyAction.changeBodyXFormKVValue(this.props.tabIndex, rowIndex, value)
+    }
+
+    changeBinaryData(evt) {
+        // todo upload binary data
     }
 
 }

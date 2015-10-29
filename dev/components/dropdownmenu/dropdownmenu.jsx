@@ -17,7 +17,7 @@ let DropDownMenu = React.createClass({
     render() {
         let nodes = this.props.menus.map((menu, index) => {
             return (
-                <li key={index} onClick={this.onClickItem.bind(this, menu)}>{menu}</li>
+                <li key={index} onClick={()=>{this.onClickItem(menu)}}>{menu.name||menu}</li>
             )
         })
         return (
@@ -27,8 +27,8 @@ let DropDownMenu = React.createClass({
         )
     },
 
-    onClickItem(menuItemName) {
-        this.props.onClickItem(menuItemName)
+    onClickItem(menuItem) {
+        this.props.onClickItem(menuItem)
     }
 
 })

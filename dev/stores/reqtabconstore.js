@@ -10,12 +10,15 @@ import Util from '../libs/util'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
-const DEFAULT_KEY_PLACEHOLDER = 'Key'
-const DEFAULT_VALUE_PLACEHOLDER = 'Value'
+const DEFAULT_KEY_STR = 'Key'
+const DEFAULT_VALUE_STR = 'Value'
 const BLANK_STR = ''
+const REQ_HEADERS_DATA_LIST = 'reqheadersdatalist'
+const REQ_MIDIATYPES_DATA_LIST = 'mediatypesdatalist'
+const CONTENT_TYPE_STR = 'Content-type'
 const DEFAULT_KV = {
-    keyPlaceholder: DEFAULT_KEY_PLACEHOLDER,
-    valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER,
+    keyPlaceholder: DEFAULT_KEY_STR,
+    valuePlaceholder: DEFAULT_VALUE_STR,
     checked: true,
     key: BLANK_STR,
     value: BLANK_STR,
@@ -23,7 +26,7 @@ const DEFAULT_KV = {
     valueDataList: ''
 }
 const DEFAULT_HEADERS_KV = Object.assign({}, DEFAULT_KV, {
-    keyDataList: 'reqheadersdatalist'
+    keyDataList: REQ_HEADERS_DATA_LIST
 })
 const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_KV, {
     keyPlaceholder: 'URL Parameter Key'
@@ -53,11 +56,13 @@ const DEFAULT_CON_ITEM = {
         activeIndex: 1,
         headerKVs: [DEFAULT_HEADERS_KV],
         bodyType: {
-            name: 'form-data',
+            name: 'raw',
             value: 'Text'
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
-        bodyXFormKVs: [DEFAULT_BODY_XFORM_KV]
+        bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
+        bodyBinaryData: null,
+        bodyRawData: null
     },
     showParamKV: true,
     showBodyRawTypeList: false,
@@ -67,7 +72,36 @@ const BODY_BUILDER_INDEX = 1
 
 let tabCons = {
     bodyTypes: ['form-data', 'x-www-form-urlencoded', 'binary', 'raw'],
-    rawTypes: ['Text', 'Text(text/plain)', 'JSON(application/json)', 'Javascript(application/javascript)', 'XML(application/xml)', 'XML(text/xml)', 'HTML(text/html)'],
+    rawTypes: [
+        {
+            value: 'text',
+            name: 'Text'
+        },
+        {
+            value: 'text/plain',
+            name: 'Text(text/plain)'
+        },
+        {
+            value: 'application/json',
+            name: 'JSON(application/json)'
+        },
+        {
+            value: 'application/javascript',
+            name: 'Javascript(application/javascript)'
+        },
+        {
+            value: 'application/xml',
+            name: 'XML(application/xml)'
+        },
+        {
+            value: 'text/xml',
+            name: 'XML(text/xml)'
+        },
+        {
+            value: 'text/html',
+            name: 'XML(text/html)'
+        }
+    ],
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
     items: [_.cloneDeep(DEFAULT_CON_ITEM)]
 }
@@ -183,11 +217,20 @@ let headerActions = {
         let header = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
         header[type] = value
         if (type === 'key' && header['keyDataList']) {
-            if (value.toLowerCase() === 'content-type') {
-                header.valueDataList = 'mediatypsdatalist'
+            if (value === CONTENT_TYPE_STR) {
+                header.valueDataList = REQ_MIDIATYPES_DATA_LIST
             } else {
-                header.valueDataList = ''
+                header.valueDataList = BLANK_STR
             }
+        }
+        // change body's raw type
+        if (header.key === CONTENT_TYPE_STR) {
+            let rawType = _.find(tabCons.rawTypes, (rawType) => {
+                return rawType.value === header.value
+            })
+            let bodyType = tabCons.items[tabIndex].builders.bodyType
+            bodyType.name = 'raw'
+            bodyType.value = rawType ? rawType.name : ''
         }
     }
 }
@@ -197,8 +240,29 @@ let bodyActions = {
         tabCons.items[tabIndex].builders.bodyType.name = bodyType
     },
 
-    changeBodyTypeValue(tabIndex, bodyTypeValue) {
-        tabCons.items[tabIndex].builders.bodyType.value = bodyTypeValue
+    changeBodyTypeValue(tabIndex, bodyType) {
+        let isTextType = bodyType.name.toLowerCase() === 'text'
+        let headers = tabCons.items[tabIndex].builders.headerKVs
+        let contentType = _.find(headers, (header) => {
+            return header.key== CONTENT_TYPE_STR
+        })
+        tabCons.items[tabIndex].builders.bodyType.value = bodyType.name
+        if (!isTextType) {
+            // clear header `Content-type`
+            if (contentType) {
+                contentType.value = bodyType.value
+            } else {
+                headers.unshift(Object.assign({}, DEFAULT_HEADERS_KV, {
+                    key: CONTENT_TYPE_STR,
+                    value: bodyType.value,
+                    valueDataList: REQ_MIDIATYPES_DATA_LIST
+                }))
+            }
+        } else if(contentType) {
+            _.remove(headers, (header) => {
+                return header.key === CONTENT_TYPE_STR
+            })
+        }
     },
 
     toggleBodyTypeList(tabIndex) {

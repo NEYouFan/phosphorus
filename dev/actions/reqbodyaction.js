@@ -14,11 +14,12 @@ let ReqBodyAction = {
         })
     },
 
-    changeBodyTypeValue(tabIndex, bodyTypeValue) {
+    changeBodyTypeValue(tabIndex, bodyTypeValue, bodyTypeName) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_CHANGE_TYPE_VALUE,
             tabIndex: tabIndex,
-            bodyTypeValue: bodyTypeValue
+            bodyTypeValue: bodyTypeValue,
+            bodyTypeName: bodyTypeName
         })
     },
 
