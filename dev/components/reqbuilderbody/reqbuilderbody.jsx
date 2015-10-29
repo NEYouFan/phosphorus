@@ -71,10 +71,10 @@ class ReqBuilderBody extends React.Component {
                 return this.getXFormCon()
                 break
             case 'binary':
-                return this.getFormDataCon()
+                return this.getBinaryCon()
                 break
             case 'raw':
-                return this.getFormDataCon()
+                return this.getRawCon()
                 break
             default:
                 break
@@ -109,6 +109,18 @@ class ReqBuilderBody extends React.Component {
                 changeKVKey={(rowIndex, value) => {this.changeBodyXFormKVKey(rowIndex, value)}}
                 changeKVValue={(rowIndex, value) => {this.changeBodyXFormKVValue(rowIndex, value)}}
                 />
+        )
+    }
+
+    getBinaryCon() {
+        return (
+            <input type="file" name="binaryData"/>
+        )
+    }
+
+    getRawCon() {
+        return (
+            <textarea name="rawData"/>
         )
     }
 
