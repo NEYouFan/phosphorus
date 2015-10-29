@@ -6,14 +6,17 @@ import React from 'react'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
+import ReqTabConAction from '../../actions/reqtabconaction'
+import ReqBodyAction from '../../actions/reqbodyaction'
+
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
 import Collections from '../collections/collections.jsx'
 import ReqTab from '../reqtab/reqtab.jsx'
 import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
-import ReqTabConAction from '../../actions/reqtabconaction'
-import ReqBodyAction from '../../actions/reqbodyaction'
+import ReqHeadersDataList from '../reqheadersdatalist/reqheadersdatalist.jsx'
+import MediaTypesDataList from '../mediatypesdatalist/mediatypesdatalist.jsx'
 
 function getAppStates() {
     return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
@@ -56,6 +59,8 @@ let Index = React.createClass({
                         activeTabIndex={this.state.reqTab.activeIndex}
                         tabCons={this.state.reqTabCon}
                         />
+                    <ReqHeadersDataList/>
+                    <MediaTypesDataList/>
                 </div>
             </div>
         )

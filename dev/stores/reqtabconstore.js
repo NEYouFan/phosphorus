@@ -6,7 +6,7 @@ import _ from 'lodash'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import ReqTabStore from './reqtabstore'
-import Util from '../lib/util'
+import Util from '../libs/util'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
@@ -18,10 +18,13 @@ const DEFAULT_HEADERS_KV = {
     valuePlaceholder: DEFAULT_VALUE_PLACEHOLDER,
     checked: true,
     key: BLANK_STR,
-    value: BLANK_STR
+    value: BLANK_STR,
+    keyDataList: 'reqheadersdatalist',
+    valueDataList: ''
 }
 const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_HEADERS_KV, {
-    keyPlaceholder: 'URL Parameter Key'
+    keyPlaceholder: 'URL Parameter Key',
+    keyDataList: ''
 })
 
 const DEFAULT_CON_ITEM = {
@@ -98,7 +101,7 @@ let paramActions = {
 
     toggleCheckParam(tabIndex, rowIndex) {
         let kv = tabCons.items[tabIndex].paramKVs[rowIndex]
-        if (kv.pathVariable) return
+        if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].paramKVs[rowIndex].checked
         this.updateTabUrl(tabIndex)
     },
@@ -152,7 +155,7 @@ let headerActions = {
 
     toggleCheckHeader(tabIndex, rowIndex) {
         let kv = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
-        if (kv.pathVariable) return
+        if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].builders.headerKVs[rowIndex].checked
     },
 
@@ -177,6 +180,13 @@ let headerActions = {
         headers.forEach((header, index) => {
             if (index === rowIndex) {
                 header[type] = value
+                if (type === 'key' && header['keyDataList']) {
+                    if (value.toLowerCase() === 'content-type') {
+                        header.valueDataList = 'mediatypsdatalist'
+                    } else {
+                        header.valueDataList = ''
+                    }
+                }
             }
         })
     }

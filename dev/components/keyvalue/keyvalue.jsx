@@ -13,12 +13,25 @@ let KeyValue = React.createClass({
         let nodes = this.props.kvs.map((kv, index) => {
             let rowClasses = classNames({
                 'kv-row': true,
-                'removable': !kv.pathVariable
+                'removable': !kv.readonly
             })
             let okSignClasses = classNames({
                 'glyphicon glyphicon-ok-sign': true,
                 'checked': kv.checked
             })
+            let keyInputProps = {
+                placeholder: kv.keyPlaceholder,
+                value: kv.key,
+                readOnly: kv.readonly,
+                onChange: this.changeKey.bind(this, index),
+                list: kv.keyDataList
+            }
+            let valueInputProps = {
+                placeholder: kv.keyPlaceholder,
+                value: kv.value,
+                onChange: this.changeValue.bind(this, index),
+                list: kv.valueDataList
+            }
             return (
                 <div className={rowClasses} key={index}>
                     <div className={okSignClasses} onClick={this.toggle.bind(this, index)}></div>
@@ -26,17 +39,8 @@ let KeyValue = React.createClass({
                          onFocus={this.focus.bind(this, index)}
                          onBlur={this.blur}
                         >
-                        <input
-                            placeholder={kv.keyPlaceholder}
-                            value={kv.key}
-                            readOnly={kv.pathVariable}
-                            onChange={this.changeKey.bind(this, index)}
-                            />
-                        <input
-                            placeholder={kv.valuePlaceholder}
-                            value={kv.value}
-                            onChange={this.changeValue.bind(this, index)}
-                            />
+                        <input {...keyInputProps} />
+                        <input {...valueInputProps}/>
                     </div>
                     {index === total - 1 ?
                         <div className="glyphicon glyphicon-edit" onClick={this.edit}></div>

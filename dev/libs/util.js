@@ -19,7 +19,7 @@ let Util = {
             while ((ret = pathVariableExp.exec(result.pathname)) != null) {
                 params.push({
                     keyPlaceholder: DEFAULT_PATH_VARIABLE_PLACEHOLDER,
-                    pathVariable: true, // can't change key, readonly flag
+                    readonly: true, // can't change key, readonly flag
                     key: ret[1]
                 })
             }
@@ -78,7 +78,7 @@ let Util = {
     getQuery(params) {
         let query = {}
         params.map((param, index) => {
-            if (param.pathVariable) return
+            if (param.readonly) return
             if ((!param.key && !param.value) || !param.checked) return
             if (!query[param.key]) {
                 query[param.key]= []
