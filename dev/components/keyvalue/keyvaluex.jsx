@@ -14,7 +14,7 @@ class KeyValueX extends KeyValue {
             'file-value-type': valueType === 'file'
         })
         return (
-            <div className={classes} onFocus={this.focus.bind(this, rowIndex)} onBlur={this.blur}>
+            <div className={classes} onFocus={this.focus.bind(this, rowIndex)} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <input {...valueInputProps} className="value-text-inp"/>
                 <input type="file"/>

@@ -21,7 +21,7 @@ class ReqBuilderBody extends React.Component{
             return (
                 <li key={index}>
                     <label>
-                        <input type="radio" value={type} name="type" checked={isChecked} onChange={this.onChange}/>
+                        <input type="radio" value={type} name="type" checked={isChecked} onChange={this.onChange.bind(this)}/>
                         <span>{type}</span>
                     </label>
                     {type === 'raw' ?

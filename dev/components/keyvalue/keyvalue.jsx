@@ -35,12 +35,12 @@ class KeyValue extends React.Component {
             let inputs = this.getInputs(kv, index, keyInputProps, valueInputProps)
             return (
                 <div className={rowClasses} key={index}>
-                    <div className={okSignClasses} onClick={this.toggle.bind(this, index)}></div>
+                    <div className={okSignClasses} onClick={()=>{this.toggle(index)}}></div>
                     {inputs}
                     {index === total - 1 ?
-                        <div className="glyphicon glyphicon-edit" onClick={this.edit.bind(this)}></div>
+                        <div className="glyphicon glyphicon-edit" onClick={()=>{this.edit()}}></div>
                         :
-                        <div className="glyphicon glyphicon-remove" onClick={this.remove.bind(this, index)}></div>
+                        <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(index)}}></div>
                     }
                 </div>
             )
@@ -58,7 +58,7 @@ class KeyValue extends React.Component {
 
     getInputs(kv, rowIndex, keyInputProps, valueInputProps) {
         return (
-            <div className="input-wrap" onFocus={this.focus.bind(this, rowIndex)} onBlur={this.blur}>
+            <div className="input-wrap" onFocus={(e)=>{this.focus(rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <input {...valueInputProps}/>
             </div>
