@@ -46,8 +46,7 @@ class KeyValue extends React.Component {
             )
         })
         let kvClasses = classNames({
-            'mod-kv': true,
-            'hide': !this.props.showKV
+            'mod-kv': true
         })
         return (
             <div className={kvClasses}>

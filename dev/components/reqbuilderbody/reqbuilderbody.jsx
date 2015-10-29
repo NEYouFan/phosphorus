@@ -46,7 +46,7 @@ class ReqBuilderBody extends React.Component {
         })
 
         let modClassName = classNames({
-            hide: this.props.builders.activeIndex !== 1
+            hide: this.props.builders.activeTabName !== 'Request Body'
         })
 
         let conNodes = this.getCon(bodyType.name)
@@ -84,7 +84,6 @@ class ReqBuilderBody extends React.Component {
     getFormDataCon() {
         return (
             <KeyValueX
-                showKV={true}
                 kvs={this.props.builders.bodyFormDataKVs}
                 toggleKV={(rowIndex) => {this.toggleBodyFormDataKV(rowIndex)}}
                 addKV={() => {this.addBodyFormDataKV()}}

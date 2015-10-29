@@ -13,17 +13,16 @@ let AppConstants = keyMirror({
     // req content action
     REQ_CONTENT_CHANGE_ACTIVE_INDEX: null,
     REQ_CONTENT_CHANGE_METHOD: null,
-    REQ_CONTENT_FILL_PARAMS: null,
+    REQ_CONTENT_FILL_URL_PARAMS: null,
     REQ_CONTENT_ADD: null,
     REQ_CONTENT_REMOVE: null,
-    REQ_CONTENT_TOGGLE_PARAMS: null,
     REQ_CONTENT_TOGGLE_METHODS_LIST: null,
-    // params kv action
-    REQ_PARAM_ADD_KV: null,
-    REQ_PARAM_REMOVE_KV: null,
-    REQ_PARAM_TOGGLE_KV: null,
-    REQ_PARAM_CHANGE_KV_KEY: null,
-    REQ_PARAM_CHANGE_KV_VALUE: null,
+    // url params kv action
+    REQ_URL_PARAMS_ADD_KV: null,
+    REQ_URL_PARAMS_REMOVE_KV: null,
+    REQ_URL_PARAMS_TOGGLE_KV: null,
+    REQ_URL_PARAMS_CHANGE_KV_KEY: null,
+    REQ_URL_PARAMS_CHANGE_KV_VALUE: null,
     // builder
     REQ_BUILDER_SWITCH_TAB: null,
     // header kv action

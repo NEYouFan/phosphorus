@@ -9,7 +9,7 @@ const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_ITEMS = {
     url: '',
-    method: 'GET',
+    method: 'POST',
     name: 'New tab'
 }
 

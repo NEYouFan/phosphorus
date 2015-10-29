@@ -4,41 +4,7 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 
-let ReqTabConAction = {
-
-    addCon() {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_ADD
-        })
-    },
-
-    removeCon(tabIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_REMOVE,
-            tabIndex: tabIndex
-        })
-    },
-
-    toggleMethodList(tabIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_TOGGLE_METHODS_LIST,
-            tabIndex: tabIndex
-        })
-    },
-
-    changeMethod(tabIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_CHANGE_METHOD,
-            tabIndex: tabIndex
-        })
-    },
-
-    fillURLParams(tabIndex) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_FILL_URL_PARAMS,
-            tabIndex: tabIndex
-        })
-    },
+let ReqURLParamsAction = {
 
     toggleURLParamsKV(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
@@ -83,16 +49,8 @@ let ReqTabConAction = {
             rowIndex: rowIndex,
             value: value
         })
-    },
-
-    switchBuilderTab(tabIndex, activeTabName) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BUILDER_SWITCH_TAB,
-            tabIndex: tabIndex,
-            activeTabName: activeTabName
-        })
     }
 
 }
 
-export default ReqTabConAction
+export default ReqURLParamsAction

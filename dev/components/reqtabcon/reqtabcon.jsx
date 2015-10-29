@@ -10,9 +10,10 @@ import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
 import ReqURL from '../requrl/requrl.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
-import ReqBuilderTab from '../reqbuildertab/reqbuildertab'
-import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader'
-import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody'
+import ReqBuilderTab from '../reqbuildertab/reqbuildertab.jsx'
+import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader.jsx'
+import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
+import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 
 /** @namespace this.props.tabCons */
 let ReqTabCon = React.createClass({
@@ -33,16 +34,6 @@ let ReqTabCon = React.createClass({
                         reqMethods={this.props.tabCons.reqMethods}
                         showMethodList={this.props.tabCons.reqCons[index].showReqMethodList}
                         />
-                    <KeyValue
-                        showKV={this.props.tabCons.reqCons[index].showParamKV}
-                        kvs={this.props.tabCons.reqCons[index].paramKVs}
-                        toggleKV={(rowIndex) => {this.toggleParamKV(index, rowIndex)}}
-                        addKV={() => {this.addParamKV(index)}}
-                        removeKV={(rowIndex) => {this.removeParamKV(index, rowIndex)}}
-                        editKV={() => {this.editParamKV(index)}}
-                        changeKVKey={(rowIndex, value) => {this.changeParamKVKey(index, rowIndex, value)}}
-                        changeKVValue={(rowIndex, value) => {this.changeParamKVValue(index, rowIndex, value)}}
-                        />
                     <ReqBuilderTab
                         tabIndex={index}
                         builders={this.props.tabCons.reqCons[index].builders}
@@ -58,6 +49,10 @@ let ReqTabCon = React.createClass({
                         builders={this.props.tabCons.reqCons[index].builders}
                         showRawTypeList={this.props.tabCons.reqCons[index].showBodyRawTypeList}
                         />
+                    <ReqBuilderURLParams
+                        tabIndex={index}
+                        builders={this.props.tabCons.reqCons[index].builders}
+                        />
                 </div>
             )
         })
@@ -66,30 +61,6 @@ let ReqTabCon = React.createClass({
                 {tabConNodes}
             </div>
         )
-    },
-
-    toggleParamKV(tabIndex, rowIndex) {
-        ReqTabConAction.toggleParamKV(tabIndex, rowIndex)
-    },
-
-    addParamKV(tabIndex) {
-        ReqTabConAction.addParamKV(tabIndex)
-    },
-
-    removeParamKV(tabIndex, rowIndex) {
-        ReqTabConAction.removeParamKV(tabIndex, rowIndex)
-    },
-
-    editParamKV(tabIndex) {
-        ReqTabConAction.editParamKV(tabIndex)
-    },
-
-    changeParamKVKey(tabIndex, rowIndex, value) {
-        ReqTabConAction.changeParamKVKey(tabIndex, rowIndex, value)
-    },
-
-    changeParamKVValue(tabIndex, rowIndex, value) {
-        ReqTabConAction.changeParamKVValue(tabIndex, rowIndex, value)
     }
 
 })

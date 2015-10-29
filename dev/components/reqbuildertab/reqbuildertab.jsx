@@ -6,23 +6,23 @@ import ReqTabConAction from '../../actions/reqtabconaction'
 import classNames from 'classnames'
 import _ from 'lodash'
 
-let ReqBuilderTab = React.createClass({
+class ReqBuilderTab extends React.Component{
 
     render() {
-        let activeIndex = this.props.builders.activeIndex
+        let activeTabName = this.props.builders.activeTabName
         let nodes = this.props.builders.items.map((builder, index) => {
             let classes = classNames({
-                active: index === activeIndex,
+                active: builder.name === activeTabName,
                 disabled: builder.disabled
             })
             let builderName = builder.name
-            if (builderName.toLowerCase() === 'headers') {
+            if (builderName.toLowerCase() === 'request headers') {
                 builderName += '(' + this.getValidHeadersNum() + ')'
             }
             return (
                 <li
                     className={classes}
-                    onClick={this.clickHandler.bind(this, index)}
+                    onClick={(e)=>{this.clickHandler(builder.name, e)}}
                     key={index}
                     >
                     {builderName}
@@ -36,14 +36,14 @@ let ReqBuilderTab = React.createClass({
                 </ol>
             </div>
         )
-    },
+    }
 
-    clickHandler(index, evt) {
+    clickHandler(builderName, evt) {
         let target = evt.target
         if (target.classList.contains('active')) return
         if (target.classList.contains('disabled')) return
-        ReqTabConAction.switchBuilderTab(this.props.tabIndex, index)
-    },
+        ReqTabConAction.switchBuilderTab(this.props.tabIndex, builderName)
+    }
 
     getValidHeadersNum() {
         let results = _.filter(this.props.builders.headerKVs, (kv) => {
@@ -52,6 +52,6 @@ let ReqBuilderTab = React.createClass({
         return results.length
     }
 
-})
+}
 
 export default ReqBuilderTab

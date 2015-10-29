@@ -15,7 +15,13 @@ const DEFAULT_VALUE_STR = 'Value'
 const BLANK_STR = ''
 const REQ_HEADERS_DATA_LIST = 'reqheadersdatalist'
 const REQ_MIDIATYPES_DATA_LIST = 'mediatypesdatalist'
-const CONTENT_TYPE_STR = 'Content-type'
+const CONTENT_TYPE_STR = 'Content-Type'
+const REQUEST_BODY_STR = 'Request Body'
+const URL_PARAMS_STR = 'URL Params'
+const REQUEST_HEADERS_STR = 'Request Headers'
+const RESPONSE_CHECKER_STR = 'Response Checker'
+const RESPONSE_STR = 'Response'
+
 const DEFAULT_KV = {
     keyPlaceholder: DEFAULT_KEY_STR,
     valuePlaceholder: DEFAULT_VALUE_STR,
@@ -37,23 +43,31 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 
 const DEFAULT_CON_ITEM = {
-    paramKVs: [DEFAULT_PARAMS_KV],
     builders: {
         items: [
             {
-                name: 'Headers',
+                name: URL_PARAMS_STR,
                 disabled: false
             },
             {
-                name: 'Body',
+                name: REQUEST_BODY_STR,
                 disabled: false
             },
             {
-                name: 'Response Checker',
+                name: REQUEST_HEADERS_STR,
+                disabled: false
+            },
+            {
+                name: RESPONSE_CHECKER_STR,
+                disabled: false
+            },
+            {
+                name: RESPONSE_STR,
                 disabled: false
             }
         ],
-        activeIndex: 1,
+        paramKVs: [DEFAULT_PARAMS_KV],
+        activeTabName: REQUEST_BODY_STR,
         headerKVs: [DEFAULT_HEADERS_KV],
         bodyType: {
             name: 'raw',
@@ -64,11 +78,9 @@ const DEFAULT_CON_ITEM = {
         bodyBinaryData: null,
         bodyRawData: null
     },
-    showParamKV: true,
     showBodyRawTypeList: false,
     showReqMethodList: false
 }
-const BODY_BUILDER_INDEX = 1
 
 let tabCons = {
     bodyTypes: ['form-data', 'x-www-form-urlencoded', 'binary', 'raw'],
@@ -102,7 +114,7 @@ let tabCons = {
             name: 'XML(text/html)'
         }
     ],
-    reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
+    reqMethods: ['POST', 'GET', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
     items: [_.cloneDeep(DEFAULT_CON_ITEM)]
 }
 
@@ -124,66 +136,72 @@ let tabConActions = {
         let tab = ReqTabStore.getTab(tabIndex)
         let isGetMethod = tab.method.toLowerCase() === 'get'
         let builders = tabCons.items[tabIndex].builders
-        builders.items[BODY_BUILDER_INDEX].disabled = isGetMethod
-        if (isGetMethod && builders.activeIndex === BODY_BUILDER_INDEX) {
-            builders.activeIndex = DEFAULT_ACTIVE_INDEX
+        let bodyBuilder = _.find(builders.items, (builder) => {
+            return builder.name === REQUEST_BODY_STR
+        })
+        bodyBuilder.disabled = isGetMethod
+        if (isGetMethod && builders.activeTabName === REQUEST_BODY_STR) {
+            builders.activeTabName = URL_PARAMS_STR
         }
     },
 
-    toggleParams(tabIndex) {
-        tabCons.items[tabIndex].showParamKV = !tabCons.items[tabIndex].showParamKV
-    },
-
-    switchBuilderTab(tabIndex, activeIndex) {
-        tabCons.items[tabIndex].builders.activeIndex = activeIndex
+    switchBuilderTab(tabIndex, activeTabName) {
+        tabCons.items[tabIndex].builders.activeTabName = activeTabName
     }
 }
 
 let paramActions = {
 
-    fillParams(tabIndex) {
+    fillURLParams(tabIndex) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = Util.getUrlParams(tabUrl)
         params = params.map((param) => {
             return Object.assign({}, DEFAULT_PARAMS_KV, param)
         })
         params.push(Object.assign({}, DEFAULT_PARAMS_KV))
-        tabCons.items[tabIndex].paramKVs = params
+        tabCons.items[tabIndex].builders.paramKVs = params
+        // if has path variable, active url params tab
+        let hasPathVariable = _.find(params, (param) => {
+            return param.readonly
+        })
+        if (hasPathVariable) {
+            tabConActions.switchBuilderTab(tabIndex, URL_PARAMS_STR)
+        }
     },
 
-    toggleParamKV(tabIndex, rowIndex) {
-        let kv = tabCons.items[tabIndex].paramKVs[rowIndex]
+    toggleURLParamsKV(tabIndex, rowIndex) {
+        let kv = tabCons.items[tabIndex].builders.paramKVs[rowIndex]
         if (kv.readonly) return
-        kv.checked = !tabCons.items[tabIndex].paramKVs[rowIndex].checked
+        kv.checked = !tabCons.items[tabIndex].builders.paramKVs[rowIndex].checked
         this.updateTabUrl(tabIndex)
     },
 
-    addParamKV(tabIndex) {
-        tabCons.items[tabIndex].paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
+    addURLParamsKV(tabIndex) {
+        tabCons.items[tabIndex].builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
     },
 
-    removeParamKV(tabIndex, rowIndex) {
-        tabCons.items[tabIndex].paramKVs.splice(rowIndex, 1)
+    removeURLParamsKV(tabIndex, rowIndex) {
+        tabCons.items[tabIndex].builders.paramKVs.splice(rowIndex, 1)
         this.updateTabUrl(tabIndex)
     },
 
-    changeParamKVKey (tabIndex, rowIndex, value) {
-        this.changeParam(tabIndex, rowIndex, value, 'key')
+    changeURLParamsKVKey (tabIndex, rowIndex, value) {
+        this.changeURLParams(tabIndex, rowIndex, value, 'key')
     },
 
-    changeParamKVValue (tabIndex, rowIndex, value) {
-        this.changeParam(tabIndex, rowIndex, value, 'value')
+    changeURLParamsKVValue (tabIndex, rowIndex, value) {
+        this.changeURLParams(tabIndex, rowIndex, value, 'value')
     },
 
-    changeParam(tabIndex, rowIndex, value, type) {
-        let param = tabCons.items[tabIndex].paramKVs[rowIndex]
+    changeURLParams(tabIndex, rowIndex, value, type) {
+        let param = tabCons.items[tabIndex].builders.paramKVs[rowIndex]
         param[type] = value
         this.updateTabUrl(tabIndex)
     },
 
     updateTabUrl(tabIndex) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
-        let params = tabCons.items[tabIndex].paramKVs
+        let params = tabCons.items[tabIndex].builders.paramKVs
         let newUrl = Util.setUrlQuery(tabUrl, params)
         ReqTabStore.setTabUrl(tabIndex, newUrl)
     }
@@ -244,7 +262,7 @@ let bodyActions = {
         let isTextType = bodyType.name.toLowerCase() === 'text'
         let headers = tabCons.items[tabIndex].builders.headerKVs
         let contentType = _.find(headers, (header) => {
-            return header.key== CONTENT_TYPE_STR
+            return header.key == CONTENT_TYPE_STR
         })
         tabCons.items[tabIndex].builders.bodyType.value = bodyType.name
         if (!isTextType) {
@@ -259,7 +277,7 @@ let bodyActions = {
                     valueDataList: REQ_MIDIATYPES_DATA_LIST
                 }))
             }
-        } else if(contentType) {
+        } else if (contentType) {
             // clear header `Content-type`
             _.remove(headers, (header) => {
                 return header.key === CONTENT_TYPE_STR
@@ -319,11 +337,11 @@ let bodyActions = {
     },
 
     changeBodyXFormKVKey(tabIndex, rowIndex, value) {
-        this.changeBodyFormData(tabIndex, rowIndex, value, 'key')
+        this.changeBodyXForm(tabIndex, rowIndex, value, 'key')
     },
 
     changeBodyXFormKVValue(tabIndex, rowIndex, value) {
-        this.changeBodyFormData(tabIndex, rowIndex, value, 'value')
+        this.changeBodyXForm(tabIndex, rowIndex, value, 'value')
     },
 
     changeBodyXForm(tabIndex, rowIndex, value, type) {
@@ -385,49 +403,44 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_CONTENT_TOGGLE_PARAMS:
-            actions.toggleParams(action.tabIndex)
-            ReqTabConStore.emitChange()
-            break
-
-        case AppConstants.REQ_CONTENT_FILL_PARAMS:
-            actions.fillParams(action.tabIndex)
+        case AppConstants.REQ_CONTENT_FILL_URL_PARAMS:
+            actions.fillURLParams(action.tabIndex)
             ReqTabConStore.emitChange()
             break
         // req content action <---
 
 
-        // req param action --->
-        case AppConstants.REQ_PARAM_TOGGLE_KV:
-            actions.toggleParamKV(action.tabIndex, action.rowIndex)
+        // req url params action --->
+        case AppConstants.REQ_URL_PARAMS_TOGGLE_KV:
+            actions.toggleURLParamsKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_ADD_KV:
-            actions.addParamKV(action.tabIndex)
+        case AppConstants.REQ_URL_PARAMS_ADD_KV:
+            actions.addURLParamsKV(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_REMOVE_KV:
-            actions.removeParamKV(action.tabIndex, action.rowIndex)
+        case AppConstants.REQ_URL_PARAMS_REMOVE_KV:
+            actions.removeURLParamsKV(action.tabIndex, action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_CHANGE_KV_KEY:
-            actions.changeParamKVKey(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_URL_PARAMS_CHANGE_KV_KEY:
+            actions.changeURLParamsKVKey(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
-        case AppConstants.REQ_PARAM_CHANGE_KV_VALUE:
-            actions.changeParamKVValue(action.tabIndex, action.rowIndex, action.value)
+        case AppConstants.REQ_URL_PARAMS_CHANGE_KV_VALUE:
+            actions.changeURLParamsKVValue(action.tabIndex, action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
-        // req param action <---
+        // req url params action <---
 
 
         // req builder action --->
         case AppConstants.REQ_BUILDER_SWITCH_TAB:
-            actions.switchBuilderTab(action.tabIndex, action.activeIndex)
+            actions.switchBuilderTab(action.tabIndex, action.activeTabName)
             ReqTabConStore.emitChange()
             break
         // req builder action <---

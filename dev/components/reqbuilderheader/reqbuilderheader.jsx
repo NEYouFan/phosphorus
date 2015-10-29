@@ -10,14 +10,13 @@ let ReqBuilderHeader = React.createClass({
 
     render() {
         let className = classNames({
-            hide: this.props.builders.activeIndex !== 0
+            hide: this.props.builders.activeTabName !== 'Request Headers'
         })
         let tabIndex = this.props.tabIndex
         return (
             <div className={className}>
                 <div className="mod-reqbuilder-header">
                     <KeyValue
-                        showKV={true}
                         kvs={this.props.builders.headerKVs}
                         toggleKV={(rowIndex) => {this.toggleHeaderKV(tabIndex, rowIndex)}}
                         addKV={() => {this.addHeaderKV(tabIndex)}}
