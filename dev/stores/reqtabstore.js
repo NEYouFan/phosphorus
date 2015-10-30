@@ -10,7 +10,8 @@ const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_ITEMS = {
     url: '',
     method: 'POST',
-    name: 'New tab'
+    name: 'New tab',
+    urlError: false
 }
 
 let tabs = {

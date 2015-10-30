@@ -84,6 +84,12 @@ class ReqTabConAction  {
         })
     }
 
+    static sendReq() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_CONTENT_SEND
+        })
+    }
+
 }
 
 export default ReqTabConAction

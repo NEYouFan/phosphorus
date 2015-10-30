@@ -73,7 +73,7 @@ const DEFAULT_CON_ITEM = {
         ],
         paramKVs: [DEFAULT_PARAMS_KV],
         activeTabName: REQUEST_BODY_STR,
-        headerKVs: [DEFAULT_HEADERS_KV, DEFAULT_JSON_HEADER_KV],
+        headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
             name: 'raw',
             value: 'JSON(application/json)',
@@ -179,6 +179,39 @@ let tabConActions = {
             bodyType.aceEditorConfig.mode = editorMode
         }
         Object.assign(bodyType.aceEditorConfig, config)
+    },
+
+    checkReqSend() {
+        // check if can send request now
+        // check two things: url and path variable
+        let canSend = true
+        let tabState = ReqTabStore.getAll()
+        let tab = tabState.reqTab.tabs[tabIndex]
+        // check url
+        if (!tab.url) {
+            // url can't be blank
+            canSend = false
+            tab.urlError = true
+        } else {
+            tab.urlError = false
+        }
+        if (!canSend) {
+            return canSend
+        }
+        // check all path variable has it's value
+        let params = tabCons.items[tabIndex].builders.paramKVs
+        params.forEach((param, index) => {
+            if (param.readonly) {
+                if (!param.value) {
+                    param.valueError = true
+                    canSend = false
+                }
+            }
+        })
+        if (!canSend) {
+            tabConActions.switchBuilderTab(URL_PARAMS_STR)
+        }
+        return canSend
     }
 }
 
@@ -462,6 +495,14 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_CONTENT_UPDATE_ACE_EDITOR:
             ReqTabConStore.emitAceEditorUpdate()
+            break
+
+        case AppConstants.REQ_CONTENT_SEND:
+            let canSend = actions.checkReqSend()
+            if (canSend) {
+                console.log('send now')
+            }
+            ReqTabConStore.emitChange()
             break
         // req content action <---
 

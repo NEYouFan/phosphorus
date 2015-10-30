@@ -19,6 +19,7 @@ let AppConstants = keyMirror({
     REQ_CONTENT_REMOVE: null,
     REQ_CONTENT_TOGGLE_METHODS_LIST: null,
     REQ_CONTENT_UPDATE_ACE_EDITOR: null,
+    REQ_CONTENT_SEND: null,
     // url params kv action
     REQ_URL_PARAMS_ADD_KV: null,
     REQ_URL_PARAMS_REMOVE_KV: null,

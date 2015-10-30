@@ -23,14 +23,20 @@ class KeyValue extends React.Component {
                 placeholder: kv.keyPlaceholder,
                 value: kv.key,
                 readOnly: kv.readonly,
-                onChange: this.changeKey.bind(this, index),
-                list: kv.keyDataList
+                onChange: (e) => {
+                    this.changeKey(e, index, kv)
+                },
+                list: kv.keyDataList,
+                className: kv.keyError ? 'inp-error' : ''
             }
             let valueInputProps = {
                 placeholder: kv.keyPlaceholder,
                 value: kv.value,
-                onChange: this.changeValue.bind(this, index),
-                list: kv.valueDataList
+                onChange: (e) => {
+                    this.changeValue(e, index, kv)
+                },
+                list: kv.valueDataList,
+                className: kv.valueError ? 'inp-error' : ''
             }
             let inputs = this.getInputs(kv, index, keyInputProps, valueInputProps)
             return (
@@ -91,11 +97,13 @@ class KeyValue extends React.Component {
         this.props.editKV()
     }
 
-    changeKey(rowIndex, evt) {
+    changeKey(evt, rowIndex, kv) {
+        kv.keyError = false
         this.props.changeKVKey(rowIndex, evt.target.value)
     }
 
-    changeValue(rowIndex, evt) {
+    changeValue(evt, rowIndex, kv) {
+        kv.valueError = false
         this.props.changeKVValue(rowIndex, evt.target.value)
     }
 

@@ -16,6 +16,9 @@ class ReqURL extends React.Component {
             'requrl-wrap': true,
             'requrl-show-method': this.props.showMethodList
         })
+        let inpClass = classNames({
+            'inp-error': this.props.tab.urlError
+        })
         return (
             <div className="mod-requrl">
                 <div className={reqWrapClasses}>
@@ -27,13 +30,15 @@ class ReqURL extends React.Component {
 
                     <div className="requrl-sep"></div>
                     <div className="requrl-url">
-                        <input onChange={(e)=>{this.onChange(e)}}
-                               value={this.props.tab.url}
-                               type="url"
-                               placeholder="Enter request URL here"/>
+                        <input
+                            className={inpClass}
+                            onChange={(e)=>{this.onChange(e)}}
+                            value={this.props.tab.url}
+                            type="url"
+                            placeholder="Enter request URL here"/>
                     </div>
                 </div>
-                <button className="requrl-send">Send</button>
+                <button className="requrl-send" onClick={()=>{this.sendReq()}}>Send</button>
                 <button className="requrl-save">Save</button>
             </div>
         )
@@ -49,6 +54,7 @@ class ReqURL extends React.Component {
         let tab = this.props.tab
         tab.name = url
         tab.url = url
+        tab.urlError = false
         ReqTabAction.changeTab(tab)
         ReqTabConAction.fillURLParams()
     }
@@ -58,6 +64,10 @@ class ReqURL extends React.Component {
         tab.method = methodName
         ReqTabAction.changeTab(tab)
         ReqTabConAction.changeMethod()
+    }
+
+    sendReq() {
+        ReqTabConAction.sendReq()
     }
 
 }
