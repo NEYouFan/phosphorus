@@ -1,6 +1,6 @@
+//author @huntbao
 var path = require('path');
-
-var config = {
+module.exports = {
     entry: './app.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -26,6 +26,5 @@ var config = {
     resolve: {
         extensions: ['', '.js', '.jsx']
     }
-};
+}
 
-module.exports = config;

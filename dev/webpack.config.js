@@ -1,5 +1,4 @@
-var path = require('path');
-
+//author @huntbao
 module.exports = {
     entry: './app.jsx',
     output: {
@@ -10,11 +9,6 @@ module.exports = {
         loaders: [
             {
                 test: /\.jsx?$/,
-                exclude: /(node_modules)/,
-                loader: 'babel'
-            },
-            {
-                test: /\.js?$/,
                 exclude: /(node_modules)/,
                 loader: 'babel'
             },

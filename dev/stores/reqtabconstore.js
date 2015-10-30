@@ -9,6 +9,7 @@ import ReqTabStore from './reqtabstore'
 import Util from '../libs/util'
 
 const CHANGE_EVENT = 'change'
+const ACE_EDITOR_UPDATE_EVENT = 'ace editor update'
 const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_KEY_STR = 'Key'
 const DEFAULT_VALUE_STR = 'Value'
@@ -69,7 +70,11 @@ const DEFAULT_CON_ITEM = {
         headerKVs: [DEFAULT_HEADERS_KV],
         bodyType: {
             name: 'raw',
-            value: 'Text'
+            value: 'Text',
+            aceEditorConfig: {
+                show: true,
+                mode: 'text'
+            }
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
@@ -85,35 +90,43 @@ let tabCons = {
     rawTypes: [
         {
             value: 'text',
-            name: 'Text'
+            name: 'Text',
+            editorMode: 'text'
         },
         {
             value: 'text/plain',
-            name: 'Text(text/plain)'
+            name: 'Text(text/plain)',
+            editorMode: 'text'
         },
         {
             value: 'application/json',
-            name: 'JSON(application/json)'
+            name: 'JSON(application/json)',
+            editorMode: 'json'
         },
         {
             value: 'application/javascript',
-            name: 'Javascript(application/javascript)'
+            name: 'Javascript(application/javascript)',
+            editorMode: 'javascript'
         },
         {
             value: 'application/xml',
-            name: 'XML(application/xml)'
+            name: 'XML(application/xml)',
+            editorMode: 'xml'
         },
         {
             value: 'text/xml',
-            name: 'XML(text/xml)'
+            name: 'XML(text/xml)',
+            editorMode: 'xml'
         },
         {
             value: 'text/html',
-            name: 'XML(text/html)'
+            name: 'XML(text/html)',
+            editorMode: 'html'
         }
     ],
-    reqMethods: ['POST', 'GET', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
-    items: [_.cloneDeep(DEFAULT_CON_ITEM)]
+    reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
+    items: [_.cloneDeep(DEFAULT_CON_ITEM)],
+    aceEditorId: 'brace-editor'
 }
 
 let tabConActions = {
@@ -145,6 +158,18 @@ let tabConActions = {
 
     switchBuilderTab(tabIndex, activeTabName) {
         tabCons.items[tabIndex].builders.activeTabName = activeTabName
+        this.changeAceEditorConfig(tabIndex)
+    },
+
+    changeAceEditorConfig(tabIndex, editorMode) {
+        let activeTabName = tabCons.items[tabIndex].builders.activeTabName
+        let bodyType = tabCons.items[tabIndex].builders.bodyType
+        let config = {}
+        config.show = !(activeTabName !== REQUEST_BODY_STR || bodyType.name !== 'raw')
+        if (editorMode) {
+            bodyType.aceEditorConfig.mode = editorMode
+        }
+        Object.assign(bodyType.aceEditorConfig, config)
     }
 }
 
@@ -252,8 +277,10 @@ let headerActions = {
 }
 
 let bodyActions = {
+
     changeBodyType(tabIndex, bodyType) {
         tabCons.items[tabIndex].builders.bodyType.name = bodyType
+        tabConActions.changeAceEditorConfig(tabIndex)
     },
 
     changeBodyTypeValue(tabIndex, bodyType) {
@@ -281,6 +308,7 @@ let bodyActions = {
                 return header.key === CONTENT_TYPE_STR
             })
         }
+        tabConActions.changeAceEditorConfig(tabIndex, bodyType.editorMode)
     },
 
     toggleBodyTypeList(tabIndex) {
@@ -345,6 +373,10 @@ let bodyActions = {
     changeBodyXForm(tabIndex, rowIndex, value, type) {
         let kv = tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex]
         kv[type] = value
+    },
+
+    changeBodyRawData(tabIndex, text) {
+        tabCons.items[tabIndex].builders.bodyRawData = text
     }
 
 }
@@ -359,7 +391,8 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
                 bodyTypes: tabCons.bodyTypes,
-                rawTypes: tabCons.rawTypes
+                rawTypes: tabCons.rawTypes,
+                aceEditorId: tabCons.aceEditorId
             }
         }
     },
@@ -374,6 +407,18 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     removeChangeListener(callback) {
         this.removeListener(CHANGE_EVENT, callback)
+    },
+
+    emitAceEditorUpdate() {
+        this.emit(ACE_EDITOR_UPDATE_EVENT)
+    },
+
+    addAceEditorUpdateListener(callback) {
+        this.on(ACE_EDITOR_UPDATE_EVENT, callback)
+    },
+
+    removeAceEditorUpdateListener(callback) {
+        this.removeListener(ACE_EDITOR_UPDATE_EVENT, callback)
     }
 })
 
@@ -404,6 +449,10 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_CONTENT_FILL_URL_PARAMS:
             actions.fillURLParams(action.tabIndex)
             ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_CONTENT_UPDATE_ACE_EDITOR:
+            ReqTabConStore.emitAceEditorUpdate()
             break
         // req content action <---
 
@@ -439,6 +488,11 @@ AppDispatcher.register((action) => {
         // req builder action --->
         case AppConstants.REQ_BUILDER_SWITCH_TAB:
             actions.switchBuilderTab(action.tabIndex, action.activeTabName)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_CHANGE_RAW_DATA:
+            actions.changeBodyRawData(action.tabIndex, action.text)
             ReqTabConStore.emitChange()
             break
         // req builder action <---

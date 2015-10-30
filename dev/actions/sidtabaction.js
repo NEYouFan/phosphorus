@@ -4,9 +4,9 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 
-let SideTabAction = {
+class SideTabAction  {
 
-    switchTab(activeIndex) {
+    static switchTab(activeIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.SIDE_TAB_CHANGE_ACTIVE_INDEX,
             activeIndex: activeIndex

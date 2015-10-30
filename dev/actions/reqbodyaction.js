@@ -12,6 +12,10 @@ class ReqBodyAction  {
             tabIndex: tabIndex,
             bodyType: type
         })
+        // update ace editor's value and mode
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_CONTENT_UPDATE_ACE_EDITOR
+        })
     }
 
     static changeBodyTypeValue(tabIndex, bodyTypeValue, bodyTypeName) {
@@ -126,6 +130,14 @@ class ReqBodyAction  {
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
+        })
+    }
+
+    static changeBodyRawData(tabIndex, text) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_CHANGE_RAW_DATA,
+            tabIndex: tabIndex,
+            text: text
         })
     }
 

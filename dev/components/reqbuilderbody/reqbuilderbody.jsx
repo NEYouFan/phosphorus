@@ -7,6 +7,7 @@ import ReqBodyAction from '../../actions/reqbodyaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import KeyValueX from '../keyvalue/keyvaluex.jsx'
+import AceEditor from '../aceeditor/aceeditor.jsx'
 
 class ReqBuilderBody extends React.Component {
 
@@ -19,12 +20,12 @@ class ReqBuilderBody extends React.Component {
         })
         return (
             <span className={rawTypeClasses}>
-                    <span className="rawtype-wrap" onClick={(e)=>{this.toggleRawTypeList(e)}}>
-                        <span className="rawtype-name">{bodyType.value}</span>
-                        <span className="glyphicon glyphicon-chevron-down"></span>
-                    </span>
-                    <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawTypeValue(v)}}/>
+                <span className="rawtype-wrap" onClick={(e)=>{this.toggleRawTypeList(e)}}>
+                    <span className="rawtype-name">{bodyType.value}</span>
+                    <span className="glyphicon glyphicon-chevron-down"></span>
                 </span>
+                <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawTypeValue(v)}}/>
+            </span>
         )
     }
 
@@ -118,9 +119,11 @@ class ReqBuilderBody extends React.Component {
     }
 
     getRawCon() {
-        return (
-            <textarea name="rawData"/>
-        )
+
+    }
+
+    onChangeRawText(text) {
+        console.log(text)
     }
 
     onChange(evt) {

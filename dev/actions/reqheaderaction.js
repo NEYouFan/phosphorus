@@ -4,45 +4,45 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 
-let ReqHeaderAction = {
+class ReqHeaderAction {
 
-    toggleHeaderKV(tabIndex, rowIndex) {
+    static toggleHeaderKV(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_TOGGLE_KV,
             tabIndex: tabIndex,
             rowIndex: rowIndex
         })
-    },
+    }
 
-    addHeaderKV(tabIndex) {
+    static addHeaderKV(tabIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_ADD_KV,
             tabIndex: tabIndex
         })
-    },
+    }
 
-    removeHeaderKV(tabIndex, rowIndex) {
+    static removeHeaderKV(tabIndex, rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_REMOVE_KV,
             tabIndex: tabIndex,
             rowIndex: rowIndex
         })
-    },
+    }
 
-    editHeaderKV(tabIndex) {
+    static editHeaderKV(tabIndex) {
         //todo, bulk edit
-    },
+    }
 
-    changeHeaderKVKey(tabIndex, rowIndex, value) {
+    static changeHeaderKVKey(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_CHANGE_KV_KEY,
             tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
-    },
+    }
 
-    changeHeaderKVValue(tabIndex, rowIndex, value) {
+    static changeHeaderKVValue(tabIndex, rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_CHANGE_KV_VALUE,
             tabIndex: tabIndex,

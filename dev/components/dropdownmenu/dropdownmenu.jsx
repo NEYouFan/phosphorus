@@ -6,13 +6,7 @@ import React from 'react'
 
 let ReactPropTypes = React.PropTypes
 
-/** @namespace this.props.onClickItem */
-/** @namespace this.props.menus */
 class DropDownMenu extends React.Component {
-
-    propTypes = {
-        onClickItem: ReactPropTypes.func.isRequired
-    }
 
     render() {
         let nodes = this.props.menus.map((menu, index) => {
@@ -31,6 +25,10 @@ class DropDownMenu extends React.Component {
         this.props.onClickItem(menuItem)
     }
 
+}
+
+DropDownMenu.propTypes = {
+    onClickItem: ReactPropTypes.func.isRequired
 }
 
 

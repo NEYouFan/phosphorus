@@ -3,6 +3,7 @@
 
 import './index.styl'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
@@ -17,6 +18,7 @@ import ReqTab from '../reqtab/reqtab.jsx'
 import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 import ReqHeadersDataList from '../reqheadersdatalist/reqheadersdatalist.jsx'
 import MediaTypesDataList from '../mediatypesdatalist/mediatypesdatalist.jsx'
+import AceEditor from '../aceeditor/aceeditor.jsx'
 
 class Index extends React.Component {
 
@@ -39,6 +41,9 @@ class Index extends React.Component {
         ReqTabConStore.addChangeListener(()=> {
             this.onChange()
         })
+        ReqTabConStore.addAceEditorUpdateListener(()=> {
+            this.updateAceEditor()
+        })
     }
 
     componentWillUnmount() {
@@ -50,6 +55,9 @@ class Index extends React.Component {
         })
         ReqTabConStore.removeChangeListener(()=> {
             this.onChange()
+        })
+        ReqTabConStore.removeAceEditorUpdateListener(()=> {
+            this.updateAceEditor()
         })
     }
 
@@ -72,6 +80,11 @@ class Index extends React.Component {
                         activeTabIndex={this.state.reqTab.activeIndex}
                         tabCons={this.state.reqTabCon}
                         />
+                    <AceEditor
+                        onChange={(text)=>{this.onChangeEditorText(text)}}
+                        id={this.state.reqTabCon.aceEditorId}
+                        config={this.state.reqTabCon.reqCons[this.state.reqTab.activeIndex].builders.bodyType.aceEditorConfig}
+                        />
                     <ReqHeadersDataList/>
                     <MediaTypesDataList/>
                 </div>
@@ -92,6 +105,21 @@ class Index extends React.Component {
         if (appStates.reqTabCon.reqCons[tabIndex].showBodyRawTypeList) {
             ReqBodyAction.toggleRawTypeList(tabIndex)
         }
+    }
+
+    onChangeEditorText(text) {
+        let tabIndex = this.state.reqTab.activeIndex
+        ReqBodyAction.changeBodyRawData(tabIndex, text)
+    }
+
+    updateAceEditor() {
+        let appStates = this.getAppStates()
+        let tabIndex = appStates.reqTab.activeIndex
+        let text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
+        let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].builders.bodyType.aceEditorConfig
+        let aceEditor = ace.edit(this.state.reqTabCon.aceEditorId)
+        aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
+        aceEditor.setValue(text)
     }
 
 }

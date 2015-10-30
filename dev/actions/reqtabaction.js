@@ -4,30 +4,34 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 
-let ReqTabAction = {
+class ReqTabAction {
 
-    switchTab(activeIndex) {
+    static switchTab(activeIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CHANGE_ACTIVE_INDEX,
             activeIndex: activeIndex
         })
-    },
+        // update ace editor's value and mode
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_CONTENT_UPDATE_ACE_EDITOR
+        })
+    }
 
-    changeTab(tab, tabIndex) {
+    static changeTab(tab, tabIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CHANGE,
             tab: tab,
             tabIndex: tabIndex
         })
-    },
+    }
 
-    addTab() {
+    static addTab() {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_ADD
         })
-    },
+    }
 
-    removeTab(tabIndex) {
+    static removeTab(tabIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_REMOVE,
             tabIndex: tabIndex
