@@ -24,10 +24,10 @@ class Index extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = this.getAppStates()
+        this.state = Index.getAppStates()
     }
 
-    getAppStates() {
+    static getAppStates() {
         return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
     }
 
@@ -63,7 +63,7 @@ class Index extends React.Component {
 
     render() {
         return (
-            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
+            <div className="main-wrap" onClick={()=>{Index.hideDropdownMenu()}}>
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab}/>
@@ -81,7 +81,7 @@ class Index extends React.Component {
                         tabCons={this.state.reqTabCon}
                         />
                     <AceEditor
-                        onChange={(text)=>{this.onChangeEditorText(text)}}
+                        onChange={(text)=>{Index.onChangeEditorText(text)}}
                         id={this.state.reqTabCon.aceEditorId}
                         config={this.state.reqTabCon.reqCons[this.state.reqTab.activeIndex].builders.bodyType.aceEditorConfig}
                         />
@@ -93,11 +93,11 @@ class Index extends React.Component {
     }
 
     onChange() {
-        this.setState(this.getAppStates())
+        this.setState(Index.getAppStates())
     }
 
-    hideDropdownMenu() {
-        let appStates = this.getAppStates()
+    static hideDropdownMenu() {
+        let appStates = Index.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         if (appStates.reqTabCon.reqCons[tabIndex].showReqMethodList) {
             ReqTabConAction.toggleMethodList(tabIndex)
@@ -107,13 +107,12 @@ class Index extends React.Component {
         }
     }
 
-    onChangeEditorText(text) {
-        let tabIndex = this.state.reqTab.activeIndex
-        ReqBodyAction.changeBodyRawData(tabIndex, text)
+    static onChangeEditorText(text) {
+        ReqBodyAction.changeBodyRawData(text)
     }
 
     updateAceEditor() {
-        let appStates = this.getAppStates()
+        let appStates = Index.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         let text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
         let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].builders.bodyType.aceEditorConfig
