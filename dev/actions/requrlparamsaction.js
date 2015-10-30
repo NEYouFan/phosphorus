@@ -6,25 +6,22 @@ import AppDispatcher from '../dispatcher/dispatcher'
 
 class ReqURLParamsAction  {
 
-    static toggleURLParamsKV(tabIndex, rowIndex) {
+    static toggleURLParamsKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_URL_PARAMS_TOGGLE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
     static addURLParamsKV(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_URL_PARAMS_ADD_KV,
-            tabIndex: tabIndex
+            actionType: AppConstants.REQ_URL_PARAMS_ADD_KV
         })
     }
 
-    static removeURLParamsKV(tabIndex, rowIndex) {
+    static removeURLParamsKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_URL_PARAMS_REMOVE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
@@ -33,19 +30,17 @@ class ReqURLParamsAction  {
         //todo, bulk edit
     }
 
-    static changeURLParamsKVKey(tabIndex, rowIndex, value) {
+    static changeURLParamsKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_URL_PARAMS_CHANGE_KV_KEY,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static changeURLParamsKVValue(tabIndex, rowIndex, value) {
+    static changeURLParamsKVValue(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_URL_PARAMS_CHANGE_KV_VALUE,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })

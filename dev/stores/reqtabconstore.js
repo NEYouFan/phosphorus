@@ -85,6 +85,9 @@ const DEFAULT_CON_ITEM = {
     showReqMethodList: false
 }
 
+// current active tab index
+let tabIndex
+
 let tabCons = {
     bodyTypes: ['form-data', 'x-www-form-urlencoded', 'binary', 'raw'],
     rawTypes: [
@@ -135,15 +138,15 @@ let tabConActions = {
         tabCons.items.push(_.cloneDeep(DEFAULT_CON_ITEM))
     },
 
-    removeCon(tabIndex) {
+    removeCon() {
         tabCons.items.splice(tabIndex, 1)
     },
 
-    toggleReqMethodsList(tabIndex) {
+    toggleReqMethodsList() {
         tabCons.items[tabIndex].showReqMethodList = !tabCons.items[tabIndex].showReqMethodList
     },
 
-    changeMethod(tabIndex) {
+    changeMethod() {
         let tab = ReqTabStore.getTab(tabIndex)
         let isGetMethod = tab.method.toLowerCase() === 'get'
         let builders = tabCons.items[tabIndex].builders
@@ -156,12 +159,12 @@ let tabConActions = {
         }
     },
 
-    switchBuilderTab(tabIndex, activeTabName) {
+    switchBuilderTab(activeTabName) {
         tabCons.items[tabIndex].builders.activeTabName = activeTabName
-        this.changeAceEditorConfig(tabIndex)
+        this.changeAceEditorConfig()
     },
 
-    changeAceEditorConfig(tabIndex, editorMode) {
+    changeAceEditorConfig(editorMode) {
         let activeTabName = tabCons.items[tabIndex].builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {}
@@ -175,7 +178,7 @@ let tabConActions = {
 
 let paramActions = {
 
-    fillURLParams(tabIndex) {
+    fillURLParams() {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = Util.getUrlParams(tabUrl)
         params = params.map((param) => {
@@ -188,41 +191,41 @@ let paramActions = {
             return param.readonly
         })
         if (hasPathVariable) {
-            tabConActions.switchBuilderTab(tabIndex, URL_PARAMS_STR)
+            tabConActions.switchBuilderTab(URL_PARAMS_STR)
         }
     },
 
-    toggleURLParamsKV(tabIndex, rowIndex) {
+    toggleURLParamsKV(rowIndex) {
         let kv = tabCons.items[tabIndex].builders.paramKVs[rowIndex]
         if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].builders.paramKVs[rowIndex].checked
-        this.updateTabUrl(tabIndex)
+        this.updateTabUrl()
     },
 
-    addURLParamsKV(tabIndex) {
+    addURLParamsKV() {
         tabCons.items[tabIndex].builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV))
     },
 
-    removeURLParamsKV(tabIndex, rowIndex) {
+    removeURLParamsKV(rowIndex) {
         tabCons.items[tabIndex].builders.paramKVs.splice(rowIndex, 1)
-        this.updateTabUrl(tabIndex)
+        this.updateTabUrl()
     },
 
-    changeURLParamsKVKey (tabIndex, rowIndex, value) {
-        this.changeURLParams(tabIndex, rowIndex, value, 'key')
+    changeURLParamsKVKey (rowIndex, value) {
+        this.changeURLParams(rowIndex, value, 'key')
     },
 
-    changeURLParamsKVValue (tabIndex, rowIndex, value) {
-        this.changeURLParams(tabIndex, rowIndex, value, 'value')
+    changeURLParamsKVValue (rowIndex, value) {
+        this.changeURLParams(rowIndex, value, 'value')
     },
 
-    changeURLParams(tabIndex, rowIndex, value, type) {
+    changeURLParams(rowIndex, value, type) {
         let param = tabCons.items[tabIndex].builders.paramKVs[rowIndex]
         param[type] = value
-        this.updateTabUrl(tabIndex)
+        this.updateTabUrl()
     },
 
-    updateTabUrl(tabIndex) {
+    updateTabUrl() {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = tabCons.items[tabIndex].builders.paramKVs
         let newUrl = Util.setUrlQuery(tabUrl, params)
@@ -232,29 +235,29 @@ let paramActions = {
 
 let headerActions = {
 
-    toggleHeaderKV(tabIndex, rowIndex) {
+    toggleHeaderKV(rowIndex) {
         let kv = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
         if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].builders.headerKVs[rowIndex].checked
     },
 
-    addHeaderKV(tabIndex) {
+    addHeaderKV() {
         tabCons.items[tabIndex].builders.headerKVs.push(Object.assign({}, DEFAULT_HEADERS_KV))
     },
 
-    removeHeaderKV(tabIndex, rowIndex) {
+    removeHeaderKV(rowIndex) {
         tabCons.items[tabIndex].builders.headerKVs.splice(rowIndex, 1)
     },
 
-    changeHeaderKVKey(tabIndex, rowIndex, value) {
-        this.changeHeader(tabIndex, rowIndex, value, 'key')
+    changeHeaderKVKey(rowIndex, value) {
+        this.changeHeader(rowIndex, value, 'key')
     },
 
-    changeHeaderKVValue(tabIndex, rowIndex, value) {
-        this.changeHeader(tabIndex, rowIndex, value, 'value')
+    changeHeaderKVValue(rowIndex, value) {
+        this.changeHeader(rowIndex, value, 'value')
     },
 
-    changeHeader(tabIndex, rowIndex, value, type) {
+    changeHeader(rowIndex, value, type) {
         let header = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
         header[type] = value
         if (type === 'key' && header['keyDataList']) {
@@ -278,12 +281,12 @@ let headerActions = {
 
 let bodyActions = {
 
-    changeBodyType(tabIndex, bodyType) {
+    changeBodyType(bodyType) {
         tabCons.items[tabIndex].builders.bodyType.name = bodyType
-        tabConActions.changeAceEditorConfig(tabIndex)
+        tabConActions.changeAceEditorConfig()
     },
 
-    changeBodyTypeValue(tabIndex, bodyType) {
+    changeBodyTypeValue(bodyType) {
         let isTextType = bodyType.name.toLowerCase() === 'text'
         let headers = tabCons.items[tabIndex].builders.headerKVs
         let contentType = _.find(headers, (header) => {
@@ -308,74 +311,74 @@ let bodyActions = {
                 return header.key === CONTENT_TYPE_STR
             })
         }
-        tabConActions.changeAceEditorConfig(tabIndex, bodyType.editorMode)
+        tabConActions.changeAceEditorConfig(bodyType.editorMode)
     },
 
-    toggleBodyTypeList(tabIndex) {
+    toggleBodyTypeList() {
         tabCons.items[tabIndex].showBodyRawTypeList = !tabCons.items[tabIndex].showBodyRawTypeList
     },
 
     // body form data kv action
-    toggleBodyFormDataKV(tabIndex, rowIndex) {
+    toggleBodyFormDataKV(rowIndex) {
         let kv = tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex]
         if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].checked
     },
 
-    addBodyFormDataKV(tabIndex) {
+    addBodyFormDataKV() {
         tabCons.items[tabIndex].builders.bodyFormDataKVs.push(Object.assign({}, DEFAULT_BODY_FORMDATA_KV))
     },
 
-    removeBodyFormDataKV(tabIndex, rowIndex) {
+    removeBodyFormDataKV(rowIndex) {
         tabCons.items[tabIndex].builders.bodyFormDataKVs.splice(rowIndex, 1)
     },
 
-    changeBodyFormDataKVKey(tabIndex, rowIndex, value) {
-        this.changeBodyFormData(tabIndex, rowIndex, value, 'key')
+    changeBodyFormDataKVKey(rowIndex, value) {
+        this.changeBodyFormData(rowIndex, value, 'key')
     },
 
-    changeBodyFormDataKVValue(tabIndex, rowIndex, value) {
-        this.changeBodyFormData(tabIndex, rowIndex, value, 'value')
+    changeBodyFormDataKVValue(rowIndex, value) {
+        this.changeBodyFormData(rowIndex, value, 'value')
     },
 
-    changeBodyFormData(tabIndex, rowIndex, value, type) {
+    changeBodyFormData(rowIndex, value, type) {
         let kv = tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex]
         kv[type] = value
     },
 
-    changeBodyFormDataKVValueType(tabIndex, rowIndex, value) {
+    changeBodyFormDataKVValueType(rowIndex, value) {
         tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].valueType = value
     },
 
     // body x form kv action
-    toggleBodyXFormKV(tabIndex, rowIndex) {
+    toggleBodyXFormKV(rowIndex) {
         let kv = tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex]
         if (kv.readonly) return
         kv.checked = !tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex].checked
     },
 
-    addBodyXFormKV(tabIndex) {
+    addBodyXFormKV() {
         tabCons.items[tabIndex].builders.bodyXFormKVs.push(Object.assign({}, DEFAULT_BODY_XFORM_KV))
     },
 
-    removeBodyXFormKV(tabIndex, rowIndex) {
+    removeBodyXFormKV(rowIndex) {
         tabCons.items[tabIndex].builders.bodyXFormKVs.splice(rowIndex, 1)
     },
 
-    changeBodyXFormKVKey(tabIndex, rowIndex, value) {
-        this.changeBodyXForm(tabIndex, rowIndex, value, 'key')
+    changeBodyXFormKVKey(rowIndex, value) {
+        this.changeBodyXForm(rowIndex, value, 'key')
     },
 
-    changeBodyXFormKVValue(tabIndex, rowIndex, value) {
-        this.changeBodyXForm(tabIndex, rowIndex, value, 'value')
+    changeBodyXFormKVValue(rowIndex, value) {
+        this.changeBodyXForm(rowIndex, value, 'value')
     },
 
-    changeBodyXForm(tabIndex, rowIndex, value, type) {
+    changeBodyXForm(rowIndex, value, type) {
         let kv = tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex]
         kv[type] = value
     },
 
-    changeBodyRawData(tabIndex, text) {
+    changeBodyRawData(text) {
         tabCons.items[tabIndex].builders.bodyRawData = text
     }
 
@@ -423,7 +426,7 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 })
 
 AppDispatcher.register((action) => {
-
+    tabIndex = ReqTabStore.getActiveIndex()
     switch (action.actionType) {
         // req content action --->
         case AppConstants.REQ_CONTENT_ADD:
@@ -432,22 +435,22 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_CONTENT_REMOVE:
-            actions.removeCon(action.tabIndex)
+            actions.removeCon()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_CONTENT_TOGGLE_METHODS_LIST:
-            actions.toggleReqMethodsList(action.tabIndex)
+            actions.toggleReqMethodsList()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_CONTENT_CHANGE_METHOD:
-            actions.changeMethod(action.tabIndex)
+            actions.changeMethod()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_CONTENT_FILL_URL_PARAMS:
-            actions.fillURLParams(action.tabIndex)
+            actions.fillURLParams()
             ReqTabConStore.emitChange()
             break
 
@@ -459,27 +462,27 @@ AppDispatcher.register((action) => {
 
         // req url params action --->
         case AppConstants.REQ_URL_PARAMS_TOGGLE_KV:
-            actions.toggleURLParamsKV(action.tabIndex, action.rowIndex)
+            actions.toggleURLParamsKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_URL_PARAMS_ADD_KV:
-            actions.addURLParamsKV(action.tabIndex)
+            actions.addURLParamsKV()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_URL_PARAMS_REMOVE_KV:
-            actions.removeURLParamsKV(action.tabIndex, action.rowIndex)
+            actions.removeURLParamsKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_URL_PARAMS_CHANGE_KV_KEY:
-            actions.changeURLParamsKVKey(action.tabIndex, action.rowIndex, action.value)
+            actions.changeURLParamsKVKey(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_URL_PARAMS_CHANGE_KV_VALUE:
-            actions.changeURLParamsKVValue(action.tabIndex, action.rowIndex, action.value)
+            actions.changeURLParamsKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req url params action <---
@@ -487,12 +490,12 @@ AppDispatcher.register((action) => {
 
         // req builder action --->
         case AppConstants.REQ_BUILDER_SWITCH_TAB:
-            actions.switchBuilderTab(action.tabIndex, action.activeTabName)
+            actions.switchBuilderTab(action.activeTabName)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_CHANGE_RAW_DATA:
-            actions.changeBodyRawData(action.tabIndex, action.text)
+            actions.changeBodyRawData(action.text)
             ReqTabConStore.emitChange()
             break
         // req builder action <---
@@ -500,27 +503,27 @@ AppDispatcher.register((action) => {
 
         // req header action --->
         case AppConstants.REQ_HEADER_TOGGLE_KV:
-            actions.toggleHeaderKV(action.tabIndex, action.rowIndex)
+            actions.toggleHeaderKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_HEADER_ADD_KV:
-            actions.addHeaderKV(action.tabIndex)
+            actions.addHeaderKV()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_HEADER_REMOVE_KV:
-            actions.removeHeaderKV(action.tabIndex, action.rowIndex)
+            actions.removeHeaderKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_HEADER_CHANGE_KV_KEY:
-            actions.changeHeaderKVKey(action.tabIndex, action.rowIndex, action.value)
+            actions.changeHeaderKVKey(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_HEADER_CHANGE_KV_VALUE:
-            actions.changeHeaderKVValue(action.tabIndex, action.rowIndex, action.value)
+            actions.changeHeaderKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req header action <---
@@ -528,73 +531,73 @@ AppDispatcher.register((action) => {
 
         // req body action --->
         case AppConstants.REQ_BODY_CHANGE_TYPE:
-            actions.changeBodyType(action.tabIndex, action.bodyType)
+            actions.changeBodyType(action.bodyType)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_CHANGE_TYPE_VALUE:
-            actions.changeBodyTypeValue(action.tabIndex, action.bodyTypeValue)
+            actions.changeBodyTypeValue(action.bodyTypeValue)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_TOGGLE_TYPE_LIST:
-            actions.toggleBodyTypeList(action.tabIndex)
+            actions.toggleBodyTypeList()
             ReqTabConStore.emitChange()
             break
         // body form data kv action
         case AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV:
-            actions.toggleBodyFormDataKV(action.tabIndex, action.rowIndex)
+            actions.toggleBodyFormDataKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_FORMDATA_ADD_KV:
-            actions.addBodyFormDataKV(action.tabIndex)
+            actions.addBodyFormDataKV()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_FORMDATA_REMOVE_KV:
-            actions.removeBodyFormDataKV(action.tabIndex, action.rowIndex)
+            actions.removeBodyFormDataKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_KEY:
-            actions.changeBodyFormDataKVKey(action.tabIndex, action.rowIndex, action.value)
+            actions.changeBodyFormDataKVKey(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE:
-            actions.changeBodyFormDataKVValue(action.tabIndex, action.rowIndex, action.value)
+            actions.changeBodyFormDataKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE:
-            actions.changeBodyFormDataKVValueType(action.tabIndex, action.rowIndex, action.value)
+            actions.changeBodyFormDataKVValueType(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
         //body x form kv action
         case AppConstants.REQ_BODY_XFORM_TOGGLE_KV:
-            actions.toggleBodyXFormKV(action.tabIndex, action.rowIndex)
+            actions.toggleBodyXFormKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_XFORM_ADD_KV:
-            actions.addBodyXFormKV(action.tabIndex)
+            actions.addBodyXFormKV()
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_XFORM_REMOVE_KV:
-            actions.removeBodyXFormKV(action.tabIndex, action.rowIndex)
+            actions.removeBodyXFormKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_XFORM_CHANGE_KV_KEY:
-            actions.changeBodyXFormKVKey(action.tabIndex, action.rowIndex, action.value)
+            actions.changeBodyXFormKVKey(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
         case AppConstants.REQ_BODY_XFORM_CHANGE_KV_VALUE:
-            actions.changeBodyXFormKVValue(action.tabIndex, action.rowIndex, action.value)
+            actions.changeBodyXFormKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // req body action <---

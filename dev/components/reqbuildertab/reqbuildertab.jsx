@@ -42,7 +42,7 @@ class ReqBuilderTab extends React.Component {
         let target = evt.target
         if (target.classList.contains('active')) return
         if (target.classList.contains('disabled')) return
-        ReqTabConAction.switchBuilderTab(this.props.tabIndex, builderName)
+        ReqTabConAction.switchBuilderTab(builderName)
     }
 
     getValidHeadersNum() {

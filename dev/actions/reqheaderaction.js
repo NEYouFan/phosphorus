@@ -6,46 +6,41 @@ import AppDispatcher from '../dispatcher/dispatcher'
 
 class ReqHeaderAction {
 
-    static toggleHeaderKV(tabIndex, rowIndex) {
+    static toggleHeaderKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_TOGGLE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
-    static addHeaderKV(tabIndex) {
+    static addHeaderKV() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_HEADER_ADD_KV,
-            tabIndex: tabIndex
+            actionType: AppConstants.REQ_HEADER_ADD_KV
         })
     }
 
-    static removeHeaderKV(tabIndex, rowIndex) {
+    static removeHeaderKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_REMOVE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
-    static editHeaderKV(tabIndex) {
+    static editHeaderKV() {
         //todo, bulk edit
     }
 
-    static changeHeaderKVKey(tabIndex, rowIndex, value) {
+    static changeHeaderKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_CHANGE_KV_KEY,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static changeHeaderKVValue(tabIndex, rowIndex, value) {
+    static changeHeaderKVValue(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_CHANGE_KV_VALUE,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })

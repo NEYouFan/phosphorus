@@ -12,46 +12,45 @@ class ReqBuilderURLParams extends React.Component {
         let className = classNames({
             hide: this.props.builders.activeTabName !== 'URL Params'
         })
-        let tabIndex = this.props.tabIndex
         return (
             <div className={className}>
                 <div className="mod-reqbuilder-urlparams">
                     <KeyValue
                         kvs={this.props.builders.paramKVs}
-                        toggleKV={(rowIndex) => {this.toggleURLParamsKV(tabIndex, rowIndex)}}
-                        addKV={() => {this.addURLParamsKV(tabIndex)}}
-                        removeKV={(rowIndex) => {this.removeURLParamsKV(tabIndex, rowIndex)}}
-                        editKV={() => {this.editURLParamsKV(tabIndex)}}
-                        changeKVKey={(rowIndex, value) => {this.changeURLParamsKVKey(tabIndex, rowIndex, value)}}
-                        changeKVValue={(rowIndex, value) => {this.changeURLParamsKVValue(tabIndex, rowIndex, value)}}
+                        toggleKV={(rowIndex) => {this.toggleURLParamsKV(rowIndex)}}
+                        addKV={() => {this.addURLParamsKV()}}
+                        removeKV={(rowIndex) => {this.removeURLParamsKV(rowIndex)}}
+                        editKV={() => {this.editURLParamsKV()}}
+                        changeKVKey={(rowIndex, value) => {this.changeURLParamsKVKey(rowIndex, value)}}
+                        changeKVValue={(rowIndex, value) => {this.changeURLParamsKVValue(rowIndex, value)}}
                         />
                 </div>
             </div>
         )
     }
 
-    toggleURLParamsKV(tabIndex, rowIndex) {
-        ReqURLParamsAction.toggleURLParamsKV(tabIndex, rowIndex)
+    toggleURLParamsKV(rowIndex) {
+        ReqURLParamsAction.toggleURLParamsKV(rowIndex)
     }
 
-    addURLParamsKV(tabIndex) {
-        ReqURLParamsAction.addURLParamsKV(tabIndex)
+    addURLParamsKV() {
+        ReqURLParamsAction.addURLParamsKV()
     }
 
-    removeURLParamsKV(tabIndex, rowIndex) {
-        ReqURLParamsAction.removeURLParamsKV(tabIndex, rowIndex)
+    removeURLParamsKV(rowIndex) {
+        ReqURLParamsAction.removeURLParamsKV(rowIndex)
     }
 
-    editURLParamsKV(tabIndex) {
-        ReqURLParamsAction.editURLParamsKV(tabIndex)
+    editURLParamsKV() {
+        ReqURLParamsAction.editURLParamsKV()
     }
 
-    changeURLParamsKVKey(tabIndex, rowIndex, value) {
-        ReqURLParamsAction.changeURLParamsKVKey(tabIndex, rowIndex, value)
+    changeURLParamsKVKey(rowIndex, value) {
+        ReqURLParamsAction.changeURLParamsKVKey(rowIndex, value)
     }
 
-    changeURLParamsKVValue(tabIndex, rowIndex, value) {
-        ReqURLParamsAction.changeURLParamsKVValue(tabIndex, rowIndex, value)
+    changeURLParamsKVValue(rowIndex, value) {
+        ReqURLParamsAction.changeURLParamsKVValue(rowIndex, value)
     }
 
 }

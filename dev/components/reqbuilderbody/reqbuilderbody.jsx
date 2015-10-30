@@ -74,9 +74,6 @@ class ReqBuilderBody extends React.Component {
             case 'binary':
                 return this.getBinaryCon()
                 break
-            case 'raw':
-                return this.getRawCon()
-                break
             default:
                 break
         }
@@ -118,77 +115,69 @@ class ReqBuilderBody extends React.Component {
         )
     }
 
-    getRawCon() {
-
-    }
-
-    onChangeRawText(text) {
-        console.log(text)
-    }
-
     onChange(evt) {
-        ReqBodyAction.changeBodyType(this.props.tabIndex, evt.target.value)
+        ReqBodyAction.changeBodyType(evt.target.value)
     }
 
     toggleRawTypeList(evt) {
         evt.stopPropagation()
-        ReqBodyAction.toggleRawTypeList(this.props.tabIndex)
+        ReqBodyAction.toggleRawTypeList()
     }
 
     onSelectRawTypeValue(bodyType) {
-        ReqBodyAction.changeBodyTypeValue(this.props.tabIndex, bodyType)
+        ReqBodyAction.changeBodyTypeValue(bodyType)
     }
 
     toggleBodyFormDataKV(rowIndex) {
-        ReqBodyAction.toggleBodyFormDataKV(this.props.tabIndex, rowIndex)
+        ReqBodyAction.toggleBodyFormDataKV(rowIndex)
     }
 
     addBodyFormDataKV() {
-        ReqBodyAction.addBodyFormDataKV(this.props.tabIndex)
+        ReqBodyAction.addBodyFormDataKV()
     }
 
     removeBodyFormDataKV(rowIndex) {
-        ReqBodyAction.removeBodyFormDataKV(this.props.tabIndex, rowIndex)
+        ReqBodyAction.removeBodyFormDataKV(rowIndex)
     }
 
     editBodyFormDataKV() {
-        ReqBodyAction.editBodyFormDataKV(this.props.tabIndex)
+        ReqBodyAction.editBodyFormDataKV()
     }
 
     changeBodyFormDataKVKey(rowIndex, value) {
-        ReqBodyAction.changeBodyFormDataKVKey(this.props.tabIndex, rowIndex, value)
+        ReqBodyAction.changeBodyFormDataKVKey(rowIndex, value)
     }
 
     changeBodyFormDataKVValue(rowIndex, value) {
-        ReqBodyAction.changeBodyFormDataKVValue(this.props.tabIndex, rowIndex, value)
+        ReqBodyAction.changeBodyFormDataKVValue(rowIndex, value)
     }
 
     changeBodyFormDataKVValueType(rowIndex, value) {
-        ReqBodyAction.changeBodyFormDataKVValueType(this.props.tabIndex, rowIndex, value)
+        ReqBodyAction.changeBodyFormDataKVValueType(rowIndex, value)
     }
 
     toggleBodyXFormKV(rowIndex) {
-        ReqBodyAction.toggleBodyXFormKV(this.props.tabIndex, rowIndex)
+        ReqBodyAction.toggleBodyXFormKV(rowIndex)
     }
 
     addBodyXFormKV() {
-        ReqBodyAction.addBodyXFormKV(this.props.tabIndex)
+        ReqBodyAction.addBodyXFormKV()
     }
 
     removeBodyXFormKV(rowIndex) {
-        ReqBodyAction.removeBodyXFormKV(this.props.tabIndex, rowIndex)
+        ReqBodyAction.removeBodyXFormKV(rowIndex)
     }
 
     editBodyXFormKV() {
-        ReqBodyAction.editBodyXFormKV(this.props.tabIndex)
+        ReqBodyAction.editBodyXFormKV()
     }
 
     changeBodyXFormKVKey(rowIndex, value) {
-        ReqBodyAction.changeBodyXFormKVKey(this.props.tabIndex, rowIndex, value)
+        ReqBodyAction.changeBodyXFormKVKey(rowIndex, value)
     }
 
     changeBodyXFormKVValue(rowIndex, value) {
-        ReqBodyAction.changeBodyXFormKVValue(this.props.tabIndex, rowIndex, value)
+        ReqBodyAction.changeBodyXFormKVValue(rowIndex, value)
     }
 
     changeBinaryData(evt) {

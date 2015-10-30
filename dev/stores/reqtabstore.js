@@ -31,9 +31,9 @@ let actions = {
         tabs.items.splice(tabIndex, 1)
     },
 
-    changeTab(tabIndex, tab) {
+    changeTab(tab) {
         tab.name = tab.name || DEFAULT_ITEMS.name
-        tabs.items[tabIndex] = tab
+        tabs.items[tabs.activeIndex] = tab
     }
 }
 
@@ -47,6 +47,10 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
                 activeIndex: tabs.activeIndex
             }
         }
+    },
+
+    getActiveIndex() {
+        return tabs.activeIndex
     },
 
     getTab(tabIndex) {

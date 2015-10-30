@@ -41,7 +41,7 @@ class ReqURL extends React.Component {
 
     toggleMethodList(evt) {
         evt.stopPropagation()
-        ReqTabConAction.toggleMethodList(this.props.tabIndex)
+        ReqTabConAction.toggleMethodList()
     }
 
     onChange(evt) {
@@ -49,15 +49,15 @@ class ReqURL extends React.Component {
         let tab = this.props.tab
         tab.name = url
         tab.url = url
-        ReqTabAction.changeTab(this.props.tabIndex, tab)
-        ReqTabConAction.fillURLParams(this.props.tabIndex)
+        ReqTabAction.changeTab(tab)
+        ReqTabConAction.fillURLParams()
     }
 
     onSelectMethod(methodName) {
         let tab = this.props.tab
         tab.method = methodName
-        ReqTabAction.changeTab(this.props.tabIndex, tab)
-        ReqTabConAction.changeMethod(this.props.tabIndex)
+        ReqTabAction.changeTab(tab)
+        ReqTabConAction.changeMethod()
     }
 
 }

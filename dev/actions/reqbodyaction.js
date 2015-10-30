@@ -6,10 +6,9 @@ import AppDispatcher from '../dispatcher/dispatcher'
 
 class ReqBodyAction  {
 
-    static changeBodyType(tabIndex, type) {
+    static changeBodyType(type) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_CHANGE_TYPE,
-            tabIndex: tabIndex,
             bodyType: type
         })
         // update ace editor's value and mode
@@ -18,125 +17,111 @@ class ReqBodyAction  {
         })
     }
 
-    static changeBodyTypeValue(tabIndex, bodyTypeValue, bodyTypeName) {
+    static changeBodyTypeValue(bodyTypeValue, bodyTypeName) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_CHANGE_TYPE_VALUE,
-            tabIndex: tabIndex,
             bodyTypeValue: bodyTypeValue,
             bodyTypeName: bodyTypeName
         })
     }
 
-    static toggleRawTypeList(tabIndex) {
+    static toggleRawTypeList() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BODY_TOGGLE_TYPE_LIST,
-            tabIndex: tabIndex
+            actionType: AppConstants.REQ_BODY_TOGGLE_TYPE_LIST
         })
     }
 
-    static toggleBodyFormDataKV(tabIndex, rowIndex) {
+    static toggleBodyFormDataKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
-    static addBodyFormDataKV(tabIndex) {
+    static addBodyFormDataKV() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BODY_FORMDATA_ADD_KV,
-            tabIndex: tabIndex
+            actionType: AppConstants.REQ_BODY_FORMDATA_ADD_KV
         })
     }
 
-    static removeBodyFormDataKV(tabIndex, rowIndex) {
+    static removeBodyFormDataKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_REMOVE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
-    static editBodyFormDataKV(tabIndex) {
+    static editBodyFormDataKV() {
         //todo, bulk edit
     }
 
-    static changeBodyFormDataKVKey(tabIndex, rowIndex, value) {
+    static changeBodyFormDataKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_KEY,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static changeBodyFormDataKVValue(tabIndex, rowIndex, value) {
+    static changeBodyFormDataKVValue(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static changeBodyFormDataKVValueType(tabIndex, rowIndex, value) {
+    static changeBodyFormDataKVValueType(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static toggleBodyXFormKV(tabIndex, rowIndex) {
+    static toggleBodyXFormKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_XFORM_TOGGLE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
-    static addBodyXFormKV(tabIndex) {
+    static addBodyXFormKV() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BODY_XFORM_ADD_KV,
-            tabIndex: tabIndex
+            actionType: AppConstants.REQ_BODY_XFORM_ADD_KV
         })
     }
 
-    static removeBodyXFormKV(tabIndex, rowIndex) {
+    static removeBodyXFormKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_XFORM_REMOVE_KV,
-            tabIndex: tabIndex,
             rowIndex: rowIndex
         })
     }
 
-    static editBodyXFormKV(tabIndex) {
+    static editBodyXFormKV() {
         //todo, bulk edit
     }
 
-    static changeBodyXFormKVKey(tabIndex, rowIndex, value) {
+    static changeBodyXFormKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_XFORM_CHANGE_KV_KEY,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static changeBodyXFormKVValue(tabIndex, rowIndex, value) {
+    static changeBodyXFormKVValue(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_XFORM_CHANGE_KV_VALUE,
-            tabIndex: tabIndex,
             rowIndex: rowIndex,
             value: value
         })
     }
 
-    static changeBodyRawData(tabIndex, text) {
+    static changeBodyRawData(text) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_CHANGE_RAW_DATA,
-            tabIndex: tabIndex,
             text: text
         })
     }
