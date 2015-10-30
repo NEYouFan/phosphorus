@@ -16,7 +16,7 @@ import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 
 /** @namespace this.props.tabCons */
-class ReqTabCon extends React.Component{
+class ReqTabCon extends React.Component {
 
     render() {
         let activeTabIndex = this.props.activeTabIndex

@@ -8,7 +8,7 @@ import ReqTabConActions from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
 /** @namespace this.props.tabs */
-class ReqTab extends React.Component{
+class ReqTab extends React.Component {
 
     render() {
         let removeBtnClasses = classNames({

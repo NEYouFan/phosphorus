@@ -4,7 +4,7 @@ import './history.styl'
 import React from 'react'
 import classNames from 'classnames'
 
-class History extends React.Component{
+class History extends React.Component {
 
     render() {
         let className = classNames({

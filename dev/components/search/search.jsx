@@ -3,9 +3,9 @@
 import './search.styl'
 import React from 'react'
 
-class Search extends React.Component{
+class Search extends React.Component {
 
-    render () {
+    render() {
         return (
             <div className="mod-search">
                 <input type="search" placeholder="Search"/>

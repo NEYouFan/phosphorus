@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqURLParamsAction from '../../actions/requrlparamsaction'
 
-class ReqBuilderURLParams extends React.Component{
+class ReqBuilderURLParams extends React.Component {
 
     render() {
         let className = classNames({

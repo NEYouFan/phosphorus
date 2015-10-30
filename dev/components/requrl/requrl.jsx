@@ -9,7 +9,7 @@ import ReqTabConAction from '../../actions/reqtabconaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 
 /** @namespace this.props.showMethodList */
-class ReqURL extends React.Component{
+class ReqURL extends React.Component {
 
     render() {
         let reqWrapClasses = classNames({

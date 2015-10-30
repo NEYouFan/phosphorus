@@ -6,7 +6,7 @@ import ReqTabConAction from '../../actions/reqtabconaction'
 import classNames from 'classnames'
 import _ from 'lodash'
 
-class ReqBuilderTab extends React.Component{
+class ReqBuilderTab extends React.Component {
 
     render() {
         let activeTabName = this.props.builders.activeTabName

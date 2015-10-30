@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqHeaderAction from '../../actions/reqheaderaction'
 
-class ReqBuilderHeader extends React.Component{
+class ReqBuilderHeader extends React.Component {
 
     render() {
         let className = classNames({

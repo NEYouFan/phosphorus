@@ -8,16 +8,16 @@ let ReactPropTypes = React.PropTypes
 
 /** @namespace this.props.onClickItem */
 /** @namespace this.props.menus */
-class DropDownMenu extends React.Component{
+class DropDownMenu extends React.Component {
 
-    propTypes: {
+    propTypes = {
         onClickItem: ReactPropTypes.func.isRequired
     }
 
     render() {
         let nodes = this.props.menus.map((menu, index) => {
             return (
-                <li key={index} onClick={()=>{this.onClickItem(menu)}}>{menu.name||menu}</li>
+                <li key={index} onClick={()=>{this.onClickItem(menu)}}>{menu.name || menu}</li>
             )
         })
         return (

@@ -18,9 +18,9 @@ import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 import ReqHeadersDataList from '../reqheadersdatalist/reqheadersdatalist.jsx'
 import MediaTypesDataList from '../mediatypesdatalist/mediatypesdatalist.jsx'
 
-class Index extends React.Component{
+class Index extends React.Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props)
         this.state = this.getAppStates()
     }
@@ -30,15 +30,27 @@ class Index extends React.Component{
     }
 
     componentDidMount() {
-        SideTabStore.addChangeListener(()=>{this.onChange()})
-        ReqTabStore.addChangeListener(()=>{this.onChange()})
-        ReqTabConStore.addChangeListener(()=>{this.onChange()})
+        SideTabStore.addChangeListener(()=> {
+            this.onChange()
+        })
+        ReqTabStore.addChangeListener(()=> {
+            this.onChange()
+        })
+        ReqTabConStore.addChangeListener(()=> {
+            this.onChange()
+        })
     }
 
     componentWillUnmount() {
-        SideTabStore.removeChangeListener(()=>{this.onChange()})
-        ReqTabStore.removeChangeListener(()=>{this.onChange()})
-        ReqTabConStore.removeChangeListener(()=>{this.onChange()})
+        SideTabStore.removeChangeListener(()=> {
+            this.onChange()
+        })
+        ReqTabStore.removeChangeListener(()=> {
+            this.onChange()
+        })
+        ReqTabConStore.removeChangeListener(()=> {
+            this.onChange()
+        })
     }
 
     render() {

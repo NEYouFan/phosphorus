@@ -6,7 +6,7 @@ import SideTabAction from '../../actions/sidtabaction'
 import SideTabStore from '../../stores/sidetabstore'
 import classNames from 'classnames'
 
-class SideTab extends React.Component{
+class SideTab extends React.Component {
 
     render() {
         let historyClass = classNames({
@@ -25,7 +25,7 @@ class SideTab extends React.Component{
         )
     }
 
-    clickHandler (e) {
+    clickHandler(e) {
         if (e.target.classList.contains('active')) return
         let activeIndex = Number(e.target.dataset.index)
         SideTabAction.switchTab(activeIndex)

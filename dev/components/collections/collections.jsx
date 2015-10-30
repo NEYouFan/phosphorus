@@ -4,9 +4,9 @@ import './collections.styl'
 import React from 'react'
 import classNames from 'classnames'
 
-class Collections extends React.Component{
+class Collections extends React.Component {
 
-    render () {
+    render() {
         let className = classNames({
             hide: this.props.sideTab.activeIndex !== 1
         })

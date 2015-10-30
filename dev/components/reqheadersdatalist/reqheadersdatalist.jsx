@@ -4,7 +4,7 @@
 import React from 'react'
 import reqHeaders from '../../libs/httpreqheaders'
 
-class ReqHeadersDataList extends React.Component{
+class ReqHeadersDataList extends React.Component {
 
     render() {
         let nodes = reqHeaders.map((item, index) => {
