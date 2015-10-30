@@ -3,13 +3,12 @@
 
 import './index.styl'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import Ace from 'brace'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
-
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
@@ -112,11 +111,11 @@ class Index extends React.Component {
     }
 
     updateAceEditor() {
-        let appStates = Index.getAppStates()
+        let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         let text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
         let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].builders.bodyType.aceEditorConfig
-        let aceEditor = ace.edit(this.state.reqTabCon.aceEditorId)
+        let aceEditor = Ace.edit(this.state.reqTabCon.aceEditorId)
         aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         aceEditor.setValue(text)
     }

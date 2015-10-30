@@ -23,10 +23,10 @@ class ReqTab extends React.Component {
             return (
                 <div className={tabClasses} key={index} title={tab.name}>
                     <div className="reqtab-box"></div>
-                    <span className="reqtab-name" onClick={this.click.bind(this, index)}>
+                    <span className="reqtab-name" onMouseUp={(e)=>{this.mouseUp(e,index)}}>
                         <em>{tab.name}</em>
                     </span>
-                    <span className={removeBtnClasses} onClick={this.remove.bind(this, index)}></span>
+                    <span className={removeBtnClasses} onMouseUp={(e)=>{this.remove(e,index)}}></span>
                 </div>
             )
         })
@@ -39,10 +39,17 @@ class ReqTab extends React.Component {
         )
     }
 
-    click(tabIndex, evt) {
-        let tab = evt.target.parentNode
-        if (tab.classList.contains('active')) return
-        this.switchTab(tabIndex)
+    mouseUp(evt, tabIndex) {
+        let tab = evt.currentTarget.parentNode
+        if (evt.button === 1) {
+            if (this.props.tabs.length > 1) {
+                evt.stopPropagation()
+                this.removeTab(tab, tabIndex)
+            }
+        } else {
+            if (tab.classList.contains('active')) return
+            this.switchTab(tabIndex)
+        }
     }
 
     add() {
@@ -51,14 +58,15 @@ class ReqTab extends React.Component {
         this.switchTab(this.props.tabs.length - 1)
     }
 
-    switchTab(activeIndex) {
-        ReqTabActions.switchTab(activeIndex)
+    remove(evt, tabIndex) {
+        let tab = evt.currentTarget.parentNode
+        this.removeTab(tab, tabIndex)
     }
 
-    remove(tabIndex, evt) {
-        ReqTabActions.removeTab(tabIndex)
+    removeTab(tab, tabIndex) {
         ReqTabConActions.removeCon(tabIndex)
-        let isActive = evt.target.parentNode.classList.contains('active')
+        ReqTabActions.removeTab(tabIndex)
+        let isActive = tab.classList.contains('active')
         let currentActiveIndex = this.props.activeIndex
         let nextActiveIndex
         if (isActive) {
@@ -69,6 +77,10 @@ class ReqTab extends React.Component {
             nextActiveIndex = currentActiveIndex - 1
         }
         this.switchTab(nextActiveIndex)
+    }
+
+    switchTab(activeIndex) {
+        ReqTabActions.switchTab(activeIndex)
     }
 
 }

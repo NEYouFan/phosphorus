@@ -13,8 +13,7 @@ class ReqTabAction {
         })
         // update ace editor's value and mode
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_UPDATE_ACE_EDITOR,
-            activeIndex: activeIndex
+            actionType: AppConstants.REQ_CONTENT_UPDATE_ACE_EDITOR
         })
     }
 

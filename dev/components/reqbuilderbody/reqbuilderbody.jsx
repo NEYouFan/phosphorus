@@ -121,7 +121,9 @@ class ReqBuilderBody extends React.Component {
 
     toggleRawTypeList(evt) {
         evt.stopPropagation()
-        ReqBodyAction.toggleRawTypeList()
+        if (evt.currentTarget.parentNode.classList.contains('show-raw-value')) {
+            ReqBodyAction.toggleRawTypeList()
+        }
     }
 
     onSelectRawTypeValue(bodyType) {

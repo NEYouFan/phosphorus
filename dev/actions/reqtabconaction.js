@@ -12,9 +12,10 @@ class ReqTabConAction  {
         })
     }
 
-    static removeCon() {
+    static removeCon(tabIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_CONTENT_REMOVE
+            actionType: AppConstants.REQ_CONTENT_REMOVE,
+            tabIndex: tabIndex
         })
     }
 

@@ -34,6 +34,12 @@ const DEFAULT_KV = {
 const DEFAULT_HEADERS_KV = Object.assign({}, DEFAULT_KV, {
     keyDataList: REQ_HEADERS_DATA_LIST
 })
+const DEFAULT_JSON_HEADER_KV = Object.assign({}, DEFAULT_HEADERS_KV, {
+    keyDataList: REQ_HEADERS_DATA_LIST,
+    valueDataList: REQ_MIDIATYPES_DATA_LIST,
+    key: 'Content-Type',
+    value: 'application/json'
+})
 const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_KV, {
     keyPlaceholder: 'URL Parameter Key'
 })
@@ -67,13 +73,13 @@ const DEFAULT_CON_ITEM = {
         ],
         paramKVs: [DEFAULT_PARAMS_KV],
         activeTabName: REQUEST_BODY_STR,
-        headerKVs: [DEFAULT_HEADERS_KV],
+        headerKVs: [DEFAULT_HEADERS_KV, DEFAULT_JSON_HEADER_KV],
         bodyType: {
             name: 'raw',
-            value: 'Text',
+            value: 'JSON(application/json)',
             aceEditorConfig: {
                 show: true,
-                mode: 'text'
+                mode: 'json'
             }
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
@@ -89,7 +95,7 @@ const DEFAULT_CON_ITEM = {
 let tabIndex
 
 let tabCons = {
-    bodyTypes: ['form-data', 'x-www-form-urlencoded', 'binary', 'raw'],
+    bodyTypes: ['raw', 'form-data', 'x-www-form-urlencoded', 'binary'],
     rawTypes: [
         {
             value: 'text',
@@ -138,7 +144,7 @@ let tabConActions = {
         tabCons.items.push(_.cloneDeep(DEFAULT_CON_ITEM))
     },
 
-    removeCon() {
+    removeCon(tabIndex) {
         tabCons.items.splice(tabIndex, 1)
     },
 
@@ -435,7 +441,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_CONTENT_REMOVE:
-            actions.removeCon()
+            actions.removeCon(action.tabIndex)
             ReqTabConStore.emitChange()
             break
 

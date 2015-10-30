@@ -13,7 +13,7 @@ import htmlMode from 'brace/mode/html'
 class AceEditor extends React.Component {
 
     componentDidMount() {
-        this.editor = ace.edit(this.props.id)
+        this.editor = Ace.edit(this.props.id)
         this.editor.$blockScrolling = Infinity
         this.editor.on('input', () => {
             this.onChange()
