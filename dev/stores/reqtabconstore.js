@@ -161,7 +161,7 @@ let tabConActions = {
         })
         bodyBuilder.disabled = isGetMethod
         if (isGetMethod && builders.activeTabName === REQUEST_BODY_STR) {
-            builders.activeTabName = URL_PARAMS_STR
+            this.switchBuilderTab(URL_PARAMS_STR)
         }
     },
 
@@ -174,9 +174,9 @@ let tabConActions = {
         let activeTabName = tabCons.items[tabIndex].builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {}
-        config.show = !(activeTabName !== REQUEST_BODY_STR || bodyType.name !== 'raw')
+        config.show = activeTabName === REQUEST_BODY_STR && bodyType.name === 'raw'
         if (editorMode) {
-            bodyType.aceEditorConfig.mode = editorMode
+            config.mode = editorMode
         }
         Object.assign(bodyType.aceEditorConfig, config)
     },
