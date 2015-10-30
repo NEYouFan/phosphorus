@@ -4,7 +4,7 @@
 import React from 'react'
 import mediaTypes from '../../libs/mediatypes'
 
-let MediaTypesDataList = React.createClass({
+class MediaTypesDataList extends React.Component{
 
     render() {
         let nodes = mediaTypes.map((item, index) => {
@@ -19,6 +19,6 @@ let MediaTypesDataList = React.createClass({
         )
     }
 
-})
+}
 
 export default MediaTypesDataList

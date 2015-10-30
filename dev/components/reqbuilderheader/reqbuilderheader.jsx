@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqHeaderAction from '../../actions/reqheaderaction'
 
-let ReqBuilderHeader = React.createClass({
+class ReqBuilderHeader extends React.Component{
 
     render() {
         let className = classNames({
@@ -28,33 +28,33 @@ let ReqBuilderHeader = React.createClass({
                 </div>
             </div>
         )
-    },
+    }
 
     toggleHeaderKV(tabIndex, rowIndex) {
         ReqHeaderAction.toggleHeaderKV(tabIndex, rowIndex)
-    },
+    }
 
     addHeaderKV(tabIndex) {
         ReqHeaderAction.addHeaderKV(tabIndex)
-    },
+    }
 
     removeHeaderKV(tabIndex, rowIndex) {
         ReqHeaderAction.removeHeaderKV(tabIndex, rowIndex)
-    },
+    }
 
     editHeaderKV(tabIndex) {
         ReqHeaderAction.editHeaderKV(tabIndex)
-    },
+    }
 
     changeHeaderKVKey(tabIndex, rowIndex, value) {
         ReqHeaderAction.changeHeaderKVKey(tabIndex, rowIndex, value)
-    },
+    }
 
     changeHeaderKVValue(tabIndex, rowIndex, value) {
         ReqHeaderAction.changeHeaderKVValue(tabIndex, rowIndex, value)
     }
 
-})
+}
 
 
 export default ReqBuilderHeader

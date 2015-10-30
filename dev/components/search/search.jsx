@@ -3,9 +3,9 @@
 import './search.styl'
 import React from 'react'
 
-let Search = React.createClass({
+class Search extends React.Component{
 
-    render: function () {
+    render () {
         return (
             <div className="mod-search">
                 <input type="search" placeholder="Search"/>
@@ -13,7 +13,7 @@ let Search = React.createClass({
         )
     }
 
-})
+}
 
 
 export default Search

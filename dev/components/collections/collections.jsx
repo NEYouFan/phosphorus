@@ -4,9 +4,9 @@ import './collections.styl'
 import React from 'react'
 import classNames from 'classnames'
 
-let Collections = React.createClass({
+class Collections extends React.Component{
 
-    render: function () {
+    render () {
         let className = classNames({
             hide: this.props.sideTab.activeIndex !== 1
         })
@@ -17,6 +17,6 @@ let Collections = React.createClass({
         )
     }
 
-})
+}
 
 export default Collections

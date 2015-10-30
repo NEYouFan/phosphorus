@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqURLParamsAction from '../../actions/requrlparamsaction'
 
-let ReqBuilderURLParams = React.createClass({
+class ReqBuilderURLParams extends React.Component{
 
     render() {
         let className = classNames({
@@ -28,33 +28,33 @@ let ReqBuilderURLParams = React.createClass({
                 </div>
             </div>
         )
-    },
+    }
 
     toggleURLParamsKV(tabIndex, rowIndex) {
         ReqURLParamsAction.toggleURLParamsKV(tabIndex, rowIndex)
-    },
+    }
 
     addURLParamsKV(tabIndex) {
         ReqURLParamsAction.addURLParamsKV(tabIndex)
-    },
+    }
 
     removeURLParamsKV(tabIndex, rowIndex) {
         ReqURLParamsAction.removeURLParamsKV(tabIndex, rowIndex)
-    },
+    }
 
     editURLParamsKV(tabIndex) {
         ReqURLParamsAction.editURLParamsKV(tabIndex)
-    },
+    }
 
     changeURLParamsKVKey(tabIndex, rowIndex, value) {
         ReqURLParamsAction.changeURLParamsKVKey(tabIndex, rowIndex, value)
-    },
+    }
 
     changeURLParamsKVValue(tabIndex, rowIndex, value) {
         ReqURLParamsAction.changeURLParamsKVValue(tabIndex, rowIndex, value)
     }
 
-})
+}
 
 
 export default ReqBuilderURLParams

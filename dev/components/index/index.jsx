@@ -18,31 +18,32 @@ import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 import ReqHeadersDataList from '../reqheadersdatalist/reqheadersdatalist.jsx'
 import MediaTypesDataList from '../mediatypesdatalist/mediatypesdatalist.jsx'
 
-function getAppStates() {
-    return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
-}
+class Index extends React.Component{
 
-let Index = React.createClass({
+    constructor (props) {
+        super(props)
+        this.state = this.getAppStates()
+    }
 
-    getInitialState: function () {
-        return getAppStates()
-    },
+    getAppStates() {
+        return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
+    }
 
     componentDidMount() {
-        SideTabStore.addChangeListener(this.onChange)
-        ReqTabStore.addChangeListener(this.onChange)
-        ReqTabConStore.addChangeListener(this.onChange)
-    },
+        SideTabStore.addChangeListener(()=>{this.onChange()})
+        ReqTabStore.addChangeListener(()=>{this.onChange()})
+        ReqTabConStore.addChangeListener(()=>{this.onChange()})
+    }
 
     componentWillUnmount() {
-        SideTabStore.removeChangeListener(this.onChange)
-        ReqTabStore.removeChangeListener(this.onChange)
-        ReqTabConStore.removeChangeListener(this.onChange)
-    },
+        SideTabStore.removeChangeListener(()=>{this.onChange()})
+        ReqTabStore.removeChangeListener(()=>{this.onChange()})
+        ReqTabConStore.removeChangeListener(()=>{this.onChange()})
+    }
 
     render() {
         return (
-            <div className="main-wrap" onClick={this.hideDropdownMenu}>
+            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab}/>
@@ -64,14 +65,14 @@ let Index = React.createClass({
                 </div>
             </div>
         )
-    },
+    }
 
     onChange() {
-        this.setState(getAppStates())
-    },
+        this.setState(this.getAppStates())
+    }
 
     hideDropdownMenu() {
-        let appStates = getAppStates()
+        let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         if (appStates.reqTabCon.reqCons[tabIndex].showReqMethodList) {
             ReqTabConAction.toggleMethodList(tabIndex)
@@ -81,7 +82,7 @@ let Index = React.createClass({
         }
     }
 
-})
+}
 
 
 export default Index

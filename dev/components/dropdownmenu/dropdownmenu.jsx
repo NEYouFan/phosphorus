@@ -8,11 +8,11 @@ let ReactPropTypes = React.PropTypes
 
 /** @namespace this.props.onClickItem */
 /** @namespace this.props.menus */
-let DropDownMenu = React.createClass({
+class DropDownMenu extends React.Component{
 
     propTypes: {
         onClickItem: ReactPropTypes.func.isRequired
-    },
+    }
 
     render() {
         let nodes = this.props.menus.map((menu, index) => {
@@ -25,13 +25,13 @@ let DropDownMenu = React.createClass({
                 {nodes}
             </ol>
         )
-    },
+    }
 
     onClickItem(menuItem) {
         this.props.onClickItem(menuItem)
     }
 
-})
+}
 
 
 export default DropDownMenu

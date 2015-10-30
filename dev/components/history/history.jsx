@@ -4,7 +4,7 @@ import './history.styl'
 import React from 'react'
 import classNames from 'classnames'
 
-let History = React.createClass({
+class History extends React.Component{
 
     render() {
         let className = classNames({
@@ -17,7 +17,7 @@ let History = React.createClass({
         )
     }
 
-})
+}
 
 
 export default History

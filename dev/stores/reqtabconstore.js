@@ -21,7 +21,6 @@ const URL_PARAMS_STR = 'URL Params'
 const REQUEST_HEADERS_STR = 'Request Headers'
 const RESPONSE_CHECKER_STR = 'Response Checker'
 const RESPONSE_STR = 'Response'
-
 const DEFAULT_KV = {
     keyPlaceholder: DEFAULT_KEY_STR,
     valuePlaceholder: DEFAULT_VALUE_STR,
@@ -41,7 +40,6 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'text'
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
-
 const DEFAULT_CON_ITEM = {
     builders: {
         items: [

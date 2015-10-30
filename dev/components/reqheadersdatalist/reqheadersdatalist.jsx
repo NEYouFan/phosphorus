@@ -4,7 +4,7 @@
 import React from 'react'
 import reqHeaders from '../../libs/httpreqheaders'
 
-let ReqHeadersDataList = React.createClass({
+class ReqHeadersDataList extends React.Component{
 
     render() {
         let nodes = reqHeaders.map((item, index) => {
@@ -19,6 +19,6 @@ let ReqHeadersDataList = React.createClass({
         )
     }
 
-})
+}
 
 export default ReqHeadersDataList

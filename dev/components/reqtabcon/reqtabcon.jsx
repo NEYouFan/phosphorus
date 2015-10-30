@@ -16,7 +16,7 @@ import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 
 /** @namespace this.props.tabCons */
-let ReqTabCon = React.createClass({
+class ReqTabCon extends React.Component{
 
     render() {
         let activeTabIndex = this.props.activeTabIndex
@@ -63,7 +63,7 @@ let ReqTabCon = React.createClass({
         )
     }
 
-})
+}
 
 
 export default ReqTabCon

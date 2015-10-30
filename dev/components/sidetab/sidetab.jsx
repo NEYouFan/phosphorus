@@ -6,7 +6,7 @@ import SideTabAction from '../../actions/sidtabaction'
 import SideTabStore from '../../stores/sidetabstore'
 import classNames from 'classnames'
 
-let SideTab = React.createClass({
+class SideTab extends React.Component{
 
     render() {
         let historyClass = classNames({
@@ -23,7 +23,7 @@ let SideTab = React.createClass({
                 </ol>
             </div>
         )
-    },
+    }
 
     clickHandler (e) {
         if (e.target.classList.contains('active')) return
@@ -31,7 +31,7 @@ let SideTab = React.createClass({
         SideTabAction.switchTab(activeIndex)
     }
 
-})
+}
 
 
 export default SideTab

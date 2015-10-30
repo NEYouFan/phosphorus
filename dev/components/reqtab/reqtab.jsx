@@ -8,7 +8,7 @@ import ReqTabConActions from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
 /** @namespace this.props.tabs */
-let ReqTab = React.createClass({
+class ReqTab extends React.Component{
 
     render() {
         let removeBtnClasses = classNames({
@@ -37,23 +37,23 @@ let ReqTab = React.createClass({
                 {addButton}
             </div>
         )
-    },
+    }
 
     click(tabIndex, evt) {
         let tab = evt.target.parentNode
         if (tab.classList.contains('active')) return
         this.switchTab(tabIndex)
-    },
+    }
 
     add() {
         ReqTabActions.addTab()
         ReqTabConActions.addCon()
         this.switchTab(this.props.tabs.length - 1)
-    },
+    }
 
     switchTab(activeIndex) {
         ReqTabActions.switchTab(activeIndex)
-    },
+    }
 
     remove(tabIndex, evt) {
         ReqTabActions.removeTab(tabIndex)
@@ -71,7 +71,7 @@ let ReqTab = React.createClass({
         this.switchTab(nextActiveIndex)
     }
 
-})
+}
 
 
 export default ReqTab
