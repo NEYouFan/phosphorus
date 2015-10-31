@@ -24,8 +24,12 @@ class Res extends React.Component {
             // prepare
             case 0:
                 return this.getPrepareCon()
+            // sending...
             case 1:
                 return this.getSendingCon()
+            // sending failed
+            case 3:
+                return this.getFailedCon()
             default:
                 break
         }
@@ -48,6 +52,15 @@ class Res extends React.Component {
                     <div className="dot2"></div>
                 </div>
                 <div className="loading-txt">Waiting for response...</div>
+            </div>
+        )
+    }
+
+    getFailedCon() {
+        return (
+            <div className="res-tip failed-tip">
+                <em className="glyphicon glyphicon-exclamation-sign"></em>
+                <span>{this.props.builders.fetchResponseData.toString()}</span>
             </div>
         )
     }

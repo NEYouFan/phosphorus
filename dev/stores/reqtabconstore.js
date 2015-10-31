@@ -7,6 +7,7 @@ import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import ReqTabStore from './reqtabstore'
 import Util from '../libs/util'
+import Requester from '../components/requester/requester'
 
 const CHANGE_EVENT = 'change'
 const ACE_EDITOR_UPDATE_EVENT = 'ace editor update'
@@ -24,7 +25,8 @@ const RESPONSE_CHECKER_STR = 'Response Checker'
 const RESPONSE_STR = 'Response'
 const REQ_PREPARE = 0
 const REQ_SENDING = 1
-const REQ_COMPLETE = 2
+const REQ_SUCCEEDED = 2
+const REQ_FAILED = 3
 const DEFAULT_KV = {
     keyPlaceholder: DEFAULT_KEY_STR,
     valuePlaceholder: DEFAULT_VALUE_STR,
@@ -79,20 +81,23 @@ const DEFAULT_CON_ITEM = {
         headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
             name: 'raw',
-            value: 'JSON(application/json)',
-            aceEditorConfig: {
-                show: false,
-                mode: 'json'
-            }
+            value: 'JSON(application/json)'
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
         bodyBinaryData: null,
         bodyRawData: null,
-        reqStatus: REQ_PREPARE
+        reqStatus: REQ_PREPARE,
+        fetchResponse: null,
+        fetchResponseData: null
     },
     showBodyRawTypeList: false,
-    showReqMethodList: false
+    showReqMethodList: false,
+    aceEditorConfig: {
+        show: false,
+        mode: 'json',
+        readOnly: false
+    }
 }
 
 // current active tab index
@@ -175,14 +180,17 @@ let tabConActions = {
     },
 
     changeAceEditorConfig(editorMode) {
-        let activeTabName = tabCons.items[tabIndex].builders.activeTabName
+        let tabCon = tabCons.items[tabIndex]
+        let activeTabName = tabCon.builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
-        let config = {}
-        config.show = activeTabName === REQUEST_BODY_STR && bodyType.name === 'raw'
+        let config = {
+            show: activeTabName === REQUEST_BODY_STR && bodyType.name === 'raw',
+            readOnly: activeTabName === RESPONSE_STR
+        }
         if (editorMode) {
             config.mode = editorMode
         }
-        Object.assign(bodyType.aceEditorConfig, config)
+        Object.assign(tabCon.aceEditorConfig, config)
     },
 
     checkReqSend() {
@@ -191,8 +199,9 @@ let tabConActions = {
         let canSend = true
         let tabState = ReqTabStore.getAll()
         let tab = tabState.reqTab.tabs[tabIndex]
+        let tabUrl = tab.url
         // check url
-        if (!tab.url) {
+        if (!tabUrl) {
             // url can't be blank
             canSend = false
             tab.urlError = true
@@ -209,6 +218,8 @@ let tabConActions = {
                 if (!param.value) {
                     param.valueError = true
                     canSend = false
+                } else {
+                    tabUrl = tabUrl.replace(':' + param.key, param.value)
                 }
             }
         })
@@ -216,6 +227,7 @@ let tabConActions = {
             tabConActions.switchBuilderTab(URL_PARAMS_STR)
         }
         if (canSend) {
+            tab.rurl = tabUrl // it is the correct request url
             tabCons.items[tabIndex].builders.reqStatus = REQ_SENDING
             tabConActions.switchBuilderTab(RESPONSE_STR)
         }
@@ -508,7 +520,25 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_CONTENT_SEND:
             let canSend = actions.checkReqSend()
             if (canSend) {
-                console.log('send now')
+                Requester.fetch((res, data) => {
+                    console.log(data)
+                    console.log(res)
+                    tabConActions.switchBuilderTab(RESPONSE_STR)
+                    let tabCon = tabCons.items[tabIndex]
+                    let builders = tabCon.builders
+                    builders.fetchResponse = res
+                    builders.fetchResponseData = data
+                    if (!res) {
+                        // no response, error happened
+                        builders.reqStatus = REQ_FAILED
+                    } else {
+                        // has response
+                        builders.reqStatus = REQ_SUCCEEDED
+                        tabCon.aceEditorConfig.show = true
+                    }
+                    ReqTabConStore.emitChange()
+                    ReqTabConStore.emitAceEditorUpdate()
+                })
             }
             ReqTabConStore.emitChange()
             break

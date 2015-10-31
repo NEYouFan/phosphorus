@@ -82,7 +82,7 @@ class Index extends React.Component {
                     <AceEditor
                         onChange={(text)=>{this.onChangeEditorText(text)}}
                         id={this.state.reqTabCon.aceEditorId}
-                        config={this.state.reqTabCon.reqCons[this.state.reqTab.activeIndex].builders.bodyType.aceEditorConfig}
+                        config={this.state.reqTabCon.reqCons[this.state.reqTab.activeIndex].aceEditorConfig}
                         />
                     <ReqHeadersDataList/>
                     <MediaTypesDataList/>
@@ -111,12 +111,19 @@ class Index extends React.Component {
     }
 
     updateAceEditor() {
+        // https://github.com/securingsincity/react-ace/blob/master/src/ace.jsx
         let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
-        let text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
-        let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].builders.bodyType.aceEditorConfig
+        let text
+        let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].aceEditorConfig
         let aceEditor = Ace.edit(this.state.reqTabCon.aceEditorId)
         aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
+        if (aceEditorConfig.readOnly) {
+            aceEditor.setOption('readOnly', true)
+            text = this.state.reqTabCon.reqCons[tabIndex].builders.fetchResponseData
+        } else {
+            text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
+        }
         aceEditor.setValue(text)
     }
 
