@@ -8,7 +8,7 @@ import Events from 'events'
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_ITEMS = {
-    url: 'http://nei.hz.netease.com/api/projGroup/getProList',
+    url: 'http://www.youdao.com/smartresult-xml/search.s?jsFlag=true&type=mobile&q=手机号',
     rurl: '',// rurl is the request url, it's path variable is replaced (done in tabConActions.checkReqSend(), see@reqtabconstore.js )
     method: 'GET',
     name: 'New tab',
