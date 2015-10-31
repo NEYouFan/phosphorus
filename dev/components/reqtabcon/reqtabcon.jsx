@@ -14,6 +14,7 @@ import ReqBuilderTab from '../reqbuildertab/reqbuildertab.jsx'
 import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader.jsx'
 import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
+import Res from '../res/res.jsx'
 
 /** @namespace this.props.tabCons */
 class ReqTabCon extends React.Component {
@@ -38,7 +39,7 @@ class ReqTabCon extends React.Component {
                         tabIndex={index}
                         builders={this.props.tabCons.reqCons[index].builders}
                         />
-                    <ReqBuilderHeader
+                    <ReqBuilderURLParams
                         tabIndex={index}
                         builders={this.props.tabCons.reqCons[index].builders}
                         />
@@ -49,7 +50,11 @@ class ReqTabCon extends React.Component {
                         builders={this.props.tabCons.reqCons[index].builders}
                         showRawTypeList={this.props.tabCons.reqCons[index].showBodyRawTypeList}
                         />
-                    <ReqBuilderURLParams
+                    <ReqBuilderHeader
+                        tabIndex={index}
+                        builders={this.props.tabCons.reqCons[index].builders}
+                        />
+                    <Res
                         tabIndex={index}
                         builders={this.props.tabCons.reqCons[index].builders}
                         />

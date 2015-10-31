@@ -122,6 +122,52 @@ input.inp-error::-webkit-input-placeholder {
   color: #ff5a19;
 }
 
+.spinner {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  text-align: center;
+  animation: sk-rotate 2.0s infinite linear;
+
+  .dot1,
+  .dot2 {
+    width: 60%;
+    height: 60%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    background-color: #999;
+    border-radius: 100%;
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+  }
+
+  .dot2 {
+    top: auto;
+    bottom: 0;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+  }
+
+  @keyframes sk-rotate {
+    100% {
+      transform: rotate(360deg);
+      -webkit-transform: rotate(360deg)
+    }
+  }
+
+  @keyframes sk-bounce {
+    0%, 100% {
+      transform: scale(0.0);
+      -webkit-transform: scale(0.0);
+    }
+    50% {
+      transform: scale(1.0);
+      -webkit-transform: scale(1.0);
+    }
+  }
+}
+
 .main,
 .main-wrap {
   position: absolute;
@@ -137,7 +183,7 @@ input.inp-error::-webkit-input-placeholder {
   top: 0;
   left: 0;
   bottom: 0;
-  padding: 10px
+  padding: 6px 10px 10px
 }
 
 .bd {

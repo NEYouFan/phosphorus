@@ -31,6 +31,7 @@ class ReqURL extends React.Component {
                     <div className="requrl-sep"></div>
                     <div className="requrl-url">
                         <input
+                            autoFocus="true"
                             className={inpClass}
                             onChange={(e)=>{this.onChange(e)}}
                             value={this.props.tab.url}

@@ -22,6 +22,9 @@ const URL_PARAMS_STR = 'URL Params'
 const REQUEST_HEADERS_STR = 'Request Headers'
 const RESPONSE_CHECKER_STR = 'Response Checker'
 const RESPONSE_STR = 'Response'
+const REQ_PREPARE = 0
+const REQ_SENDING = 1
+const REQ_COMPLETE = 2
 const DEFAULT_KV = {
     keyPlaceholder: DEFAULT_KEY_STR,
     valuePlaceholder: DEFAULT_VALUE_STR,
@@ -72,20 +75,21 @@ const DEFAULT_CON_ITEM = {
             }
         ],
         paramKVs: [DEFAULT_PARAMS_KV],
-        activeTabName: REQUEST_BODY_STR,
+        activeTabName: RESPONSE_STR,
         headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
             name: 'raw',
             value: 'JSON(application/json)',
             aceEditorConfig: {
-                show: true,
+                show: false,
                 mode: 'json'
             }
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
         bodyBinaryData: null,
-        bodyRawData: null
+        bodyRawData: null,
+        reqStatus: REQ_PREPARE
     },
     showBodyRawTypeList: false,
     showReqMethodList: false
@@ -210,6 +214,10 @@ let tabConActions = {
         })
         if (!canSend) {
             tabConActions.switchBuilderTab(URL_PARAMS_STR)
+        }
+        if (canSend) {
+            tabCons.items[tabIndex].builders.reqStatus = REQ_SENDING
+            tabConActions.switchBuilderTab(RESPONSE_STR)
         }
         return canSend
     }
