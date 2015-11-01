@@ -125,7 +125,7 @@ class Index extends React.Component {
         } else {
             text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
         }
-        aceEditor.setValue(JSON.stringify(text, null, '\t'), -1);
+        aceEditor.setValue(JSON.stringify(text, null, '\t'), -1)
     }
 
 }
