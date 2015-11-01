@@ -10,8 +10,8 @@ let Requester = {
     fetch(callback) {
         let tabState = ReqTabStore.getAll().reqTab
         let tabConState = ReqConTabStore.getAll().reqTabCon
-        console.log(tabState)
-        console.log(tabConState)
+        //console.log(tabState)
+        //console.log(JSON.stringify(tabConState))
         let tabIndex = tabState.activeIndex
         let tab = tabState.tabs[tabIndex]
         let tabCon = tabConState.reqCons[tabIndex]

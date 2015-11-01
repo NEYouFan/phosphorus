@@ -24,7 +24,7 @@ class ReqURL extends React.Component {
                 <div className={reqWrapClasses}>
                     <div className="requrl-method" onClick={(e)=>{this.toggleMethodList(e)}}>
                         <span className="requrl-method-name">{this.props.tab.method}</span>
-                        <span className="glyphicon glyphicon-chevron-down"></span>
+                        <span className="icono-caretDown"></span>
                     </div>
                     <DropDownMenu menus={this.props.reqMethods} onClickItem={(n)=>{this.onSelectMethod(n)}}/>
 

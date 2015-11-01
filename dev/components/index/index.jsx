@@ -114,9 +114,10 @@ class Index extends React.Component {
         // https://github.com/securingsincity/react-ace/blob/master/src/ace.jsx
         let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
-        let text
         let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].aceEditorConfig
+        if (!aceEditorConfig.show) return
         let aceEditor = Ace.edit(this.state.reqTabCon.aceEditorId)
+        let text
         aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         if (aceEditorConfig.readOnly) {
             aceEditor.setOption('readOnly', true)
@@ -124,7 +125,7 @@ class Index extends React.Component {
         } else {
             text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
         }
-        aceEditor.setValue(text)
+        aceEditor.setValue(JSON.stringify(text, null, '\t'), -1)
     }
 
 }

@@ -30,7 +30,7 @@ class ReqTab extends React.Component {
                 </div>
             )
         })
-        let addButton = <div className="glyphicon glyphicon-plus-sign reqtab-add" onClick={()=>{this.add()}}></div>
+        let addButton = <a className="icono-plusCircle reqtab-add" onClick={()=>{this.add()}}></a>
         return (
             <div className="clr mod-reqtabs">
                 {tabNodes}
