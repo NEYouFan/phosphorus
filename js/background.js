@@ -10,7 +10,7 @@ chrome.app.runtime.onLaunched.addListener(function () {
             height = 800
         }
 
-        chrome.app.window.create('index.html', {
+        chrome.app.window.create('phosphorus.html', {
             id: 'phosphorus-main',
             bounds: {
                 width: width,

@@ -528,15 +528,13 @@ AppDispatcher.register((action) => {
                     let builders = tabCon.builders
                     builders.fetchResponse = res
                     builders.fetchResponseData = data
-                    //if (!res) {
-                    if (false) {
+                    if (!res) {
                         // no response, error happened
                         builders.reqStatus = REQ_FAILED
                     } else {
                         // has response
                         builders.reqStatus = REQ_SUCCEEDED
                         tabCon.aceEditorConfig.show = true
-                        builders.fetchResponseData = {"reqCons":[{"builders":{"items":[{"name":"URL Params","disabled":false},{"name":"Request Body","disabled":false},{"name":"Request Headers","disabled":false},{"name":"Response Checker","disabled":false},{"name":"Response","disabled":false}],"paramKVs":[{"keyPlaceholder":"URL Parameter Key","valuePlaceholder":"Value","checked":true,"key":"","value":"","keyDataList":"","valueDataList":""}],"activeTabName":"Response","headerKVs":[{"keyPlaceholder":"Key","valuePlaceholder":"Value","checked":true,"key":"Content-Type","value":"application/json","keyDataList":"reqheadersdatalist","valueDataList":"mediatypesdatalist"},{"keyPlaceholder":"Key","valuePlaceholder":"Value","checked":true,"key":"","value":"","keyDataList":"reqheadersdatalist","valueDataList":""}],"bodyType":{"name":"raw","value":"JSON(application/json)"},"bodyFormDataKVs":[{"keyPlaceholder":"Key","valuePlaceholder":"Value","checked":true,"key":"","value":"","keyDataList":"","valueDataList":"","valueType":"text"}],"bodyXFormKVs":[{"keyPlaceholder":"Key","valuePlaceholder":"Value","checked":true,"key":"","value":"","keyDataList":"","valueDataList":""}],"bodyBinaryData":null,"bodyRawData":null,"reqStatus":1,"fetchResponse":null,"fetchResponseData":null},"showBodyRawTypeList":false,"showReqMethodList":false,"aceEditorConfig":{"show":false,"mode":"json","readOnly":true}}],"reqMethods":["GET","POST","PUT","PATCH","DELETE","COPY","HEAD","OPTIONS","LINKS","UNLINK","PURGE","LOCK","UNLOCK","PROPFIND","VIEW"],"bodyTypes":["raw","form-data","x-www-form-urlencoded","binary"],"rawTypes":[{"value":"text","name":"Text","editorMode":"text"},{"value":"text/plain","name":"Text(text/plain)","editorMode":"text"},{"value":"application/json","name":"JSON(application/json)","editorMode":"json"},{"value":"application/javascript","name":"Javascript(application/javascript)","editorMode":"javascript"},{"value":"application/xml","name":"XML(application/xml)","editorMode":"xml"},{"value":"text/xml","name":"XML(text/xml)","editorMode":"xml"},{"value":"text/html","name":"XML(text/html)","editorMode":"html"}],"aceEditorId":"brace-editor"}
                     }
                     ReqTabConStore.emitChange()
                     ReqTabConStore.emitAceEditorUpdate()

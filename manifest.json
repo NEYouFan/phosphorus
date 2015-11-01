@@ -41,7 +41,7 @@
   "sandbox": {
     "content_security_policy": "sandbox allow-scripts allow-popups;font-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:7070/assets/index.js http://localhost:7070/webpack-dev-server.js;",
     "pages": [
-      "index.html"
+
     ]
   },
   "offline_enabled": true,
