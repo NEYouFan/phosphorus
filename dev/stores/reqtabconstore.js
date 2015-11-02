@@ -52,6 +52,10 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'text'
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
+const DEFAULT_RES_SHOW_TYPE = {
+    type: 'Pretty',
+    prettyType: 'HTML'
+}
 const DEFAULT_CON_ITEM = {
     builders: {
         items: [
@@ -89,8 +93,10 @@ const DEFAULT_CON_ITEM = {
         bodyRawData: null,
         reqStatus: REQ_PREPARE,
         fetchResponse: null,
-        fetchResponseData: null,
-        resPrettyType: 'HTML'
+        fetchResponseRawData: null,
+        fetchResponseIsJSON: false,
+        resShowType: Object.assign({}, DEFAULT_RES_SHOW_TYPE),
+        resFilePath: null
     },
     showBodyRawTypeList: false,
     showReqMethodList: false,
@@ -233,8 +239,13 @@ let tabConActions = {
         }
         if (canSend) {
             tab.rurl = tabUrl // it is the correct request url
-            tabCons.items[tabIndex].builders.reqStatus = REQ_SENDING
+            let builders = tabCons.items[tabIndex].builders
+            builders.reqStatus = REQ_SENDING
             tabConActions.switchBuilderTab(RESPONSE_STR)
+            builders.fetchResponse = null
+            builders.fetchResponseRawData = null
+            builders.fetchResponseData = null
+            builders.fetchResponseIsJSON = false
         }
         return canSend
     },
@@ -248,7 +259,7 @@ let tabConActions = {
             let tabCon = tabCons.items[tabIndex]
             let builders = tabCon.builders
             builders.fetchResponse = res
-            builders.fetchResponseData = data
+            builders.fetchResponseRawData = data
             if (!res) {
                 // no response, error happened
                 builders.reqStatus = REQ_FAILED
@@ -256,6 +267,17 @@ let tabConActions = {
                 // has response
                 builders.reqStatus = REQ_SUCCEEDED
                 tabCon.aceEditorConfig.show = true
+                builders.resShowType = Object.assign({}, DEFAULT_RES_SHOW_TYPE)
+                try {
+                    builders.fetchResponseData = JSON.stringify(JSON.parse(data), null, '\t')
+                    builders.resShowType.prettyType = 'JSON'
+                    tabCon.aceEditorConfig.mode = 'json'
+                    builders.fetchResponseIsJSON = true
+                } catch (e) {
+                    //
+                    builders.resShowType.prettyType = 'HTML'
+                    tabCon.aceEditorConfig.mode = 'html'
+                }
             }
             ReqTabConStore.emitChange()
             ReqTabConStore.emitAceEditorUpdate()
@@ -483,7 +505,29 @@ let resActions = {
     },
 
     changeResPrettyTypeValue(prettyType) {
-        tabCons.items[tabIndex].builders.resPrettyType = prettyType
+        tabCons.items[tabIndex].builders.resShowType.prettyType = prettyType
+        tabCons.items[tabIndex].aceEditorConfig.mode = prettyType.toLowerCase()
+    },
+
+    changeResShowType(showType) {
+        let tabCon = tabCons.items[tabIndex]
+        tabCon.builders.resShowType.type = showType
+        let editorConfig = {}
+        let prettyType
+        if (showType !== 'Pretty') {
+            editorConfig.show = false
+        } else {
+            editorConfig.show = true
+            if (tabCon.builders.fetchResponseIsJSON) {
+                editorConfig.mode = 'json'
+                prettyType = 'JSON'
+            } else {
+                editorConfig.mode = 'html'
+                prettyType = 'HTML'
+            }
+        }
+        Object.assign(tabCon.aceEditorConfig, editorConfig)
+        tabCon.builders.resShowType.prettyType = prettyType
     }
 
 }
@@ -722,6 +766,13 @@ AppDispatcher.register((action) => {
         case AppConstants.RES_CHANGE_PRETTY_TYPE_VALUE:
             actions.changeResPrettyTypeValue(action.prettyType)
             ReqTabConStore.emitChange()
+            ReqTabConStore.emitAceEditorUpdate()
+            break
+
+        case AppConstants.RES_CHANGE_SHOW_TYPE:
+            actions.changeResShowType(action.showType)
+            ReqTabConStore.emitChange()
+            ReqTabConStore.emitAceEditorUpdate()
             break
 
         default:

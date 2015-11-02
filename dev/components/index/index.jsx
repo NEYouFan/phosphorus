@@ -120,21 +120,32 @@ class Index extends React.Component {
         let tabIndex = appStates.reqTab.activeIndex
         let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].aceEditorConfig
         if (!aceEditorConfig.show) return
+        let builders = this.state.reqTabCon.reqCons[tabIndex].builders
         let aceEditor = Ace.edit(this.state.reqTabCon.aceEditorId)
         let text
-        aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         if (aceEditorConfig.readOnly) {
             aceEditor.setOption('readOnly', true)
-            text = this.state.reqTabCon.reqCons[tabIndex].builders.fetchResponseData
+            let resShowType = builders.resShowType
+            text = builders.fetchResponseData
+            if (resShowType.type === 'Pretty') {
+                if (!text) {
+                    if (resShowType.prettyType === 'JSON') {
+                        try {
+                            text = JSON.stringify(JSON.parse(builders.fetchResponseRawData), null, '\t')
+                        } catch (err) {
+                            text = err.message
+                        }
+                    } else {
+                        text = builders.fetchResponseRawData
+                    }
+                }
+            } else {
+                text = builders.fetchResponseRawData
+            }
         } else {
-            text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
+            text = builders.bodyRawData
         }
-        //try {
-        //    text = JSON.stringify(JSON.parse(text), null, '\t')
-        //} catch(err) {
-        //    //
-        //    text = err.message
-        //}
+        aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         // this function will trigger editor's change event
         aceEditor.setValue(text, -1)
         aceEditor.getSession().setUseWrapMode(true)

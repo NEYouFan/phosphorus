@@ -5,6 +5,7 @@ import React from 'react'
 import classNames from 'classnames'
 import ResAction from '../../actions/resaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
+import FS from '../../libs/fs'
 
 class Res extends React.Component {
 
@@ -15,32 +16,33 @@ class Res extends React.Component {
         return (
             <div className={className}>
                 <div className="mod-res">
+                    {this.getTip()}
                     {this.getCon()}
                 </div>
             </div>
         )
     }
 
-    getCon() {
+    getTip() {
         switch (this.props.builders.reqStatus) {
             // prepare
             case 0:
-                return this.getPrepareCon()
+                return this.getPrepareTip()
             // sending...
             case 1:
-                return this.getSendingCon()
+                return this.getSendingTip()
             // sending succeeded
             case 2:
-                return this.getSuccessCon()
+                return this.getSuccessTip()
             // sending failed
             case 3:
-                return this.getFailedCon()
+                return this.getFailedTip()
             default:
                 break
         }
     }
 
-    getPrepareCon() {
+    getPrepareTip() {
         return (
             <div className="res-tip">
                 <em className="glyphicon glyphicon-info-sign"></em>
@@ -49,7 +51,7 @@ class Res extends React.Component {
         )
     }
 
-    getSendingCon() {
+    getSendingTip() {
         return (
             <div className="res-tip">
                 <div className="spinner">
@@ -61,11 +63,19 @@ class Res extends React.Component {
         )
     }
 
-    getSuccessCon() {
+    getSuccessTip() {
         let response = this.props.builders.fetchResponse
-        let prettyType = this.props.builders.resPrettyType
+        let showType = this.props.builders.resShowType
+        let isPrettyActive = showType.type === 'Pretty' ? 'active' : ''
+        let isRawActive = showType.type === 'Raw' ? 'active' : ''
+        let isPreviewActive = showType.type === 'Preview' ? 'active' : ''
+        let tipClasses = classNames({
+            'res-tip': true,
+            'success-tip': true,
+            'pretty-list': isPrettyActive
+        })
         return (
-            <div className="res-tip success-tip">
+            <div className={tipClasses}>
                 <span className="status">
                     <span className="status-label">Status:</span>
                     <span className="status-code">{response.status}</span>
@@ -75,17 +85,17 @@ class Res extends React.Component {
                     <span className="time-label">Time:</span>
                     <span className="time-text">{response.time}ms</span>
                 </span>
-                <ol className="res-types">
-                    <li>Pretty</li>
-                    <li>Raw</li>
-                    <li>Preview</li>
+                <ol className="res-types" onClick={(e)=>{this.changeShowType(e)}}>
+                    <li className={isPrettyActive}>Pretty</li>
+                    <li className={isRawActive}>Raw</li>
+                    <li className={isPreviewActive}>Preview</li>
                 </ol>
-                {this.getPrettyTypeNodes(prettyType)}
+                {this.getPrettyTypeNodes(showType)}
             </div>
         )
     }
 
-    getPrettyTypeNodes(prettyType) {
+    getPrettyTypeNodes(showType) {
         let prettyTypeClasses = classNames({
             'res-prettytype-list': true,
             'show-type-list': this.props.showPrettyTypeList
@@ -93,7 +103,7 @@ class Res extends React.Component {
         return (
             <span className={prettyTypeClasses}>
                 <span className="prettytype-wrap" onClick={(e)=>{this.togglePrettyTypeList(e)}}>
-                    <span className="prettytype-name">{prettyType}</span>
+                    <span className="prettytype-name">{showType.prettyType}</span>
                     <span className="glyphicon glyphicon-chevron-down"></span>
                 </span>
                 <DropDownMenu menus={this.props.prettyTypes} onClickItem={(v)=>{this.onSelectPrettyTypeValue(v)}}/>
@@ -110,13 +120,56 @@ class Res extends React.Component {
         ResAction.changeResPrettyValue(prettyType)
     }
 
-    getFailedCon() {
+    changeShowType(evt) {
+        let target = evt.target
+        if (target.classList.contains('active')) return
+        ResAction.changeResShowType(target.textContent)
+    }
+
+    getFailedTip() {
         return (
             <div className="res-tip failed-tip">
                 <em className="glyphicon glyphicon-exclamation-sign"></em>
-                <span>{this.props.builders.fetchResponseData.toString()}</span>
+                <span>{this.props.builders.fetchResponseRawData.toString()}</span>
             </div>
         )
+    }
+
+    getCon() {
+        // success content
+        if (this.props.builders.reqStatus === 2) {
+            switch (this.props.builders.resShowType.type) {
+                case 'Raw':
+                    return this.getRawCon()
+                case 'Preview':
+                    return this.getPreviewCon()
+                default:
+                    break;
+            }
+        }
+    }
+
+    getRawCon() {
+        return (
+            <div className="raw-con">
+                <textarea readOnly={true} value={this.props.builders.fetchResponseRawData}></textarea>
+            </div>
+        )
+    }
+
+    getPreviewCon() {
+        let builders = this.props.builders
+        if (builders.resFilePath) {
+            return (
+                <iframe src={builders.resFilePath} frameborder="0"></iframe>
+            )
+        } else {
+            FS.write('response.html', builders.fetchResponseRawData, 'html', (filePath) => {
+                console.log(filePath)
+                builders.resFilePath = filePath
+                ResAction.emitChange()
+            })
+        }
     }
 
 }

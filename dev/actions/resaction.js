@@ -19,6 +19,13 @@ class ResAction  {
         })
     }
 
+    static changeResShowType (showType) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.RES_CHANGE_SHOW_TYPE,
+            showType: showType
+        })
+    }
+
 }
 
 export default ResAction

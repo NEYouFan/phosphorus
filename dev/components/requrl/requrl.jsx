@@ -37,6 +37,7 @@ class ReqURL extends React.Component {
                             value={this.props.tab.url}
                             type="url"
                             spellCheck="false"
+                            onKeyDown={(e)=>{this.onKeyDown(e)}}
                             placeholder="Enter request URL here"/>
                     </div>
                 </div>
@@ -70,6 +71,12 @@ class ReqURL extends React.Component {
 
     sendReq() {
         ReqTabConAction.sendReq()
+    }
+
+    onKeyDown(evt) {
+        if (evt.keyCode === 13) {
+            this.sendReq()
+        }
     }
 
 }
