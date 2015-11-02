@@ -9,6 +9,7 @@ import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
+import ResAction from '../../actions/resaction'
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
@@ -99,10 +100,13 @@ class Index extends React.Component {
         let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         if (appStates.reqTabCon.reqCons[tabIndex].showReqMethodList) {
-            ReqTabConAction.toggleMethodList(tabIndex)
+            ReqTabConAction.toggleMethodList()
         }
         if (appStates.reqTabCon.reqCons[tabIndex].showBodyRawTypeList) {
-            ReqBodyAction.toggleRawTypeList(tabIndex)
+            ReqBodyAction.toggleRawTypeList()
+        }
+        if (appStates.reqTabCon.reqCons[tabIndex].showResPrettyTypeList) {
+            ResAction.toggleResPrettyTypeList()
         }
     }
 
@@ -125,7 +129,16 @@ class Index extends React.Component {
         } else {
             text = this.state.reqTabCon.reqCons[tabIndex].builders.bodyRawData
         }
-        aceEditor.setValue(JSON.stringify(text, null, '\t'), -1)
+        //try {
+        //    text = JSON.stringify(JSON.parse(text), null, '\t')
+        //} catch(err) {
+        //    //
+        //    text = err.message
+        //}
+        // this function will trigger editor's change event
+        aceEditor.setValue(text, -1)
+        aceEditor.getSession().setUseWrapMode(true)
+        //aceEditor.execCommand("find")
     }
 
 }

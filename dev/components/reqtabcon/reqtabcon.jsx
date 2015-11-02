@@ -56,7 +56,9 @@ class ReqTabCon extends React.Component {
                         />
                     <Res
                         tabIndex={index}
+                        prettyTypes={this.props.tabCons.prettyTypes}
                         builders={this.props.tabCons.reqCons[index].builders}
+                        showPrettyTypeList={this.props.tabCons.reqCons[index].showResPrettyTypeList}
                         />
                 </div>
             )

@@ -9,6 +9,7 @@ import jsonMode from 'brace/mode/json'
 import javascriptMode from 'brace/mode/javascript'
 import xmlMode from 'brace/mode/xml'
 import htmlMode from 'brace/mode/html'
+import searchBox from 'brace/ext/searchbox'
 
 class AceEditor extends React.Component {
 

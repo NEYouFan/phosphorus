@@ -10,8 +10,6 @@ let Requester = {
     fetch(callback) {
         let tabState = ReqTabStore.getAll().reqTab
         let tabConState = ReqConTabStore.getAll().reqTabCon
-        //console.log(tabState)
-        //console.log(JSON.stringify(tabConState))
         let tabIndex = tabState.activeIndex
         let tab = tabState.tabs[tabIndex]
         let tabCon = tabConState.reqCons[tabIndex]
@@ -29,8 +27,10 @@ let Requester = {
             headers: headers
         }
         let res
+        let startTime = Date.now()
         fetch(url, fetchOptions).then(function (response) {
             res = response
+            res.time = Date.now() - startTime
             return response.text()
         }).then(function (data) {
             callback(res, data)

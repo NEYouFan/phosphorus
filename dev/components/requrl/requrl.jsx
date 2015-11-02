@@ -33,10 +33,10 @@ class ReqURL extends React.Component {
                         <input
                             autoFocus="true"
                             className={inpClass}
-                            onMouseEnter={(e)=>{this.onMouseEnter(e)}}
                             onChange={(e)=>{this.onChange(e)}}
                             value={this.props.tab.url}
                             type="url"
+                            spellCheck="false"
                             placeholder="Enter request URL here"/>
                     </div>
                 </div>
@@ -49,10 +49,6 @@ class ReqURL extends React.Component {
     toggleMethodList(evt) {
         evt.stopPropagation()
         ReqTabConAction.toggleMethodList()
-    }
-
-    onMouseEnter(evt) {
-        return evt.target.select()
     }
 
     onChange(evt) {

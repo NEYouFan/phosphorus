@@ -1,6 +1,6 @@
 //author @huntbao
 .mod-res {
-  margin: 20px 8px
+  margin: 15px 8px
 
   .res-tip {
     color: #999;
@@ -17,5 +17,67 @@
 
   .failed-tip {
     color: #ff5a19;
+  }
+
+  .success-tip {
+    font-size: 12px
+    display: flex
+
+    .status,
+    .time {
+      margin: 0 20px 0 0
+      font-weight: bold
+
+      &-label {
+        margin: 0 4px 0 0
+      }
+
+      &-code,
+      &-text {
+        color: #298852
+        margin: 0 0 0 2px
+      }
+
+    }
+
+    .res-types {
+      display: flex
+      background-color: #f2f2f2;
+      border-radius: 3px;
+      border: solid 1px #ccc;
+      padding: 5px 8px;
+      height: 20px;
+      margin: -5px 0 0 30px;
+      overflow: hidden
+      cursor: pointer
+
+      li {
+        padding: 0 6px;
+        text-align: center
+
+        &.active {
+          clear: #70c5b1
+        }
+      }
+    }
+
+    .res-prettytype-list {
+      position: relative
+      margin: 0 0 0 20px
+      cursor: pointer
+
+      .mod-dropdown-menu {
+        position: absolute
+        top: 20px
+        left: 0;
+        display: none
+      }
+
+      &.show-type-list {
+        .mod-dropdown-menu {
+          display: block
+        }
+      }
+    }
   }
 }

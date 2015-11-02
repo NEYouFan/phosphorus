@@ -53,6 +53,9 @@ let AppConstants = keyMirror({
     REQ_BODY_XFORM_CHANGE_KV_KEY: null,
     REQ_BODY_XFORM_CHANGE_KV_VALUE: null,
     REQ_BODY_XFORM_CHANGE_KV_VALUE_TYPE: null,
+    // response actions
+    RES_TOGGLE_PRETTY_TYPE_LIST: null,
+    RES_CHANGE_PRETTY_TYPE_VALUE: null,
 })
 
 export default AppConstants

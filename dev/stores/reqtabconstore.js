@@ -89,14 +89,17 @@ const DEFAULT_CON_ITEM = {
         bodyRawData: null,
         reqStatus: REQ_PREPARE,
         fetchResponse: null,
-        fetchResponseData: null
+        fetchResponseData: null,
+        resPrettyType: 'HTML'
     },
     showBodyRawTypeList: false,
     showReqMethodList: false,
+    showResPrettyTypeList: false,
     aceEditorConfig: {
         show: false,
         mode: 'json',
-        readOnly: false
+        readOnly: false,
+        wrapMode: true
     }
 }
 
@@ -143,6 +146,7 @@ let tabCons = {
         }
     ],
     reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
+    prettyTypes: ['JSON', 'XML', 'HTML', 'Text'],
     items: [_.cloneDeep(DEFAULT_CON_ITEM)],
     aceEditorId: 'brace-editor'
 }
@@ -184,7 +188,8 @@ let tabConActions = {
         let activeTabName = tabCon.builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {
-            show: activeTabName === REQUEST_BODY_STR && bodyType.name === 'raw',
+            show: activeTabName === REQUEST_BODY_STR && bodyType.name === 'raw' ||
+                  activeTabName === RESPONSE_STR && tabCon.builders.reqStatus === REQ_SUCCEEDED,
             readOnly: activeTabName === RESPONSE_STR
         }
         if (editorMode) {
@@ -232,6 +237,29 @@ let tabConActions = {
             tabConActions.switchBuilderTab(RESPONSE_STR)
         }
         return canSend
+    },
+
+    sendReq() {
+        let canSend = this.checkReqSend()
+        if (!canSend) return
+        Requester.fetch((res, data) => {
+            console.log(res)
+            tabConActions.switchBuilderTab(RESPONSE_STR)
+            let tabCon = tabCons.items[tabIndex]
+            let builders = tabCon.builders
+            builders.fetchResponse = res
+            builders.fetchResponseData = data
+            if (!res) {
+                // no response, error happened
+                builders.reqStatus = REQ_FAILED
+            } else {
+                // has response
+                builders.reqStatus = REQ_SUCCEEDED
+                tabCon.aceEditorConfig.show = true
+            }
+            ReqTabConStore.emitChange()
+            ReqTabConStore.emitAceEditorUpdate()
+        })
     }
 }
 
@@ -438,12 +466,29 @@ let bodyActions = {
     },
 
     changeBodyRawData(text) {
+        let tabCon = tabCons.items[tabIndex]
+        if (tabCon.builders.activeTabName === RESPONSE_STR) {
+            // response tab, should not change bodyRawData
+            return
+        }
         tabCons.items[tabIndex].builders.bodyRawData = text
     }
 
 }
 
-let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions)
+let resActions = {
+
+    toggleResPrettyTypeList() {
+        tabCons.items[tabIndex].showResPrettyTypeList = !tabCons.items[tabIndex].showResPrettyTypeList
+    },
+
+    changeResPrettyTypeValue(prettyType) {
+        tabCons.items[tabIndex].builders.resPrettyType = prettyType
+    }
+
+}
+
+let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions, resActions)
 
 let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 
@@ -454,6 +499,7 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 reqMethods: tabCons.reqMethods,
                 bodyTypes: tabCons.bodyTypes,
                 rawTypes: tabCons.rawTypes,
+                prettyTypes: tabCons.prettyTypes,
                 aceEditorId: tabCons.aceEditorId
             }
         }
@@ -518,28 +564,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_CONTENT_SEND:
-            let canSend = actions.checkReqSend()
-            if (canSend) {
-                Requester.fetch((res, data) => {
-                    console.log(data)
-                    console.log(res)
-                    tabConActions.switchBuilderTab(RESPONSE_STR)
-                    let tabCon = tabCons.items[tabIndex]
-                    let builders = tabCon.builders
-                    builders.fetchResponse = res
-                    builders.fetchResponseData = data
-                    if (!res) {
-                        // no response, error happened
-                        builders.reqStatus = REQ_FAILED
-                    } else {
-                        // has response
-                        builders.reqStatus = REQ_SUCCEEDED
-                        tabCon.aceEditorConfig.show = true
-                    }
-                    ReqTabConStore.emitChange()
-                    ReqTabConStore.emitAceEditorUpdate()
-                })
-            }
+            actions.sendReq()
             ReqTabConStore.emitChange()
             break
         // req content action <---
@@ -577,6 +602,7 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_BUILDER_SWITCH_TAB:
             actions.switchBuilderTab(action.activeTabName)
             ReqTabConStore.emitChange()
+            ReqTabConStore.emitAceEditorUpdate()
             break
 
         case AppConstants.REQ_BODY_CHANGE_RAW_DATA:
@@ -686,6 +712,17 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
         // req body action <---
+
+        // res action --->
+        case AppConstants.RES_TOGGLE_PRETTY_TYPE_LIST:
+            actions.toggleResPrettyTypeList()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHANGE_PRETTY_TYPE_VALUE:
+            actions.changeResPrettyTypeValue(action.prettyType)
+            ReqTabConStore.emitChange()
+            break
 
         default:
             break
