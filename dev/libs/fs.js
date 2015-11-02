@@ -1,6 +1,8 @@
 //author @huntbao
 'use strict'
 
+import Util from './util'
+
 let FileSystem = {
 
     __initialized: false,
@@ -62,26 +64,24 @@ let FileSystem = {
 
     write(name, data, type, callback) {
         if (!this.__initialized) {
-            this.init(() => {
-                this.write(name, type, callback)
-            })
+            return this.init(this.write.bind(this, ...arguments))
         }
         name = encodeURI(name)
         name = name.replace('/', '_')
         this.removeFileIfExists(name, () => {
-            this.__fs.root.getFile(name, {create: true}, function (fileEntry) {
+            this.__fs.root.getFile(name, {create: true}, (fileEntry) => {
                 fileEntry.createWriter(function (fileWriter) {
                     fileWriter.onwriteend = function (e) {
                         var properties = {
                             url: fileEntry.toURL()
                         }
-
                         callback(properties.url)
                     }
                     fileWriter.onerror = function (e) {
                         callback(false)
                     }
                     let blob
+                    data = Util.stripScriptTag(data)
                     if (type === 'pdf') {
                         blob = new Blob([data], {type: 'application/pdf'})
                     } else {

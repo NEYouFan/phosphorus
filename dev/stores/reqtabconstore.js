@@ -242,10 +242,12 @@ let tabConActions = {
             let builders = tabCons.items[tabIndex].builders
             builders.reqStatus = REQ_SENDING
             tabConActions.switchBuilderTab(RESPONSE_STR)
+            // clear previous data
             builders.fetchResponse = null
             builders.fetchResponseRawData = null
             builders.fetchResponseData = null
             builders.fetchResponseIsJSON = false
+            builders.resFilePath = null
         }
         return canSend
     },
@@ -773,6 +775,10 @@ AppDispatcher.register((action) => {
             actions.changeResShowType(action.showType)
             ReqTabConStore.emitChange()
             ReqTabConStore.emitAceEditorUpdate()
+            break
+
+        case AppConstants.RES_EMIT_CHANGE:
+            ReqTabConStore.emitChange()
             break
 
         default:

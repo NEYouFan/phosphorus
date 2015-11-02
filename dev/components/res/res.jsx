@@ -161,11 +161,12 @@ class Res extends React.Component {
         let builders = this.props.builders
         if (builders.resFilePath) {
             return (
-                <iframe src={builders.resFilePath} frameborder="0"></iframe>
+                <div className="preview-con">
+                    <iframe src={builders.resFilePath} frameBorder="0"></iframe>
+                </div>
             )
         } else {
             FS.write('response.html', builders.fetchResponseRawData, 'html', (filePath) => {
-                console.log(filePath)
                 builders.resFilePath = filePath
                 ResAction.emitChange()
             })

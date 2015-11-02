@@ -26,6 +26,12 @@ class ResAction  {
         })
     }
 
+    static emitChange () {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.RES_EMIT_CHANGE
+        })
+    }
+
 }
 
 export default ResAction

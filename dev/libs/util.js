@@ -81,11 +81,18 @@ let Util = {
             if (param.readonly) return
             if ((!param.key && !param.value) || !param.checked) return
             if (!query[param.key]) {
-                query[param.key]= []
+                query[param.key] = []
             }
-            query[param.key].push(param.value||'')
+            query[param.key].push(param.value || '')
         })
         return query
+    },
+
+    stripScriptTag: function (text) {
+        if (!text) return text;
+        var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
+        text = text.replace(re, "");
+        return text;
     }
 }
 

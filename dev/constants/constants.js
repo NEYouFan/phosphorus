@@ -57,6 +57,7 @@ let AppConstants = keyMirror({
     RES_TOGGLE_PRETTY_TYPE_LIST: null,
     RES_CHANGE_PRETTY_TYPE_VALUE: null,
     RES_CHANGE_SHOW_TYPE: null,
+    RES_EMIT_CHANGE: null,
 })
 
 export default AppConstants

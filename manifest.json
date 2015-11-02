@@ -24,6 +24,7 @@
     "system.display",
     "http://*/*",
     "https://*/*",
+    "filesystem://*/*",
     "contextMenus",
     "unlimitedStorage",
     "storage",
