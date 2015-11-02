@@ -9,7 +9,8 @@ const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_ITEMS = {
     //url: 'http://www.baidu.com/',
-    url: 'http://www.google.com',
+    //url: 'https://note.sdo.com/notecategory/list?_=1446469270609',
+    url: 'http://nei.hz.netease.com/api/dashboard/getAllData',
     rurl: '',// rurl is the request url, it's path variable is replaced (done in tabConActions.checkReqSend(), see@reqtabconstore.js )
     method: 'GET',
     name: 'New tab',

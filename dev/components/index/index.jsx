@@ -116,6 +116,7 @@ class Index extends React.Component {
 
     updateAceEditor() {
         // https://github.com/securingsincity/react-ace/blob/master/src/ace.jsx
+        // https://github.com/ajaxorg/ace/wiki/Embedding-API
         let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].aceEditorConfig
