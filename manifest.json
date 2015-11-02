@@ -1,10 +1,12 @@
 {
-  "app": {
-    "background": {
-      "scripts": [
-        "js/background.js"
-      ]
-    }
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "images/icons/19x19.png",
+    "default_title": "Phosphorus - A tool like Postman"
   },
   "icons": {
     "16": "images/icons/16x16.png",
@@ -15,33 +17,21 @@
   },
   "description": "A tool like Postman",
   "manifest_version": 2,
-  "name": "Phosphorus",
-  "short_name": "Phosphorus",
+  "name": "Phosphorus - A tool like Postman",
+  "short_name": "Phosphorus - A tool like Postman",
   "minimum_chrome_version": "28",
-  "offline_enabled": true,
   "permissions": [
-    "webview",
     "system.display",
     "http://*/*",
     "https://*/*",
     "contextMenus",
     "unlimitedStorage",
     "storage",
-    "fileSystem",
-    "fileSystem.write",
-    "notifications",
-    "identity",
-    {
-      "socket": [
-        "tcp-connect:*:*",
-        "tcp-listen:*:*"
-      ]
-    }
+    "notifications"
   ],
-  "sandbox": {
-    "content_security_policy": "sandbox allow-scripts allow-popups; script-src 'self' 'unsafe-inline' 'unsafe-eval';",
-    "pages": []
-  },
-  "offline_enabled": true,
+  "content_security_policy": "script-src 'self' http://localhost:7070/webpack-dev-server.js http://localhost:7070/assets/index.js;object-src 'self'",
+  "web_accessible_resources": [
+    "index.html"
+  ],
   "version": "1.0.0"
 }

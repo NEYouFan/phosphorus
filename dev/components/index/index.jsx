@@ -63,7 +63,7 @@ class Index extends React.Component {
 
     render() {
         return (
-            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
+            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}} onContextMenu={(e)=>{this.onContextMenu(e)}}>
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab}/>
@@ -108,6 +108,10 @@ class Index extends React.Component {
         if (appStates.reqTabCon.reqCons[tabIndex].showResPrettyTypeList) {
             ResAction.toggleResPrettyTypeList()
         }
+    }
+
+    onContextMenu(evt) {
+        evt.preventDefault()
     }
 
     onChangeEditorText(text) {

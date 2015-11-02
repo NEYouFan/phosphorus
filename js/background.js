@@ -1,29 +1,28 @@
 ﻿//Phosphorus
 //author @huntbao
-chrome.app.runtime.onLaunched.addListener(function () {
-    chrome.system.display.getInfo(function (info) {
-        var width = info[0].workArea.width
-        var height = info[0].workArea.height
+'use strict'
 
-        if (width > 1400 && height > 800) {
-            width = 1400
-            height = 800
-        }
+let bg = {
 
-        chrome.app.window.create('phosphorus.html', {
-            id: 'phosphorus-main',
-            bounds: {
-                width: width,
-                height: height
-            },
-            outerBounds: {
-                width: width,
-                height: height
-            }
-        }, function (win) {
-            win.onClosed.addListener(function () {
-                console.log('On closing the window')
+    init() {
+        var self = this
+        self.browserAction()
+    },
+
+    browserAction() {
+        chrome.browserAction.onClicked.addListener(function () {
+            let screenWidth = window.screen.availWidth
+            let screenHeight = window.screen.availHeight
+            chrome.windows.create({
+                url: 'index.html',
+                left: 50,
+                top: 50,
+                width: screenWidth - 100,
+                height: screenHeight - 100,
+                type: 'panel'
             })
         })
-    })
-})
+    }
+}
+
+bg.init()
