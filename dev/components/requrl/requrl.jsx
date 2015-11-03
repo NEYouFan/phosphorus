@@ -37,6 +37,8 @@ class ReqURL extends React.Component {
                             value={this.props.tab.url}
                             type="url"
                             spellCheck="false"
+                            onFocus={(e)=>{this.onFocus(e)}}
+                            onBlur={(e)=>{this.onBlur(e)}}
                             onKeyDown={(e)=>{this.onKeyDown(e)}}
                             placeholder="Enter request URL here"/>
                     </div>
@@ -77,6 +79,17 @@ class ReqURL extends React.Component {
         if (evt.keyCode === 13) {
             this.sendReq()
         }
+    }
+
+    onFocus(evt) {
+        if (evt.target.dataset.isFocused === undefined || evt.target.dataset.isFocused === '0') {
+            evt.target.select()
+            evt.target.dataset.isFocused = '1'
+        }
+    }
+
+    onBlur(evt) {
+        evt.target.dataset.isFocused = '0'
     }
 
 }
