@@ -96,15 +96,14 @@ let Util = {
     },
 
     copyToClipboard(text){
-        var copyDiv = document.createElement('textarea')
-        copyDiv.contentEditable = true
-        document.body.appendChild(copyDiv)
-        copyDiv.innerHTML = text
-        copyDiv.unselectable = 'off'
-        copyDiv.focus()
+        var ta = document.createElement('textarea')
+        ta.className = 'copy-textarea'
+        document.body.appendChild(ta)
+        ta.innerHTML = text
+        ta.focus()
         document.execCommand('selectall')
-        document.execCommand("copy", false, null)
-        document.body.removeChild(copyDiv)
+        document.execCommand('copy', false, null)
+        document.body.removeChild(ta)
     }
 }
 
