@@ -115,8 +115,6 @@ class Index extends React.Component {
     }
 
     updateAceEditor() {
-        // https://github.com/securingsincity/react-ace/blob/master/src/ace.jsx
-        // https://github.com/ajaxorg/ace/wiki/Embedding-API
         let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
         let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].aceEditorConfig
@@ -149,10 +147,6 @@ class Index extends React.Component {
         aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         // this function will trigger editor's change event
         aceEditor.setValue(text, -1)
-        //aceEditor.getSession().setUseWrapMode(aceEditorConfig.wrapMode)
-        //if (aceEditorConfig.showSearch) {
-        //    aceEditor.execCommand('find')
-        //}
     }
 
 }

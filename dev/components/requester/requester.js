@@ -6,7 +6,6 @@ import ReqConTabStore from '../../stores/reqtabconstore'
 
 let Requester = {
 
-    // https://github.com/bitinn/node-fetch
     fetch(callback) {
         let tabState = ReqTabStore.getAll().reqTab
         let tabConState = ReqConTabStore.getAll().reqTabCon
