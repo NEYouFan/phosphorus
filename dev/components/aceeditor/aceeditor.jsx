@@ -10,6 +10,7 @@ import javascriptMode from 'brace/mode/javascript'
 import xmlMode from 'brace/mode/xml'
 import htmlMode from 'brace/mode/html'
 import searchBox from 'brace/ext/searchbox'
+import ReqBodyAction from '../../actions/reqbodyaction'
 
 class AceEditor extends React.Component {
 
@@ -18,6 +19,12 @@ class AceEditor extends React.Component {
         this.editor.$blockScrolling = Infinity
         this.editor.on('input', () => {
             this.onChange()
+        })
+        this.editor.on('focus', (e) => {
+            if (e.relatedTarget && e.relatedTarget.classList.contains('ace_search_field')) {
+                // close search box action
+                ReqBodyAction.hideEditorSearch()
+            }
         })
     }
 
@@ -33,12 +40,29 @@ class AceEditor extends React.Component {
         return (
             <div className={classes}>
                 <div id={this.props.id}></div>
+                <div className="toggle-wrapping" title="Toggle wrapping"
+                     onClick={(e)=>{this.toggleWrapping(e)}}>
+                    <span className="glyphicon glyphicon-indent-right"></span>
+                </div>
+                <div className="search-in-editor" title="Search in editor"
+                     onClick={(e)=>{this.searchInEditor(e)}}>
+                    <span className="glyphicon glyphicon-search"></span>
+                </div>
             </div>
         )
     }
 
     onChange() {
         this.props.onChange(this.editor.getValue())
+    }
+
+    toggleWrapping(evt) {
+        evt.currentTarget.classList.toggle('active')
+        ReqBodyAction.toggleEditorWrapping()
+    }
+
+    searchInEditor(evt) {
+        ReqBodyAction.showEditorSearch()
     }
 }
 

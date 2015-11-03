@@ -10,4 +10,27 @@
   >div {
     height: 100%
   }
+
+  .toggle-wrapping,
+  .search-in-editor{
+    width: 26px;
+    height: 26px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 28px;
+    background-color: #f2f2f2;
+    cursor: pointer
+    position: absolute;
+    right: 40px;
+    top: -39px;
+
+    &.active {
+      background-color: #fff;
+    }
+  }
+
+  .search-in-editor {
+    right: 0;
+  }
 }

@@ -171,6 +171,7 @@ class Res extends React.Component {
                 ResAction.emitChange()
             })
         }
+
     }
 
 }

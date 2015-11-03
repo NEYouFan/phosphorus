@@ -63,7 +63,7 @@ class Index extends React.Component {
 
     render() {
         return (
-            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}} onContextMenu={(e)=>{this.onContextMenu(e)}}>
+            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab}/>
@@ -110,10 +110,6 @@ class Index extends React.Component {
         }
     }
 
-    onContextMenu(evt) {
-        evt.preventDefault()
-    }
-
     onChangeEditorText(text) {
         ReqBodyAction.changeBodyRawData(text)
     }
@@ -153,8 +149,10 @@ class Index extends React.Component {
         aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         // this function will trigger editor's change event
         aceEditor.setValue(text, -1)
-        aceEditor.getSession().setUseWrapMode(true)
-        //aceEditor.execCommand("find")
+        aceEditor.getSession().setUseWrapMode(aceEditorConfig.wrapMode)
+        if (aceEditorConfig.showSearch) {
+            aceEditor.execCommand("find")
+        }
     }
 
 }
