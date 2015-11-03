@@ -13,7 +13,8 @@ class KeyValue extends React.Component {
         let nodes = this.props.kvs.map((kv, index) => {
             let rowClasses = classNames({
                 'kv-row': true,
-                'removable': !kv.readonly
+                'removable': !kv.readonly,
+                'onlyone': total === 1
             })
             let okSignClasses = classNames({
                 'glyphicon glyphicon-ok-sign': true,
@@ -43,11 +44,7 @@ class KeyValue extends React.Component {
                 <div className={rowClasses} key={index}>
                     <div className={okSignClasses} onClick={()=>{this.toggle(index)}}></div>
                     {inputs}
-                    {index === total - 1 ?
-                        <div className="glyphicon glyphicon-edit" onClick={()=>{this.edit()}}></div>
-                        :
-                        <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(index)}}></div>
-                    }
+                    <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(index)}}></div>
                 </div>
             )
         })

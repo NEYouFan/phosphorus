@@ -44,7 +44,7 @@
       cursor: pointer
       margin: 5px 4px 0;
       color: #eee
-      transition all ease .2s
+      transition color ease .2s
 
       &:hover {
         color: #ccc
@@ -62,6 +62,12 @@
     &.removable {
       .glyphicon-remove {
         visibility visible
+      }
+    }
+
+    &.onlyone {
+      .glyphicon-remove {
+        visibility hidden
       }
     }
 
