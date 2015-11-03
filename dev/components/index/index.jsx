@@ -143,6 +143,7 @@ class Index extends React.Component {
             }
         } else {
             text = builders.bodyRawData
+            aceEditor.setOption('readOnly', false)
         }
         aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
         // this function will trigger editor's change event

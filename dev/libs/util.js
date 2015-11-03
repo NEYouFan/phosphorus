@@ -93,6 +93,18 @@ let Util = {
         var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
         text = text.replace(re, "");
         return text;
+    },
+
+    copyToClipboard(text){
+        var copyDiv = document.createElement('textarea')
+        copyDiv.contentEditable = true
+        document.body.appendChild(copyDiv)
+        copyDiv.innerHTML = text
+        copyDiv.unselectable = 'off'
+        copyDiv.focus()
+        document.execCommand('selectall')
+        document.execCommand("copy", false, null)
+        document.body.removeChild(copyDiv)
     }
 }
 

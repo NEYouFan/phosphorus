@@ -11,6 +11,7 @@ import xmlMode from 'brace/mode/xml'
 import htmlMode from 'brace/mode/html'
 import searchBox from 'brace/ext/searchbox'
 import ReqBodyAction from '../../actions/reqbodyaction'
+import Util from '../../libs/util'
 
 class AceEditor extends React.Component {
 
@@ -42,6 +43,10 @@ class AceEditor extends React.Component {
                      onClick={(e)=>{this.searchInEditor(e)}}>
                     <span className="glyphicon glyphicon-search"></span>
                 </div>
+                <div className="copy-icon" title="Copy editor's text"
+                     onClick={(e)=>{this.copy(e)}}>
+                    <span className="glyphicon glyphicon-copy"></span>
+                </div>
             </div>
         )
     }
@@ -58,6 +63,10 @@ class AceEditor extends React.Component {
 
     searchInEditor(evt) {
         this.editor.execCommand('find')
+    }
+
+    copy(evt) {
+        Util.copyToClipboard(this.editor.getValue())
     }
 }
 
