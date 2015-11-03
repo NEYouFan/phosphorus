@@ -17,8 +17,8 @@ class KeyValueX extends KeyValue {
             <div className={classes} onFocus={this.focus.bind(this, rowIndex)} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <input {...valueInputProps} className="value-text-inp"/>
-                <input type="file"/>
-                <select value={valueType} onChange={(evt) => {this.changeKVValueType(rowIndex, evt)}}>
+                <input type="file" onChange={(e)=>{this.onChangeFile(rowIndex,e)}}/>
+                <select value={valueType} onChange={(e) => {this.changeKVValueType(rowIndex,e)}}>
                     <option value="text">Text</option>
                     <option value="file">File</option>
                 </select>
@@ -28,6 +28,10 @@ class KeyValueX extends KeyValue {
 
     changeKVValueType(rowIndex, evt) {
         this.props.changeKVValueType(rowIndex, evt.target.value)
+    }
+
+    onChangeFile(rowIndex, evt) {
+        this.props.changeKVFileValue(rowIndex, evt.target)
     }
 
 }

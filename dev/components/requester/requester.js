@@ -26,14 +26,31 @@ let Requester = {
             headers: headers
         }
         // deal form-data
-        if (method !== 'GET' && tabCon.builders.bodyType.name === 'form-data') {
-            let fd = new FormData()
-            tabCon.builders.bodyFormDataKVs.map((kv) => {
-                if (kv.key && kv.value) {
-                    fd.append(kv.key, kv.value)
-                }
-            })
-            fetchOptions.body = fd
+        let bodyType = tabCon.builders.bodyType.type
+        if (method !== 'GET') {
+            if (bodyType === 'form-data') {
+                let fd = new FormData()
+                tabCon.builders.bodyFormDataKVs.map((kv) => {
+                    if (kv.key) {
+                        if (kv.valueType === 'text' && kv.value) {
+                            fd.append(kv.key, kv.value)
+                        } else if (kv.valueType === 'file' && kv.fileInput && kv.fileInput.files[0]) {
+                            fd.append(kv.key, kv.fileInput.files[0])
+                        }
+                    }
+                })
+                fetchOptions.body = fd
+            } else if (bodyType === 'x-www-form-urlencoded') {
+                let fd = new FormData()
+                tabCon.builders.bodyXFormKVs.map((kv) => {
+                    if (kv.key && kv.value) {
+                        fd.append(kv.key, kv.value)
+                    }
+                })
+                fetchOptions.body = fd
+            } else if (bodyType === 'raw') {
+                fetchOptions.body = tabCon.builders.bodyRawData
+            }
         }
         let res
         let startTime = Date.now()

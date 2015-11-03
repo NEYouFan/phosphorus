@@ -14,6 +14,7 @@ let mediatypes = [
     'application/rss+xml',
     'application/soap+xml',
     'application/font-woff',
+    'application/x-www-form-urlencoded',
     'application/x-yaml',
     'application/xhtml+xml',
     'application/xml',

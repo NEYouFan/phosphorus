@@ -18,6 +18,8 @@ const BLANK_STR = ''
 const REQ_HEADERS_DATA_LIST = 'reqheadersdatalist'
 const REQ_MIDIATYPES_DATA_LIST = 'mediatypesdatalist'
 const CONTENT_TYPE_STR = 'Content-Type'
+const XFORM_CONTENT_TYPE = 'x-www-form-urlencoded'
+const XFORM_CONTENT_TYPE_VALUE = 'application/x-www-form-urlencoded'
 const REQUEST_BODY_STR = 'Request Body'
 const URL_PARAMS_STR = 'URL Params'
 const REQUEST_HEADERS_STR = 'Request Headers'
@@ -49,7 +51,8 @@ const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_KV, {
     keyPlaceholder: 'URL Parameter Key'
 })
 const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
-    valueType: 'text'
+    valueType: 'text',
+    fileInput: null
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_SHOW_TYPE = {
@@ -84,8 +87,9 @@ const DEFAULT_CON_ITEM = {
         activeTabName: REQUEST_BODY_STR,
         headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
-            name: 'form-data',
-            value: 'JSON(application/json)'
+            type: 'raw',
+            name: 'JSON(application/json)',
+            value: 'application/json'
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
@@ -102,7 +106,7 @@ const DEFAULT_CON_ITEM = {
     showReqMethodList: false,
     showResPrettyTypeList: false,
     aceEditorConfig: {
-        show: false,
+        show: true,
         mode: 'json',
         readOnly: false
     }
@@ -193,8 +197,8 @@ let tabConActions = {
         let activeTabName = tabCon.builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {
-            show: activeTabName === REQUEST_BODY_STR && bodyType.name === 'raw' ||
-                  activeTabName === RESPONSE_STR && tabCon.builders.reqStatus === REQ_SUCCEEDED,
+            show: activeTabName === REQUEST_BODY_STR && bodyType.type === 'raw' ||
+            activeTabName === RESPONSE_STR && tabCon.builders.reqStatus === REQ_SUCCEEDED,
             readOnly: activeTabName === RESPONSE_STR
         }
         if (editorMode) {
@@ -383,8 +387,12 @@ let headerActions = {
                 return rawType.value === header.value
             })
             let bodyType = tabCons.items[tabIndex].builders.bodyType
-            bodyType.name = 'raw'
-            bodyType.value = rawType ? rawType.name : ''
+            if (header.value === XFORM_CONTENT_TYPE_VALUE) {
+                bodyType.name = XFORM_CONTENT_TYPE
+            } else {
+                bodyType.name = 'raw'
+                bodyType.value = rawType ? rawType.name : ''
+            }
         }
     }
 }
@@ -392,13 +400,33 @@ let headerActions = {
 let bodyActions = {
 
     changeBodyType(bodyType) {
-        tabCons.items[tabIndex].builders.bodyType.name = bodyType
-        if (bodyType !== 'raw') {
-            let headers = tabCons.items[tabIndex].builders.headerKVs
+        tabCons.items[tabIndex].builders.bodyType.type = bodyType
+        let headers = tabCons.items[tabIndex].builders.headerKVs
+        if (bodyType === 'form-data') {
             // clear header `Content-type`
             _.remove(headers, (header) => {
                 return header.key === CONTENT_TYPE_STR
             })
+        } else if (bodyType === XFORM_CONTENT_TYPE) {
+            let contentType = _.find(headers, (header) => {
+                return header.key == CONTENT_TYPE_STR
+            })
+            if (contentType) {
+                // update header `Content-type`
+                contentType.value = XFORM_CONTENT_TYPE_VALUE
+            } else {
+                // add header `Content-type`
+                headers.unshift(Object.assign({}, DEFAULT_HEADERS_KV, {
+                    key: CONTENT_TYPE_STR,
+                    value: XFORM_CONTENT_TYPE_VALUE,
+                    valueDataList: REQ_MIDIATYPES_DATA_LIST
+                }))
+            }
+        } else if (bodyType === 'raw') {
+            let rawType = _.find(tabCons.rawTypes, (rt) => {
+                return rt.name == tabCons.items[tabIndex].builders.bodyType.name
+            })
+            this.changeBodyTypeValue(rawType)
         }
         tabConActions.changeAceEditorConfig()
     },
@@ -409,7 +437,7 @@ let bodyActions = {
         let contentType = _.find(headers, (header) => {
             return header.key == CONTENT_TYPE_STR
         })
-        tabCons.items[tabIndex].builders.bodyType.value = bodyType.name
+        tabCons.items[tabIndex].builders.bodyType.name = bodyType.name
         if (!isTextType) {
             if (contentType) {
                 // update header `Content-type`
@@ -465,6 +493,10 @@ let bodyActions = {
 
     changeBodyFormDataKVValueType(rowIndex, value) {
         tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].valueType = value
+    },
+
+    changeBodyFormDataKVFileValue(rowIndex, fileInput) {
+        tabCons.items[tabIndex].builders.bodyFormDataKVs[rowIndex].fileInput = fileInput
     },
 
     // body x form kv action
@@ -736,6 +768,10 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE:
             actions.changeBodyFormDataKVValueType(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_FILE_VALUE:
+            actions.changeBodyFormDataKVFileValue(action.rowIndex, action.fileInput)
             break
 
         //body x form kv action

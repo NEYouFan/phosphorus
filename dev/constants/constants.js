@@ -46,6 +46,7 @@ let AppConstants = keyMirror({
     REQ_BODY_FORMDATA_CHANGE_KV_KEY: null,
     REQ_BODY_FORMDATA_CHANGE_KV_VALUE: null,
     REQ_BODY_FORMDATA_CHANGE_KV_VALUE_TYPE: null,
+    REQ_BODY_FORMDATA_CHANGE_KV_FILE_VALUE: null,
     // body x form kv action
     REQ_BODY_XFORM_TOGGLE_KV: null,
     REQ_BODY_XFORM_ADD_KV: null,

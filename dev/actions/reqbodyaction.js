@@ -79,6 +79,14 @@ class ReqBodyAction  {
         })
     }
 
+    static changeBodyFormDataKVFileValue(rowIndex, fileInput) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_FORMDATA_CHANGE_KV_FILE_VALUE,
+            rowIndex: rowIndex,
+            fileInput: fileInput
+        })
+    }
+
     static toggleBodyXFormKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_XFORM_TOGGLE_KV,

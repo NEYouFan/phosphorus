@@ -21,7 +21,7 @@ class ReqBuilderBody extends React.Component {
         return (
             <span className={rawTypeClasses}>
                 <span className="rawtype-wrap" onClick={(e)=>{this.toggleRawTypeList(e)}}>
-                    <span className="rawtype-name">{bodyType.value}</span>
+                    <span className="rawtype-name">{bodyType.name}</span>
                     <span className="glyphicon glyphicon-chevron-down"></span>
                 </span>
                 <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawTypeValue(v)}}/>
@@ -32,7 +32,7 @@ class ReqBuilderBody extends React.Component {
     render() {
         let bodyType = this.props.builders.bodyType
         let typeNodes = this.props.bodyTypes.map((type, index) => {
-            let isChecked = type === bodyType.name
+            let isChecked = type === bodyType.type
             let rawNodes = this.getRawNodes(type, isChecked, bodyType)
             return (
                 <li key={index}>
@@ -50,7 +50,7 @@ class ReqBuilderBody extends React.Component {
             hide: this.props.builders.activeTabName !== 'Request Body'
         })
 
-        let conNodes = this.getCon(bodyType.name)
+        let conNodes = this.getCon(bodyType.type)
         return (
             <div className={modClassName}>
                 <div className="mod-reqbuilder-body">
@@ -90,6 +90,7 @@ class ReqBuilderBody extends React.Component {
                 changeKVKey={(rowIndex, value) => {this.changeBodyFormDataKVKey(rowIndex, value)}}
                 changeKVValue={(rowIndex, value) => {this.changeBodyFormDataKVValue(rowIndex, value)}}
                 changeKVValueType={(rowIndex, value) => {this.changeBodyFormDataKVValueType(rowIndex, value)}}
+                changeKVFileValue={(rowIndex, value) => {this.changeBodyFormDataKVFileValue(rowIndex, value)}}
                 />
         )
     }
@@ -104,7 +105,7 @@ class ReqBuilderBody extends React.Component {
                 removeKV={(rowIndex) => {this.removeBodyXFormKV(rowIndex)}}
                 editKV={() => {this.editBodyXFormKV()}}
                 changeKVKey={(rowIndex, value) => {this.changeBodyXFormKVKey(rowIndex, value)}}
-                changeKVValue={(rowIndex, value) => {this.changeBodyXFormKVValue(rowIndex, value)}}
+                changeKVValue={(rowIndex, fileInput) => {this.changeBodyXFormKVValue(rowIndex, fileInput)}}
                 />
         )
     }
@@ -156,6 +157,10 @@ class ReqBuilderBody extends React.Component {
 
     changeBodyFormDataKVValueType(rowIndex, value) {
         ReqBodyAction.changeBodyFormDataKVValueType(rowIndex, value)
+    }
+
+    changeBodyFormDataKVFileValue(rowIndex, fileInput) {
+        ReqBodyAction.changeBodyFormDataKVFileValue(rowIndex, fileInput)
     }
 
     toggleBodyXFormKV(rowIndex) {
