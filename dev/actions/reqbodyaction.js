@@ -126,24 +126,6 @@ class ReqBodyAction  {
         })
     }
 
-    static toggleEditorWrapping () {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BODY_TOGGLE_EDITOR_WRAPPING
-        })
-    }
-
-    static showEditorSearch () {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BODY_SHOW_EDITOR_SEARCH
-        })
-    }
-
-    static hideEditorSearch () {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_BODY_HIDE_EDITOR_SEARCH
-        })
-    }
-
 }
 
 export default ReqBodyAction

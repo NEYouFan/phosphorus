@@ -20,12 +20,6 @@ class AceEditor extends React.Component {
         this.editor.on('input', () => {
             this.onChange()
         })
-        this.editor.on('focus', (e) => {
-            if (e.relatedTarget && e.relatedTarget.classList.contains('ace_search_field')) {
-                // close search box action
-                ReqBodyAction.hideEditorSearch()
-            }
-        })
     }
 
     componentDidUpdate() {
@@ -58,11 +52,12 @@ class AceEditor extends React.Component {
 
     toggleWrapping(evt) {
         evt.currentTarget.classList.toggle('active')
-        ReqBodyAction.toggleEditorWrapping()
+        let wrapMode = this.editor.getSession().getUseWrapMode()
+        this.editor.getSession().setUseWrapMode(!wrapMode)
     }
 
     searchInEditor(evt) {
-        ReqBodyAction.showEditorSearch()
+        this.editor.execCommand('find')
     }
 }
 

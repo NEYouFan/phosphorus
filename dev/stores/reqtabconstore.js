@@ -104,9 +104,7 @@ const DEFAULT_CON_ITEM = {
     aceEditorConfig: {
         show: false,
         mode: 'json',
-        readOnly: false,
-        wrapMode: false,
-        showSearch: false
+        readOnly: false
     }
 }
 
@@ -497,23 +495,6 @@ let bodyActions = {
             return
         }
         tabCons.items[tabIndex].builders.bodyRawData = text
-    },
-
-    // body editor action
-
-    toggleEditorWrapping() {
-        let tabCon = tabCons.items[tabIndex]
-        tabCon.aceEditorConfig.wrapMode = !tabCon.aceEditorConfig.wrapMode
-    },
-
-    showEditorSearch() {
-        let tabCon = tabCons.items[tabIndex]
-        tabCon.aceEditorConfig.showSearch = true
-    },
-
-    hideEditorSearch() {
-        let tabCon = tabCons.items[tabIndex]
-        tabCon.aceEditorConfig.showSearch = false
     }
 
 }
@@ -774,25 +755,6 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_BODY_XFORM_CHANGE_KV_VALUE:
             actions.changeBodyXFormKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
-            break
-
-        //body editor action
-        case AppConstants.REQ_BODY_TOGGLE_EDITOR_WRAPPING:
-            actions.toggleEditorWrapping()
-            ReqTabConStore.emitChange()
-            ReqTabConStore.emitAceEditorUpdate()
-            break
-
-        case AppConstants.REQ_BODY_SHOW_EDITOR_SEARCH:
-            actions.showEditorSearch()
-            ReqTabConStore.emitChange()
-            ReqTabConStore.emitAceEditorUpdate()
-            break
-
-        case AppConstants.REQ_BODY_HIDE_EDITOR_SEARCH:
-            actions.hideEditorSearch()
-            //ReqTabConStore.emitChange()
-            //ReqTabConStore.emitAceEditorUpdate()
             break
         // req body action <---
 
