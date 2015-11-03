@@ -12,7 +12,7 @@ const DEFAULT_ITEMS = {
     //url: 'https://note.sdo.com/notecategory/list?_=1446469270609',
     url: 'http://nei.hz.netease.com/api/dashboard/getAllData',
     rurl: '',// rurl is the request url, it's path variable is replaced (done in tabConActions.checkReqSend(), see@reqtabconstore.js )
-    method: 'GET',
+    method: 'POST',
     name: 'New tab',
     urlError: false
 }

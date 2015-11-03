@@ -25,8 +25,19 @@ let Requester = {
             method: method,
             headers: headers
         }
+        // deal form-data
+        if (method !== 'GET' && tabCon.builders.bodyType.name === 'form-data') {
+            let fd = new FormData()
+            tabCon.builders.bodyFormDataKVs.map((kv) => {
+                if (kv.key && kv.value) {
+                    fd.append(kv.key, kv.value)
+                }
+            })
+            fetchOptions.body = fd
+        }
         let res
         let startTime = Date.now()
+        console.log(fetchOptions)
         fetch(url, fetchOptions).then(function (response) {
             res = response
             res.time = Date.now() - startTime
@@ -36,6 +47,7 @@ let Requester = {
         }).catch(function (err) {
             callback(res, err)
         })
+
     }
 }
 

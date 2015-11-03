@@ -81,10 +81,10 @@ const DEFAULT_CON_ITEM = {
             }
         ],
         paramKVs: [DEFAULT_PARAMS_KV],
-        activeTabName: RESPONSE_STR,
+        activeTabName: REQUEST_BODY_STR,
         headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
-            name: 'raw',
+            name: 'form-data',
             value: 'JSON(application/json)'
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
@@ -393,6 +393,13 @@ let bodyActions = {
 
     changeBodyType(bodyType) {
         tabCons.items[tabIndex].builders.bodyType.name = bodyType
+        if (bodyType !== 'raw') {
+            let headers = tabCons.items[tabIndex].builders.headerKVs
+            // clear header `Content-type`
+            _.remove(headers, (header) => {
+                return header.key === CONTENT_TYPE_STR
+            })
+        }
         tabConActions.changeAceEditorConfig()
     },
 
