@@ -17,7 +17,7 @@
   },
   "description": "A tool like Postman",
   "manifest_version": 2,
-  "name": "Phosphorus - A tool like Postman",
+  "name": "Phosphorus",
   "short_name": "Phosphorus - A tool like Postman",
   "minimum_chrome_version": "28",
   "permissions": [

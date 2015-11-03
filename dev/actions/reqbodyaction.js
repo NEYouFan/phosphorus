@@ -127,6 +127,13 @@ class ReqBodyAction  {
         })
     }
 
+    static changeBodyBinaryFile(fileInput) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_BINARY_FILE,
+            fileInput: fileInput
+        })
+    }
+
     static changeBodyRawData(text) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_CHANGE_RAW_DATA,

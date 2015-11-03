@@ -50,12 +50,27 @@ let Requester = {
                 fetchOptions.body = fd
             } else if (bodyType === 'raw') {
                 fetchOptions.body = tabCon.builders.bodyRawData
+            } else if (bodyType === 'binary') {
+                let binaryFileInput = tabCon.builders.bodyBinaryFileInput
+                if (binaryFileInput && binaryFileInput.files.length === 1) {
+                    let reader = new FileReader()
+                    reader.onload = (e) => {
+                        fetchOptions.body = reader.result
+                        this.__fetch(url, fetchOptions, callback)
+                    }
+                    reader.readAsBinaryString(binaryFileInput.files[0])
+                    return
+                }
             }
         }
+        this.__fetch(url, fetchOptions, callback)
+    },
+
+    __fetch(url, options, callback) {
         let res
         let startTime = Date.now()
-        console.log(fetchOptions)
-        fetch(url, fetchOptions).then(function (response) {
+        console.log(options)
+        fetch(url, options).then(function (response) {
             res = response
             res.time = Date.now() - startTime
             return response.text()
@@ -64,7 +79,6 @@ let Requester = {
         }).catch(function (err) {
             callback(res, err)
         })
-
     }
 }
 

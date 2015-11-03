@@ -93,7 +93,7 @@ const DEFAULT_CON_ITEM = {
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
-        bodyBinaryData: null,
+        bodyBinaryFileInput: null,
         bodyRawData: null,
         reqStatus: REQ_PREPARE,
         fetchResponse: null,
@@ -402,7 +402,7 @@ let bodyActions = {
     changeBodyType(bodyType) {
         tabCons.items[tabIndex].builders.bodyType.type = bodyType
         let headers = tabCons.items[tabIndex].builders.headerKVs
-        if (bodyType === 'form-data') {
+        if (bodyType === 'form-data' || bodyType === 'binary') {
             // clear header `Content-type`
             _.remove(headers, (header) => {
                 return header.key === CONTENT_TYPE_STR
@@ -525,6 +525,10 @@ let bodyActions = {
     changeBodyXForm(rowIndex, value, type) {
         let kv = tabCons.items[tabIndex].builders.bodyXFormKVs[rowIndex]
         kv[type] = value
+    },
+
+    changeBodyBinaryFile(fileInput) {
+        tabCons.items[tabIndex].builders.bodyBinaryFileInput = fileInput
     },
 
     changeBodyRawData(text) {
@@ -798,6 +802,11 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_BODY_XFORM_CHANGE_KV_VALUE:
             actions.changeBodyXFormKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
+            break
+
+        // body binary action
+        case AppConstants.REQ_BODY_BINARY_FILE:
+            actions.changeBodyBinaryFile(action.fileInput)
             break
         // req body action <---
 

@@ -188,7 +188,7 @@ class ReqBuilderBody extends React.Component {
     }
 
     changeBinaryData(evt) {
-        // todo upload binary data
+        ReqBodyAction.changeBodyBinaryFile(evt.target)
     }
 
 }
