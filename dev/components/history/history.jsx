@@ -8,7 +8,7 @@ class History extends React.Component {
 
     render() {
         let className = classNames({
-            hide: this.props.sideTab.activeTabName !== 'History'
+            hide: this.props.tabs.activeTabName !== 'History'
         })
         return (
             <div className={className}>

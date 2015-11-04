@@ -10,7 +10,7 @@ import Requester from '../components/requester/requester'
 const CHANGE_EVENT = 'change'
 
 let tabs = {
-    activeTabName: 'History'
+    activeTabName: 'Collections'
 }
 
 //let NEI_SERVER_URL = 'http://nei.hz.netease.com'
@@ -24,11 +24,12 @@ let actions = {
         tabs.activeTabName = activeTabName
     },
 
-    fetchCollections() {
+    fetchCollections(callback) {
         // already fetched
         if (collectionsData !== null) return
         Util.fetchNEICollections(NEI_SERVER_URL, (collections, res) => {
-            console.log(collections)
+            collectionsData = collections
+            callback()
         })
     }
 }
@@ -37,9 +38,11 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getAll() {
         return {
-            sideTab: tabs,
-            history: historyData,
-            collections: collectionsData
+            sideTab: {
+                tabs: tabs,
+                histories: historyData,
+                collections: collectionsData
+            }
         }
     },
 
@@ -48,11 +51,11 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
     },
 
     addChangeListener(callback) {
-        this.on(CHANGE_EVENT, callback);
+        this.on(CHANGE_EVENT, callback)
     },
 
     removeChangeListener(callback) {
-        this.removeListener(CHANGE_EVENT, callback);
+        this.removeListener(CHANGE_EVENT, callback)
     }
 })
 
@@ -66,8 +69,9 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.SIDE_TAB_FETCH_COLLECTIONS:
-            actions.fetchCollections()
-            SideTabStore.emitChange()
+            actions.fetchCollections(() => {
+                SideTabStore.emitChange()
+            })
             break
 
         default:

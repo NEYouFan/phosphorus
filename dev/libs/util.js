@@ -122,44 +122,44 @@ let Util = {
             projectGroups = [
                 {
                     "id": 10207,
-                    "name": "测试",
+                    "name": "TEST",
                     "creatorId": 10011,
                     "type": 0,
                     "fromUsrGroup": "0",
-                    "creatorName": "包勇明",
+                    "creatorName": "BYM",
                     "projects": [
                         {
                             "id": 10597,
-                            "name": "勿删",
+                            "name": "Not Delete",
                             "type": 0,
                             "creatorId": 10011,
-                            "creatorName": "包勇明",
+                            "creatorName": "BYM",
                             "qbsId": 0
                         },
                         {
                             "id": 10484,
-                            "name": "公共资源库",
+                            "name": "Public Sources",
                             "type": 1,
                             "creatorId": 10011,
-                            "creatorName": "包勇明",
+                            "creatorName": "BYM",
                             "qbsId": 0
                         }
                     ]
                 },
                 {
                     "id": 10088,
-                    "name": "默认分组",
+                    "name": "Default Group",
                     "creatorId": 10011,
                     "type": 1,
                     "fromUsrGroup": "0",
-                    "creatorName": "包勇明",
+                    "creatorName": "BYM",
                     "projects": [
                         {
                             "id": 10182,
-                            "name": "公共资源库",
+                            "name": "Public Sources",
                             "type": 1,
                             "creatorId": 10011,
-                            "creatorName": "包勇明",
+                            "creatorName": "BYM",
                             "qbsId": 0
                         }
                     ]
@@ -1393,9 +1393,6 @@ let Util = {
                     "timestamp": 1446627522073
                 }
             }
-            console.log(projectGroups)
-            console.log(projects)
-            return
             let methodMap = {
                 0: 'POST',
                 1: 'GET',
@@ -1407,6 +1404,8 @@ let Util = {
                 let collection = {
                     id: UUID.v1(),
                     name: pg.name,
+                    attributes: [],
+                    datatypes: [],
                     folders: [],
                     requests: []
                 }
@@ -1419,17 +1418,30 @@ let Util = {
                     projects[p.id].interfaces.forEach((inter) => {
                         let request = {
                             id: UUID.v1(),
-                            url: inter.path,
-                            method: methodMap[p.method],
-                            isRest: !!p.isRest,
-                            name: p.name,
-                            description: p.description,
-
+                            url: neiServerUrl + inter.path,
+                            method: methodMap[inter.method],
+                            isRest: !!inter.isRest,
+                            name: inter.name,
+                            description: inter.description,
+                            inputs: inter.inputs,
+                            outputs: inter.outputs,
+                            folderId: folder.id,
+                            collectionId: collection.id
                         }
+                        folder.orders.push(request.id)
+                        collection.requests.push(request)
                     })
+                    collection.attributes.push(...projects[p.id].attributes)
+                    collection.datatypes.push(...projects[p.id].datatypes)
+                    collection.folders.push(folder)
                 })
+                collections.push(collection)
             })
         }
+        convertData()
+        console.log(collections)
+        callback(collections, res)
+        return
         let getDetail = (projectGroups) => {
             let projects = {}
             async.eachSeries(projectGroups, (pg, cb) => {

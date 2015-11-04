@@ -11,10 +11,10 @@ class SideTab extends React.Component {
 
     render() {
         let historyClass = classNames({
-            active: this.props.sideTab.activeTabName === 'History'
+            active: this.props.tabs.activeTabName === 'History'
         })
         let collectionsClass = classNames({
-            active: this.props.sideTab.activeTabName === 'Collections'
+            active: this.props.tabs.activeTabName === 'Collections'
         })
         return (
             <div className="mod-tab">

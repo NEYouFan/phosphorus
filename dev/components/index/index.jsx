@@ -27,7 +27,6 @@ class Index extends React.Component {
     constructor(props) {
         super(props)
         this.state = this.getAppStates()
-        SideTabAction.fetchCollections()
     }
 
     getAppStates() {
@@ -47,6 +46,7 @@ class Index extends React.Component {
         ReqTabConStore.addAceEditorUpdateListener(()=> {
             this.updateAceEditor()
         })
+        SideTabAction.fetchCollections()
     }
 
     componentWillUnmount() {
@@ -71,9 +71,9 @@ class Index extends React.Component {
 
                 <div className="side">
                     <Search />
-                    <SideTab sideTab={this.state.sideTab}/>
-                    <History sideTab={this.state.sideTab}/>
-                    <Collections sideTab={this.state.sideTab}/>
+                    <SideTab tabs={this.state.sideTab.tabs}/>
+                    <History tabs={this.state.sideTab.tabs} histories={this.state.sideTab.histories}/>
+                    <Collections tabs={this.state.sideTab.tabs} collections={this.state.sideTab.collections}/>
                 </div>
                 <div className="bd">
                     <ReqTab
