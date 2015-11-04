@@ -39,13 +39,17 @@ class AceEditor extends React.Component {
                      onClick={(e)=>{this.toggleWrapping(e)}}>
                     <span className="glyphicon glyphicon-indent-right"></span>
                 </div>
+                <div className="copy-icon" title="Copy editor's text"
+                     onClick={(e)=>{this.copy(e)}}>
+                    <span className="glyphicon glyphicon-copy"></span>
+                </div>
                 <div className="search-in-editor" title="Search in editor"
                      onClick={(e)=>{this.searchInEditor(e)}}>
                     <span className="glyphicon glyphicon-search"></span>
                 </div>
-                <div className="copy-icon" title="Copy editor's text"
-                     onClick={(e)=>{this.copy(e)}}>
-                    <span className="glyphicon glyphicon-copy"></span>
+                <div className="json-format" title="Format to JSON"
+                     onClick={(e)=>{this.formatJSON(e)}}>
+                    <span className="glyphicon glyphicon-transfer"></span>
                 </div>
             </div>
         )
@@ -67,6 +71,14 @@ class AceEditor extends React.Component {
 
     copy(evt) {
         Util.copyToClipboard(this.editor.getValue())
+    }
+
+    formatJSON(evt) {
+        try {
+            this.editor.setValue(JSON.stringify(JSON.parse(this.editor.getValue()), null, '\t'), -1)
+        } catch (err) {
+            // do noting
+        }
     }
 }
 

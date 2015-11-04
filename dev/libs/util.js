@@ -9,6 +9,7 @@ const pathVariableExp = new RegExp('/:(\\w+?[^/]*)', 'g')
 //const queryExp = new RegExp('(\\w+)=(\\w+)|(\\w+)=*|=*(\\w+)', 'g')
 
 let Util = {
+
     getUrlParams(url) {
         let params = []
         if (!url) return params
@@ -88,7 +89,7 @@ let Util = {
         return query
     },
 
-    stripScriptTag: function (text) {
+    stripScriptTag(text) {
         if (!text) return text;
         var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
         text = text.replace(re, "");
@@ -104,6 +105,19 @@ let Util = {
         document.execCommand('selectall')
         document.execCommand('copy', false, null)
         document.body.removeChild(ta)
+    },
+
+    fetchFromNEI() {
+        let url = 'http://nei.hz.netease.com/api/projGroup/getProList'
+        let headers = {
+            'Content-Type':'application/json'
+        }
+        fetch(url, {
+            headers: headers,
+            method: 'GET'
+        }).then(() => {
+
+        })
     }
 }
 

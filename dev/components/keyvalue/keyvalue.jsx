@@ -31,7 +31,7 @@ class KeyValue extends React.Component {
                 className: kv.keyError ? 'inp-error' : ''
             }
             let valueInputProps = {
-                placeholder: kv.keyPlaceholder,
+                placeholder: kv.valuePlaceholder,
                 value: kv.value,
                 onChange: (e) => {
                     this.changeValue(e, index, kv)

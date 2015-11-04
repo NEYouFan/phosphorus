@@ -8,11 +8,11 @@ import Events from 'events'
 const CHANGE_EVENT = 'change'
 
 let tabs = {
-    activeIndex: 0
+    activeTabName: 'Collections'
 }
 
-function changeIndex(activeIndex) {
-    tabs.activeIndex = activeIndex
+function changeIndex(activeTabName) {
+    tabs.activeTabName = activeTabName
 }
 
 let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
@@ -40,8 +40,8 @@ AppDispatcher.register((action) => {
 
     switch (action.actionType) {
 
-        case AppConstants.SIDE_TAB_CHANGE_ACTIVE_INDEX:
-            changeIndex(action.activeIndex)
+        case AppConstants.SIDE_TAB_CHANGE_ACTIVE_NAME:
+            changeIndex(action.activeTabName)
             SideTabStore.emitChange()
             break
 

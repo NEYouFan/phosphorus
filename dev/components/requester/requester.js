@@ -70,13 +70,13 @@ let Requester = {
         let res
         let startTime = Date.now()
         console.log(options)
-        fetch(url, options).then(function (response) {
+        fetch(url, options).then((response) => {
             res = response
             res.time = Date.now() - startTime
             return response.text()
-        }).then(function (data) {
+        }).then((data) => {
             callback(res, data)
-        }).catch(function (err) {
+        }).catch((err) => {
             callback(res, err)
         })
     }

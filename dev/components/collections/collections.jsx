@@ -8,7 +8,7 @@ class Collections extends React.Component {
 
     render() {
         let className = classNames({
-            hide: this.props.sideTab.activeIndex !== 1
+            hide: this.props.sideTab.activeTabName !== 'Collections'
         })
         return (
             <div className={className}>

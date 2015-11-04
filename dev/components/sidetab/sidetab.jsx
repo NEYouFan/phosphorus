@@ -10,25 +10,25 @@ class SideTab extends React.Component {
 
     render() {
         let historyClass = classNames({
-            active: this.props.sideTab.activeIndex === 0
+            active: this.props.sideTab.activeTabName === 'History'
         })
         let collectionsClass = classNames({
-            active: this.props.sideTab.activeIndex === 1
+            active: this.props.sideTab.activeTabName === 'Collections'
         })
         return (
             <div className="mod-tab">
-                <ol className="clr" onClick={this.clickHandler}>
-                    <li className={historyClass} data-index="0">History</li>
-                    <li className={collectionsClass} data-index="1">Collections</li>
+                <ol className="clr" onClick={(e)=>{this.clickHandler(e)}}>
+                    <li className={historyClass} data-name="History">History</li>
+                    <li className={collectionsClass} data-name="Collections">Collections</li>
                 </ol>
             </div>
         )
     }
 
-    clickHandler(e) {
-        if (e.target.classList.contains('active')) return
-        let activeIndex = Number(e.target.dataset.index)
-        SideTabAction.switchTab(activeIndex)
+    clickHandler(evt) {
+        if (evt.target.classList.contains('active')) return
+        let activeTabName = evt.target.dataset.name
+        SideTabAction.switchTab(activeTabName)
     }
 
 }

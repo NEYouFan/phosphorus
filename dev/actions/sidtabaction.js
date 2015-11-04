@@ -6,10 +6,10 @@ import AppDispatcher from '../dispatcher/dispatcher'
 
 class SideTabAction  {
 
-    static switchTab(activeIndex) {
+    static switchTab(activeTabName) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.SIDE_TAB_CHANGE_ACTIVE_INDEX,
-            activeIndex: activeIndex
+            actionType: AppConstants.SIDE_TAB_CHANGE_ACTIVE_NAME,
+            activeTabName: activeTabName
         })
     }
 

@@ -4,6 +4,7 @@
 import './index.styl'
 import React from 'react'
 import Ace from 'brace'
+import Util from '../../libs/util'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
@@ -25,6 +26,9 @@ class Index extends React.Component {
     constructor(props) {
         super(props)
         this.state = this.getAppStates()
+        Util.fetchFromNEI((colletions) => {
+            console.log(colletions)
+        })
     }
 
     getAppStates() {
@@ -64,6 +68,8 @@ class Index extends React.Component {
     render() {
         return (
             <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
+                <h1>Phosphorus</h1>
+
                 <div className="side">
                     <Search />
                     <SideTab sideTab={this.state.sideTab}/>
