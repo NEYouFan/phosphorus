@@ -21,13 +21,10 @@
   "short_name": "Phosphorus - A tool like Postman",
   "minimum_chrome_version": "28",
   "permissions": [
-    "system.display",
     "http://*/*",
     "https://*/*",
-    "contextMenus",
     "unlimitedStorage",
-    "storage",
-    "notifications"
+    "storage"
   ],
   "content_security_policy": "script-src 'self' http://localhost:7070/webpack-dev-server.js http://localhost:7070/assets/index.js;object-src 'self'",
   "web_accessible_resources": [

@@ -5,6 +5,7 @@ import './index.styl'
 import React from 'react'
 import Ace from 'brace'
 import Util from '../../libs/util'
+import SideTabAction from '../../actions/sidtabaction'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
@@ -26,9 +27,7 @@ class Index extends React.Component {
     constructor(props) {
         super(props)
         this.state = this.getAppStates()
-        Util.fetchFromNEI((colletions) => {
-            console.log(colletions)
-        })
+        SideTabAction.fetchCollections()
     }
 
     getAppStates() {

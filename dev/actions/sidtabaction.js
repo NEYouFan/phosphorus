@@ -13,6 +13,13 @@ class SideTabAction  {
         })
     }
 
+    static fetchCollections() {
+        // fetch collections from nei
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_TAB_FETCH_COLLECTIONS
+        })
+    }
+
 }
 
 export default SideTabAction

@@ -3,6 +3,7 @@
 import './sidetab.styl'
 import React from 'react'
 import SideTabAction from '../../actions/sidtabaction'
+import ReqTabConAction from '../../actions/reqtabconaction'
 import SideTabStore from '../../stores/sidetabstore'
 import classNames from 'classnames'
 
