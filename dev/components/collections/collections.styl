@@ -68,6 +68,22 @@
         &:hover {
           background-color: #e8f2fe
         }
+
+        .glyphicon-folder-open {
+          display none
+          margin: 2px 0 0
+        }
+
+        &.expand {
+
+          .glyphicon-folder-close {
+            display none
+          }
+
+          .glyphicon-folder-open {
+            display block
+          }
+        }
       }
 
       &-icon {
@@ -128,6 +144,13 @@
 
     .method-put {
       color: #83b2e5
+    }
+
+    &-folders,
+    &-reqs {
+      transition all ease .1s;
+      height: 0
+      overflow: hidden;
     }
 
   }
