@@ -42,10 +42,14 @@ class Collections extends React.Component {
                             return req.id === reqId
                         })
                         let methodClasses = 'coll-req-method method-' + request.method.toLowerCase()
+                        let host = folder.host || collection.host
                         return (
                             <div className="coll-req" key={index}>
                                 <div className={methodClasses}>{getMethodUIName(request.method)}</div>
-                                <div className="coll-req-url" title={request.url}>{request.url}</div>
+                                <div className="coll-req-url"
+                                     title={host + request.path}>
+                                    {host + request.path}
+                                </div>
                             </div>
                         )
                     })
@@ -58,7 +62,8 @@ class Collections extends React.Component {
                                 </div>
                                 <div className="coll-folder-name">{folder.name}</div>
                                 <div className="coll-folder-actions">
-                                    <div className="coll-folder-actions-menus" onClick={(e)=>{this.toggleFolderActionMenu(e)}}>
+                                    <div className="coll-folder-actions-menus"
+                                         onClick={(e)=>{this.toggleFolderActionMenu(e)}}>
                                         <em className="glyphicon glyphicon-option-horizontal"></em>
                                     </div>
                                     <DropDownMenu
@@ -88,7 +93,8 @@ class Collections extends React.Component {
                                 </div>
                             </div>
                             <div className="coll-actions">
-                                <div className="coll-actions-expand-detail" onClick={(e)=>{this.toggleCollActionDetail(e)}}>
+                                <div className="coll-actions-expand-detail"
+                                     onClick={(e)=>{this.toggleCollActionDetail(e)}}>
                                     <em className="glyphicon glyphicon-arrow-right"></em>
                                     <em className="glyphicon glyphicon-arrow-left"></em>
                                 </div>
@@ -100,7 +106,7 @@ class Collections extends React.Component {
                             </div>
                             <DropDownMenu
                                 menus={this.props.sideTab.actionMenus.collection}
-                                onClickItem={(menuItem,e)=>{this.onClickCollectionMenuItem(menuItem,e)}}
+                                onClickItem={(menuItem,e)=>{this.onClickCollectionMenuItem(menuItem,collection,e)}}
                                 />
                         </div>
                         <div className="coll-folders" data-height={foldersHeight}>{folderNodes}</div>
@@ -186,12 +192,15 @@ class Collections extends React.Component {
         console.log(evt)
     }
 
-    onClickCollectionMenuItem(menuItem, evt) {
+    onClickCollectionMenuItem(menuItem, collection, evt) {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         switch (menuItem) {
-            case 'Edit server url':
-                return ModalAction.openEditCollServerURLModal()
+            case 'Edit host':
+                return ModalAction.openEditCollHostModal({
+                    id: collection.id,
+                    host: collection.host
+                })
             default:
                 break
         }

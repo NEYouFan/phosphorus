@@ -18,9 +18,10 @@ class ModalAction  {
         })
     }
 
-    static openEditCollServerURLModal() {
+    static openEditCollHostModal(collection) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.MODAL_OPEN_EDIT_COLL_SERVER_URL
+            actionType: AppConstants.MODAL_EDIT_COLL_HOST,
+            collection: collection
         })
     }
 

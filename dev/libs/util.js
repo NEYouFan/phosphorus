@@ -1403,6 +1403,7 @@ let Util = {
             projectGroups.forEach((pg) => {
                 let collection = {
                     id: UUID.v1(),
+                    host: '', // all requests' host, could be override by folder's host
                     name: pg.name,
                     attributes: [],
                     datatypes: [],
@@ -1418,7 +1419,8 @@ let Util = {
                     projects[p.id].interfaces.forEach((inter) => {
                         let request = {
                             id: UUID.v1(),
-                            url: inter.path,
+                            path: inter.path,
+                            host: '', // folder's requests' host
                             method: methodMap[inter.method],
                             isRest: !!inter.isRest,
                             name: inter.name,

@@ -4,6 +4,7 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
+import _ from 'lodash'
 import Util from '../libs/util'
 import Requester from '../components/requester/requester'
 
@@ -17,8 +18,8 @@ let tabs = {
 let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = null
 let collectionsData = null
-let collectionActionMenus = ['Edit server url']
-let collectionFolderActionMenus = ['Edit server url']
+let collectionActionMenus = ['Edit host']
+let collectionFolderActionMenus = ['Edit host']
 
 let actions = {
 
@@ -33,6 +34,13 @@ let actions = {
             collectionsData = collections
             callback()
         })
+    },
+
+    changeCollHost(collection, host) {
+        let result = _.find(collectionsData, (c) => {
+            return c.id = collection.id
+        })
+        result.host = host
     }
 }
 
@@ -78,6 +86,11 @@ AppDispatcher.register((action) => {
             actions.fetchCollections(() => {
                 SideTabStore.emitChange()
             })
+            break
+
+        case AppConstants.SIDE_CHANGE_COLL_HOST:
+            actions.changeCollHost(action.collection, action.host)
+            SideTabStore.emitChange()
             break
 
         default:

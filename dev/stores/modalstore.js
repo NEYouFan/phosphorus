@@ -13,15 +13,15 @@ let modal = {
     title: 'Title',
     okText: 'OK',
     cancelText: 'Cancel',
-    type: '' // kind of modal
+    type: '', // kind of modal
+    data: {} // additional data
 }
 
 let actions = {
 
-    openModal(type, title) {
+    openModal(options) {
         modal.open = true
-        modal.type = type
-        modal.title = title
+        Object.assign(modal, options)
     },
 
     closeModal() {
@@ -65,8 +65,13 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
-        case AppConstants.MODAL_OPEN_EDIT_COLL_SERVER_URL:
-            actions.openModal(AppConstants.MODAL_OPEN_EDIT_COLL_SERVER_URL, 'Edit server url')
+        case AppConstants.MODAL_EDIT_COLL_HOST:
+            actions.openModal({
+                type: AppConstants.MODAL_EDIT_COLL_HOST,
+                title: 'Edit host',
+                okText: 'Apply',
+                data: action.collection
+            })
             ModalStore.emitChange()
             break
 

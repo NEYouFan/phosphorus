@@ -20,6 +20,14 @@ class SideTabAction  {
         })
     }
 
+    static changeCollHost(collection, host) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_CHANGE_COLL_HOST,
+            collection: collection,
+            host: host
+        })
+    }
+
 }
 
 export default SideTabAction
