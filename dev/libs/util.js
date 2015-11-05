@@ -109,7 +109,7 @@ let Util = {
         document.body.removeChild(ta)
     },
 
-    fetchNEICollections(neiServerUrl, callback) {
+    fetchNEICollections(neiServerUrl, hosts, callback) {
         let projectGroupUrl = neiServerUrl + '/api/projGroup/getProList'
         let projectUrl = neiServerUrl + '/api/projectView/getByProjectId?pid='
         let fetchOptions = {
@@ -1403,7 +1403,8 @@ let Util = {
             projectGroups.forEach((pg) => {
                 let collection = {
                     id: UUID.v1(),
-                    host: '', // all requests' host, could be override by folder's host
+                    neiId: pg.id,
+                    host: hosts.collections[pg.id] || '', // all requests' host, could be override by folder's host
                     name: pg.name,
                     attributes: [],
                     datatypes: [],
@@ -1414,13 +1415,14 @@ let Util = {
                     let folder = {
                         id: UUID.v1(),
                         name: p.name,
+                        neiId: p.id,
+                        host: hosts.folders[p.id] || '', // folder's requests' host
                         orders: []
                     }
                     projects[p.id].interfaces.forEach((inter) => {
                         let request = {
                             id: UUID.v1(),
                             path: inter.path,
-                            host: '', // folder's requests' host
                             method: methodMap[inter.method],
                             isRest: !!inter.isRest,
                             name: inter.name,

@@ -195,10 +195,7 @@ class Collections extends React.Component {
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         switch (menuItem) {
             case 'Edit host':
-                return ModalAction.openEditCollHostModal({
-                    id: collection.id,
-                    host: collection.host
-                })
+                return ModalAction.openEditCollHostModal(collection)
             default:
                 break
         }
@@ -209,11 +206,9 @@ class Collections extends React.Component {
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         switch (menuItem) {
             case 'Edit host':
-                return ModalAction.openEditFolderHostModal({
-                    id: folder.id,
-                    collectionId: collection.id,
-                    host: folder.host
-                })
+                return ModalAction.openEditFolderHostModal(Object.assign({
+                    collectionId: collection.id
+                }, folder))
             default:
                 break
         }

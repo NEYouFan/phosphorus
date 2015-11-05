@@ -6,6 +6,7 @@ import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
 import _ from 'lodash'
 import Util from '../libs/util'
+import StorageArea from '../libs/storagearea'
 import Requester from '../components/requester/requester'
 
 const CHANGE_EVENT = 'change'
@@ -30,9 +31,17 @@ let actions = {
     fetchCollections(callback) {
         // already fetched
         if (collectionsData !== null) return
-        Util.fetchNEICollections(NEI_SERVER_URL, (collections, res) => {
-            collectionsData = collections
-            callback()
+        //StorageArea.clear()
+        //return
+        StorageArea.get('hosts', (hosts) => {
+            console.log(hosts)
+            hosts = hosts.hosts || {}
+            hosts.collections = hosts.collections || {}
+            hosts.folders = hosts.folders || {}
+            Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
+                collectionsData = collections
+                callback()
+            })
         })
     },
 
@@ -41,6 +50,13 @@ let actions = {
             return c.id = collection.id
         })
         result.host = host
+        StorageArea.get('hosts', (hosts) => {
+            console.log(hosts)
+            hosts = hosts.hosts || {}
+            hosts.collections = hosts.collections || {}
+            hosts.collections[collection.neiId] = host
+            StorageArea.set({'hosts': hosts})
+        })
     },
 
     changeFolderHost(folder, host) {
@@ -51,6 +67,13 @@ let actions = {
             return f.id == folder.id
         })
         result.host = host
+        StorageArea.get('hosts', (hosts) => {
+            console.log(hosts)
+            hosts = hosts.hosts || {}
+            hosts.folders = hosts.folders || {}
+            hosts.folders[folder.neiId] = host
+            StorageArea.set({'hosts': hosts})
+        })
     }
 }
 
