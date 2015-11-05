@@ -77,7 +77,7 @@ class AceEditor extends React.Component {
         try {
             this.editor.setValue(JSON.stringify(JSON.parse(this.editor.getValue()), null, '\t'), -1)
         } catch (err) {
-            // do noting
+            // do nothing
         }
     }
 }
