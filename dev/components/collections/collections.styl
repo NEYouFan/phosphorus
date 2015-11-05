@@ -14,12 +14,31 @@
     &-wrap {
       display: flex
       color: #4c4c4c
-      padding: 12px 8px
+      padding: 12px 8px 5px
       cursor: pointer
+      position: relative;
       transition all ease .5s
 
       &:hover {
         background-color: #e8f2fe
+
+        .coll-actions {
+          opacity: 1
+        }
+      }
+
+      .mod-dropdown-menu {
+        position: absolute
+        right: 11px;
+        bottom: -22px;
+        opacity: 0
+        transition all ease .5s
+      }
+
+      &.show-action-menu {
+        .mod-dropdown-menu {
+          opacity: 1
+        }
       }
     }
 
@@ -36,6 +55,59 @@
 
     &-info {
       margin: 4px 0 0 12px
+      flex: 1
+    }
+
+    &-actions,
+    &-folder-actions {
+
+      opacity 0
+      transition all ease .3s;
+
+      &-expand-detail,
+      &-menus {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 16px;
+        border: 1px solid #ccc
+        border-radius 50%;
+        text-align: center
+        color: #4c4c4c
+        transition all ease .3s;
+
+        &:hover {
+          border-color #4c4c4c
+        }
+      }
+
+      &-expand-detail {
+        margin: -7px 0 2px
+
+        .glyphicon-arrow-left {
+          display: none
+        }
+
+        &.expand {
+          .glyphicon-arrow-right {
+            display: none
+          }
+
+          .glyphicon-arrow-left {
+            display: block
+          }
+        }
+      }
+
+      &-menus {
+        .glyphicon-option-horizontal {
+          margin: 6px 0 0 -2px
+        }
+      }
+    }
+
+    &-folder-actions {
+      margin: 0 -6px 0 0;
     }
 
     &-name {
@@ -63,10 +135,15 @@
         font-size: 12px
         padding: 4px 14px;
         cursor: pointer
+        position relative
         transition all ease .5s
 
         &:hover {
           background-color: #e8f2fe
+
+          .coll-folder-actions {
+            opacity: 1
+          }
         }
 
         .glyphicon-folder-open {
@@ -84,6 +161,12 @@
             display block
           }
         }
+
+        .mod-dropdown-menu {
+          position: absolute
+          right: 11px;
+          bottom: -22px;
+        }
       }
 
       &-icon {
@@ -97,6 +180,7 @@
 
       &-name {
         margin: 7px 0 0 20px
+        flex: 1;
       }
     }
 

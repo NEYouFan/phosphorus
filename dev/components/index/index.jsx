@@ -73,7 +73,7 @@ class Index extends React.Component {
                     <Search />
                     <SideTab tabs={this.state.sideTab.tabs}/>
                     <History tabs={this.state.sideTab.tabs} histories={this.state.sideTab.histories}/>
-                    <Collections tabs={this.state.sideTab.tabs} collections={this.state.sideTab.collections}/>
+                    <Collections sideTab={this.state.sideTab}/>
                 </div>
                 <div className="bd">
                     <ReqTab

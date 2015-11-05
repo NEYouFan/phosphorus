@@ -4,6 +4,8 @@ import './collections.styl'
 import React from 'react'
 import classNames from 'classnames'
 import _ from 'lodash'
+import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
+import ReqTabConAction from '../../actions/reqtabconaction'
 
 class Collections extends React.Component {
 
@@ -25,9 +27,9 @@ class Collections extends React.Component {
             }
         }
         let className = classNames({
-            hide: this.props.tabs.activeTabName !== 'Collections'
+            hide: this.props.sideTab.tabs.activeTabName !== 'Collections'
         })
-        let collections = this.props.collections
+        let collections = this.props.sideTab.collections
         let collectionNodes
         if (collections) {
             collectionNodes = collections.map((collection, index) => {
@@ -54,6 +56,15 @@ class Collections extends React.Component {
                                     <span className="glyphicon glyphicon-folder-open"></span>
                                 </div>
                                 <div className="coll-folder-name">{folder.name}</div>
+                                <div className="coll-folder-actions">
+                                    <div className="coll-folder-actions-menus" onClick={(e)=>{this.toggleFolderActionMenu(e)}}>
+                                        <em className="glyphicon glyphicon-option-horizontal"></em>
+                                    </div>
+                                    <DropDownMenu
+                                        menus={this.props.sideTab.actionMenus.folder}
+                                        onClickItem={(e)=>{this.onClickFolderMenu(e)}}
+                                        />
+                                </div>
                             </div>
                             <div className="coll-reqs" data-height={reqsHeight}>{requestNodes}</div>
                         </div>
@@ -61,7 +72,10 @@ class Collections extends React.Component {
                 })
                 return (
                     <div className="coll" key={index}>
-                        <div className="coll-wrap" onClick={(e) => {this.toggleCollSlide(e)}}>
+                        <div className="coll-wrap"
+                             onClick={(e) => {this.toggleCollSlide(e)}}
+                             onMouseLeave={(e)=>{this.onMouseLeaveColl(e)}}
+                            >
                             <div className="coll-icon">
                                 <em className="glyphicon glyphicon-briefcase"></em>
                             </div>
@@ -72,6 +86,21 @@ class Collections extends React.Component {
                                     <div className="coll-reqnum-text">{collection.requests.length} requests</div>
                                 </div>
                             </div>
+                            <div className="coll-actions">
+                                <div className="coll-actions-expand-detail" onClick={(e)=>{this.toggleCollActionDetail(e)}}>
+                                    <em className="glyphicon glyphicon-arrow-right"></em>
+                                    <em className="glyphicon glyphicon-arrow-left"></em>
+                                </div>
+                                <div className="coll-actions-menus"
+                                     onClick={(e)=>{this.toggleCollActionMenu(e)}}
+                                    >
+                                    <em className="glyphicon glyphicon-option-horizontal"></em>
+                                </div>
+                            </div>
+                            <DropDownMenu
+                                menus={this.props.sideTab.actionMenus.collection}
+                                onClickItem={(menuItem,e)=>{this.onClickCollectionMenuItem(menuItem,e)}}
+                                />
                         </div>
                         <div className="coll-folders" data-height={foldersHeight}>{folderNodes}</div>
                     </div>
@@ -93,7 +122,7 @@ class Collections extends React.Component {
     }
 
     toggleCollSlide(evt) {
-        let target = evt.target
+        let target = evt.currentTarget
         let nextSibling = target.nextSibling
         target.classList.toggle('expand')
         nextSibling.classList.toggle('expand')
@@ -116,14 +145,55 @@ class Collections extends React.Component {
     }
 
     toggleFolderSlide(evt) {
-        let target = evt.target
+        let target = evt.currentTarget
         let nextSibling = target.nextSibling
         target.classList.toggle('expand')
         target.parentNode.parentNode.style.height = 'auto'
         nextSibling.classList.toggle('expand')
         let isExpanded = nextSibling.classList.contains('expand')
-        let height = (isExpanded ? (nextSibling.dataset.height) : 0) + 'px'
-        nextSibling.style.height = height
+        nextSibling.style.height = (isExpanded ? (nextSibling.dataset.height) : 0) + 'px'
+    }
+
+    toggleCollDetail(evt) {
+        // todo
+        evt.stopPropagation()
+    }
+
+    toggleCollActionDetail(evt) {
+        // todo
+        evt.stopPropagation()
+    }
+
+    toggleCollActionMenu(evt) {
+        // todo
+        evt.stopPropagation()
+        evt.currentTarget.parentNode.parentNode.classList.toggle('show-action-menu')
+    }
+
+    onMouseLeaveColl(evt) {
+        // todo
+        evt.stopPropagation()
+        evt.currentTarget.classList.remove('show-action-menu')
+    }
+
+    toggleFolderActionMenu(evt) {
+        // todo
+        evt.stopPropagation()
+    }
+
+    onClickFolderMenu(evt) {
+        console.log(evt)
+    }
+
+    onClickCollectionMenuItem(menuItem, evt) {
+        evt.stopPropagation()
+        evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
+        switch (menuItem) {
+            case 'Edit server url':
+                return ReqTabConAction.editFolderSeverURL()
+            default:
+                break
+        }
     }
 
 }

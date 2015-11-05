@@ -17,6 +17,8 @@ let tabs = {
 let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = null
 let collectionsData = null
+let collectionActionMenus = ['Edit server url']
+let collectionFolderActionMenus = ['Edit server url']
 
 let actions = {
 
@@ -41,7 +43,11 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
             sideTab: {
                 tabs: tabs,
                 histories: historyData,
-                collections: collectionsData
+                collections: collectionsData,
+                actionMenus: {
+                    collection: collectionActionMenus,
+                    folder: collectionFolderActionMenus
+                }
             }
         }
     },
