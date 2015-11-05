@@ -1,0 +1,92 @@
+//author @huntbao
+.mod-modal {
+  position: fixed
+  left: 0
+  top: 0
+  right: 0
+  bottom: 0
+  background-color rgba(0, 0, 0, .3)
+  z-index: 100
+  opacity 0
+  transition: all ease .3s;
+  pointer-events none
+
+  .modal-wrap {
+    position: absolute
+    top: -999px
+    left: 50%
+    margin: 0 0 0 -280px
+    width: 560px
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .3);
+    border-radius: 6px;
+    outline: 0;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, .3);
+    background-clip: padding-box;
+    transition: all ease .2s;
+  }
+
+  .modal-hd {
+    display: flex
+    padding: 9px 15px;
+    background-color: #f0f5f7;
+    border-radius: 6px 6px 0 0;
+
+    .modal-title {
+      flex: 1
+      cursor: default
+    }
+
+    .modal-close {
+      color: #000;
+      text-shadow: 0 1px 0 #fff;
+      opacity: .2;
+      cursor: pointer;
+      transition: all ease .3s;
+
+      &:hover {
+        opacity: .7;
+      }
+    }
+  }
+
+  .modal-ft {
+    text-align: right
+    margin: 16px
+    font-size: 12px
+
+    .modal-cancel {
+      color: #ff8e1e;
+      text-decoration none
+
+      &:hover {
+        color: #f47023;
+      }
+    }
+
+    .modal-ok {
+      padding: 4px 14px
+      border: none;
+      background-color: #ff8e1e;
+      outline: none
+      color: #fff
+      text-align: center
+      cursor: pointer
+      border-radius 3px;
+      margin: 0 0 0 12px
+
+      &:hover {
+        background-color: #f47023;
+      }
+    }
+  }
+
+  &.modal-open {
+    opacity 1
+    pointer-events auto
+
+    .modal-wrap {
+      top: 10%
+    }
+  }
+}
