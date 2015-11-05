@@ -48,7 +48,7 @@ class Collections extends React.Component {
                     })
                     return (
                         <div className="coll-folder" key={index}>
-                            <div className="coll-folder-wrap" onClick={(e) => {this.toggleSlide(e)}}>
+                            <div className="coll-folder-wrap" onClick={(e) => {this.toggleFolderSlide(e)}}>
                                 <div className="coll-folder-icon">
                                     <span className="glyphicon glyphicon-folder-close"></span>
                                     <span className="glyphicon glyphicon-folder-open"></span>
@@ -61,7 +61,7 @@ class Collections extends React.Component {
                 })
                 return (
                     <div className="coll" key={index}>
-                        <div className="coll-wrap" onClick={(e) => {this.toggleSlide(e)}}>
+                        <div className="coll-wrap" onClick={(e) => {this.toggleCollSlide(e)}}>
                             <div className="coll-icon">
                                 <em className="glyphicon glyphicon-briefcase"></em>
                             </div>
@@ -92,30 +92,38 @@ class Collections extends React.Component {
         )
     }
 
-    toggleSlide(evt) {
+    toggleCollSlide(evt) {
         let target = evt.target
         let nextSibling = target.nextSibling
         target.classList.toggle('expand')
         nextSibling.classList.toggle('expand')
         let isExpanded = nextSibling.classList.contains('expand')
-        let isReqs = nextSibling.classList.contains('coll-reqs')
         if (isExpanded) {
-            if (isReqs) {
-                target.parentNode.parentNode.style.height = 'auto'
-            }
             nextSibling.style.height = nextSibling.dataset.height + 'px'
         } else {
-            if (isReqs) {
-                target.parentNode.parentNode.style.height = target.parentNode.parentNode.dataset.height + 'px'
-            } else {
-                let nodes = nextSibling.parentNode.querySelectorAll('.coll-folders, .coll-folder-wrap, .coll-reqs')
-                _.forEach(nodes, (node) => {
-                    node.classList.remove('expand')
-                    node.style.height = 'auto'
-                })
-            }
-            nextSibling.style.height = '0px'
+            let nodes = nextSibling.parentNode.querySelectorAll('.coll-folder-wrap, .coll-reqs')
+            _.forEach(nodes, (node) => {
+                node.classList.remove('expand')
+                if (node.classList.contains('coll-reqs')) {
+                    node.style.height = '0px'
+                }
+            })
+            nextSibling.style.height = nextSibling.dataset.height + 'px'
+            setTimeout(() => {
+                nextSibling.style.height = '0px'
+            }, 0)
         }
+    }
+
+    toggleFolderSlide(evt) {
+        let target = evt.target
+        let nextSibling = target.nextSibling
+        target.classList.toggle('expand')
+        target.parentNode.parentNode.style.height = 'auto'
+        nextSibling.classList.toggle('expand')
+        let isExpanded = nextSibling.classList.contains('expand')
+        let height = (isExpanded ? (nextSibling.dataset.height) : 0) + 'px'
+        nextSibling.style.height = height
     }
 
 }

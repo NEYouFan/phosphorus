@@ -1418,7 +1418,7 @@ let Util = {
                     projects[p.id].interfaces.forEach((inter) => {
                         let request = {
                             id: UUID.v1(),
-                            url: neiServerUrl + inter.path,
+                            url: inter.path,
                             method: methodMap[inter.method],
                             isRest: !!inter.isRest,
                             name: inter.name,
