@@ -1,5 +1,6 @@
 //author @huntbao
 'use strict'
+import ReactDOM from 'react-dom'
 import './edit.coll.host.styl'
 import ModalBody from './modal.body.jsx'
 import SideTabAction from '../../actions/sidtabaction'
@@ -11,6 +12,10 @@ class EditCollHost extends ModalBody {
         this.state = {
             host: this.props.modal.data.host
         }
+    }
+
+    componentDidMount() {
+        ReactDOM.findDOMNode(this).querySelectorAll('input')[0].select()
     }
 
     getBody() {

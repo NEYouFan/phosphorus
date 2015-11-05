@@ -55,7 +55,10 @@ class Collections extends React.Component {
                     })
                     return (
                         <div className="coll-folder" key={index}>
-                            <div className="coll-folder-wrap" onClick={(e) => {this.toggleFolderSlide(e)}}>
+                            <div className="coll-folder-wrap"
+                                 onClick={(e) => {this.toggleFolderSlide(e)}}
+                                 onMouseLeave={(e)=>{this.onMouseLeaveFolder(e)}}
+                                >
                                 <div className="coll-folder-icon">
                                     <span className="glyphicon glyphicon-folder-close"></span>
                                     <span className="glyphicon glyphicon-folder-open"></span>
@@ -166,26 +169,22 @@ class Collections extends React.Component {
     }
 
     toggleCollActionDetail(evt) {
-        // todo
         evt.stopPropagation()
         // hide action menu
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
     }
 
     toggleCollActionMenu(evt) {
-        // todo
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.toggle('show-action-menu')
     }
 
     onMouseLeaveColl(evt) {
-        // todo
         evt.stopPropagation()
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
     toggleFolderActionMenu(evt) {
-        // todo
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.toggle('show-action-menu')
     }
@@ -214,6 +213,12 @@ class Collections extends React.Component {
         }
 
     }
+
+    onMouseLeaveFolder(evt) {
+        evt.stopPropagation()
+        evt.currentTarget.classList.remove('show-action-menu')
+    }
+
 
 }
 
