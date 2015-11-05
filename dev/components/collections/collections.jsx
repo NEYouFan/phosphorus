@@ -66,11 +66,11 @@ class Collections extends React.Component {
                                          onClick={(e)=>{this.toggleFolderActionMenu(e)}}>
                                         <em className="glyphicon glyphicon-option-horizontal"></em>
                                     </div>
-                                    <DropDownMenu
-                                        menus={this.props.sideTab.actionMenus.folder}
-                                        onClickItem={(e)=>{this.onClickFolderMenu(e)}}
-                                        />
                                 </div>
+                                <DropDownMenu
+                                    menus={this.props.sideTab.actionMenus.folder}
+                                    onClickItem={(menuItem,e)=>{this.onClickFolderMenuItem(menuItem,collection,folder,e)}}
+                                    />
                             </div>
                             <div className="coll-reqs" data-height={reqsHeight}>{requestNodes}</div>
                         </div>
@@ -149,6 +149,8 @@ class Collections extends React.Component {
                 nextSibling.style.height = '0px'
             }, 0)
         }
+        // hide action menu
+        target.classList.remove('show-action-menu')
     }
 
     toggleFolderSlide(evt) {
@@ -159,16 +161,15 @@ class Collections extends React.Component {
         nextSibling.classList.toggle('expand')
         let isExpanded = nextSibling.classList.contains('expand')
         nextSibling.style.height = (isExpanded ? (nextSibling.dataset.height) : 0) + 'px'
-    }
-
-    toggleCollDetail(evt) {
-        // todo
-        evt.stopPropagation()
+        // hide action menu
+        target.classList.remove('show-action-menu')
     }
 
     toggleCollActionDetail(evt) {
         // todo
         evt.stopPropagation()
+        // hide action menu
+        evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
     }
 
     toggleCollActionMenu(evt) {
@@ -186,10 +187,7 @@ class Collections extends React.Component {
     toggleFolderActionMenu(evt) {
         // todo
         evt.stopPropagation()
-    }
-
-    onClickFolderMenu(evt) {
-        console.log(evt)
+        evt.currentTarget.parentNode.parentNode.classList.toggle('show-action-menu')
     }
 
     onClickCollectionMenuItem(menuItem, collection, evt) {
@@ -204,6 +202,22 @@ class Collections extends React.Component {
             default:
                 break
         }
+    }
+
+    onClickFolderMenuItem(menuItem, collection, folder, evt) {
+        evt.stopPropagation()
+        evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
+        switch (menuItem) {
+            case 'Edit host':
+                return ModalAction.openEditFolderHostModal({
+                    id: folder.id,
+                    collectionId: collection.id,
+                    host: folder.host
+                })
+            default:
+                break
+        }
+
     }
 
 }

@@ -28,6 +28,14 @@ class SideTabAction  {
         })
     }
 
+    static changeFolderHost(folder, host) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_CHANGE_FOLDER_HOST,
+            folder: folder,
+            host: host
+        })
+    }
+
 }
 
 export default SideTabAction

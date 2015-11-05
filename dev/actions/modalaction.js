@@ -25,6 +25,13 @@ class ModalAction  {
         })
     }
 
+    static openEditFolderHostModal(folder) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_EDIT_FOLDER_HOST,
+            folder: folder
+        })
+    }
+
 }
 
 export default ModalAction

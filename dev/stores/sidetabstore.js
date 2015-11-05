@@ -41,6 +41,16 @@ let actions = {
             return c.id = collection.id
         })
         result.host = host
+    },
+
+    changeFolderHost(folder, host) {
+        let collection = _.find(collectionsData, (c) => {
+            return c.id == folder.collectionId
+        })
+        let result = _.find(collection.folders, (f) => {
+            return f.id == folder.id
+        })
+        result.host = host
     }
 }
 
@@ -90,6 +100,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_CHANGE_COLL_HOST:
             actions.changeCollHost(action.collection, action.host)
+            SideTabStore.emitChange()
+            break
+
+        case AppConstants.SIDE_CHANGE_FOLDER_HOST:
+            actions.changeFolderHost(action.folder, action.host)
             SideTabStore.emitChange()
             break
 

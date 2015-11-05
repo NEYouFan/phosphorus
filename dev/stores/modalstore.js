@@ -75,6 +75,16 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_EDIT_FOLDER_HOST:
+            actions.openModal({
+                type: AppConstants.MODAL_EDIT_FOLDER_HOST,
+                title: 'Edit host',
+                okText: 'Apply',
+                data: action.folder
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }
