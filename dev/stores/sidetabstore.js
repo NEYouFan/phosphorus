@@ -33,9 +33,9 @@ let actions = {
         if (collectionsData !== null) return
         //StorageArea.clear()
         //return
-        StorageArea.get('hosts', (hosts) => {
-            console.log(hosts)
-            hosts = hosts.hosts || {}
+        StorageArea.get('hosts', (data) => {
+            console.log(data)
+            let hosts = data.hosts || {}
             hosts.collections = hosts.collections || {}
             hosts.folders = hosts.folders || {}
             Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
@@ -50,9 +50,8 @@ let actions = {
             return c.id = collection.id
         })
         result.host = host
-        StorageArea.get('hosts', (hosts) => {
-            console.log(hosts)
-            hosts = hosts.hosts || {}
+        StorageArea.get('hosts', (data) => {
+            let hosts = data.hosts || {}
             hosts.collections = hosts.collections || {}
             hosts.collections[collection.neiId] = host
             StorageArea.set({'hosts': hosts})
@@ -67,9 +66,8 @@ let actions = {
             return f.id == folder.id
         })
         result.host = host
-        StorageArea.get('hosts', (hosts) => {
-            console.log(hosts)
-            hosts = hosts.hosts || {}
+        StorageArea.get('hosts', (data) => {
+            let hosts = data.hosts || {}
             hosts.folders = hosts.folders || {}
             hosts.folders[folder.neiId] = host
             StorageArea.set({'hosts': hosts})
