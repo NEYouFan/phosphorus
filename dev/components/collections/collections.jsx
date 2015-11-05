@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import ReqTabConAction from '../../actions/reqtabconaction'
+import ModalAction from '../../actions/modalaction'
 
 class Collections extends React.Component {
 
@@ -190,7 +191,7 @@ class Collections extends React.Component {
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         switch (menuItem) {
             case 'Edit server url':
-                return ReqTabConAction.editFolderSeverURL()
+                return ModalAction.openEditCollServerURLModal()
             default:
                 break
         }

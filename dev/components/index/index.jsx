@@ -9,6 +9,7 @@ import SideTabAction from '../../actions/sidtabaction'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
+import ModalStore from '../../stores/modalstore'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
 import ResAction from '../../actions/resaction'
@@ -21,6 +22,7 @@ import ReqTabCon from '../reqtabcon/reqtabcon.jsx'
 import ReqHeadersDataList from '../reqheadersdatalist/reqheadersdatalist.jsx'
 import MediaTypesDataList from '../mediatypesdatalist/mediatypesdatalist.jsx'
 import AceEditor from '../aceeditor/aceeditor.jsx'
+import Modal from '../modal/modal.jsx'
 
 class Index extends React.Component {
 
@@ -30,10 +32,13 @@ class Index extends React.Component {
     }
 
     getAppStates() {
-        return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll())
+        return Object.assign({}, SideTabStore.getAll(), ReqTabStore.getAll(), ReqTabConStore.getAll(), ModalStore.getAll())
     }
 
     componentDidMount() {
+        ModalStore.addChangeListener(()=> {
+            this.onChange()
+        })
         SideTabStore.addChangeListener(()=> {
             this.onChange()
         })
@@ -50,6 +55,9 @@ class Index extends React.Component {
     }
 
     componentWillUnmount() {
+        ModalStore.removeChangeListener(()=> {
+            this.onChange()
+        })
         SideTabStore.removeChangeListener(()=> {
             this.onChange()
         })
@@ -93,6 +101,7 @@ class Index extends React.Component {
                     <ReqHeadersDataList/>
                     <MediaTypesDataList/>
                 </div>
+                <Modal modal={this.state.modal}/>
             </div>
         )
     }

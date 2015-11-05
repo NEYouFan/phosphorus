@@ -61,7 +61,11 @@ let AppConstants = keyMirror({
     RES_TOGGLE_PRETTY_TYPE_LIST: null,
     RES_CHANGE_PRETTY_TYPE_VALUE: null,
     RES_CHANGE_SHOW_TYPE: null,
-    RES_EMIT_CHANGE: null
+    RES_EMIT_CHANGE: null,
+    // modal actions
+    MODAL_CLOSE: null,
+    MODAL_OPEN: null,
+    MODAL_OPEN_EDIT_COLL_SERVER_URL: null,
 })
 
 export default AppConstants
