@@ -5,6 +5,7 @@ import React from 'react'
 import classNames from 'classnames'
 import _ from 'lodash'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
+import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ModalAction from '../../actions/modalaction'
 
@@ -44,16 +45,17 @@ class Collections extends React.Component {
                             return req.id === reqId
                         })
                         let methodClasses = 'coll-req-method method-' + request.method.toLowerCase()
-                        let url = (folder.host || collection.host) + request.path
                         let classes = classNames({
                             'coll-req': true,
                             'active': this.state.activeReqURLId === reqId
                         })
+                        let url = (folder.host || collection.host) + request.path
+                        let displayName = request.name || url
                         return (
                             <div className={classes} key={index}
-                                 onClick={(e)=>{this.onClickURL(reqId,folder,collection,e)}}>
+                                 onClick={(e)=>{this.onClickURL(url,reqId,folder,collection,e)}}>
                                 <div className={methodClasses}>{this.getMethodUIName(request.method)}</div>
-                                <div className="coll-req-url" title={url}>{url}</div>
+                                <div className="coll-req-url" title={url}>{displayName}</div>
                             </div>
                         )
                     })
@@ -223,16 +225,31 @@ class Collections extends React.Component {
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
-    onClickURL(reqId, folder, collection, evt) {
+    onClickURL(url, reqId, folder, collection, evt) {
         console.log(reqId)
         console.log(folder)
         console.log(collection)
-        console.log(evt)
         this.setState({
             activeReqURLId: reqId
         })
+        let request = _.find(collection.requests, (req) => {
+            return req.id === reqId
+        })
+        if (collection.neiId) {
+            if (request.method === 'GET') {
+                request.inputs.forEach((urlParam, index) => {
+                    
+                })
+            }
+        }
+        let tab = {
+            name: url,
+            url: url,
+            method: request.method
+        }
+        ReqTabAction.changeTab(tab)
+        ReqTabConAction.fillURLParams()
     }
-
 
 }
 

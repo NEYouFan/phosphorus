@@ -14,12 +14,16 @@ class EditCollHost extends ModalBody {
         }
     }
 
+    componentDidUpdate() {
+        ReactDOM.findDOMNode(this).querySelectorAll('input')[0].select()
+    }
+
     getBody() {
         return (
             <div className="mod-edit-host">
                 {this.getTip()}
                 <input
-                    ref={(component)=>{this.selectInput(component)}}
+                    autoFocus="true"
                     type="text"
                     value={this.state.host}
                     onChange={(e) => {this.onChange(e)}}

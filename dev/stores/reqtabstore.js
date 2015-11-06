@@ -37,7 +37,7 @@ let actions = {
 
     changeTab(tab) {
         tab.name = tab.name || DEFAULT_ITEMS.name
-        tabs.items[tabs.activeIndex] = tab
+        tabs.items[tabs.activeIndex] = Object.assign(tabs.items[tabs.activeIndex], tab)
     }
 }
 
@@ -102,7 +102,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_TAB_CHANGE:
-            actions.changeTab(action.tab, action.tabIndex)
+            actions.changeTab(action.tab)
             ReqTabStore.emitChange()
             break
 

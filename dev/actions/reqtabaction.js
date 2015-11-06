@@ -17,11 +17,10 @@ class ReqTabAction {
         })
     }
 
-    static changeTab(tab, tabIndex) {
+    static changeTab(tab) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_TAB_CHANGE,
-            tab: tab,
-            tabIndex: tabIndex
+            tab: tab
         })
     }
 
