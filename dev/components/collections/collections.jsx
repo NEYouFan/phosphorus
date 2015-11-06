@@ -10,23 +10,25 @@ import ModalAction from '../../actions/modalaction'
 
 class Collections extends React.Component {
 
-    render() {
-        let getMethodUIName = (methodName) => {
-            switch (methodName) {
-                case 'DELETE':
-                    return 'DEL'
-                case 'OPTIONS':
-                    return 'OPT'
-                case 'PROPFIND':
-                    return 'PROP'
-                case 'UNLOCK':
-                    return 'UNLCK'
-                case 'UNLINK':
-                    return 'UNLNK'
-                default:
-                    return methodName
-            }
+    constructor(props) {
+        super(props)
+        this.state = {
+            activeReqURLId: null
         }
+    }
+
+    getMethodUIName(methodName) {
+        let methodMap = {
+            'DELETE': 'DEL',
+            'OPTIONS': 'OPT',
+            'PROPFIND': 'PROP',
+            'UNLOCK': 'UNLCK',
+            'UNLINK': 'UNLNK'
+        }
+        return methodMap[methodName] || methodName
+    }
+
+    render() {
         let className = classNames({
             hide: this.props.sideTab.tabs.activeTabName !== 'Collections'
         })
@@ -42,14 +44,16 @@ class Collections extends React.Component {
                             return req.id === reqId
                         })
                         let methodClasses = 'coll-req-method method-' + request.method.toLowerCase()
-                        let host = folder.host || collection.host
+                        let url = (folder.host || collection.host) + request.path
+                        let classes = classNames({
+                            'coll-req': true,
+                            'active': this.state.activeReqURLId === reqId
+                        })
                         return (
-                            <div className="coll-req" key={index}>
-                                <div className={methodClasses}>{getMethodUIName(request.method)}</div>
-                                <div className="coll-req-url"
-                                     title={host + request.path}>
-                                    {host + request.path}
-                                </div>
+                            <div className={classes} key={index}
+                                 onClick={(e)=>{this.onClickURL(reqId,folder,collection,e)}}>
+                                <div className={methodClasses}>{this.getMethodUIName(request.method)}</div>
+                                <div className="coll-req-url" title={url}>{url}</div>
                             </div>
                         )
                     })
@@ -217,6 +221,16 @@ class Collections extends React.Component {
     onMouseLeaveFolder(evt) {
         evt.stopPropagation()
         evt.currentTarget.classList.remove('show-action-menu')
+    }
+
+    onClickURL(reqId, folder, collection, evt) {
+        console.log(reqId)
+        console.log(folder)
+        console.log(collection)
+        console.log(evt)
+        this.setState({
+            activeReqURLId: reqId
+        })
     }
 
 
