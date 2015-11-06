@@ -5,6 +5,7 @@ import URL from 'url'
 import UUID from 'node-uuid'
 import async from 'async'
 import QueryString from 'querystring'
+import TestData from './collection_test_data'
 
 const DEFAULT_PATH_VARIABLE_PLACEHOLDER = 'Path Variable Key'
 const pathVariableExp = new RegExp('/:(\\w+?[^/]*)', 'g')
@@ -118,7 +119,7 @@ let Util = {
         }
         let res
         let collections = []
-        let convertData = (projectGroups, projects) => {
+        let convertDataAndReturn = (projectGroups, projects) => {
             let methodMap = {
                 0: 'POST',
                 1: 'GET',
@@ -168,7 +169,10 @@ let Util = {
                 })
                 collections.push(collection)
             })
+            callback(collections, res)
         }
+        convertDataAndReturn(TestData.projectGroups, TestData.projects)
+        return
         let getDetail = (projectGroups) => {
             let projects = {}
             async.eachSeries(projectGroups, (pg, cb) => {
@@ -183,8 +187,7 @@ let Util = {
                     cb()
                 })
             }, () => {
-                convertData(projectGroups, projects)
-                callback(collections, res)
+                convertDataAndReturn(projectGroups, projects)
             })
         }
         fetch(projectGroupUrl, fetchOptions).then((response) => {

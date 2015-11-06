@@ -15,7 +15,8 @@ const DEFAULT_ITEMS = {
     rurl: '',// rurl is the request url, it's path variables are replaced(done in tabConActions.checkReqSend(), see@reqtabconstore.js )
     method: 'POST',
     name: 'New tab',
-    urlError: false
+    urlError: false, // when click `save` button, if url is blank, then show error style
+    isNEI: false // nei tab, has some special logic, e.g.: it's url, method, url params and input params cannot be changed
 }
 
 let tabs = {

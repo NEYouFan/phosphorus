@@ -248,7 +248,8 @@ class Collections extends React.Component {
         let tab = {
             name: url,
             url: url,
-            method: request.method
+            method: request.method,
+            isNEI: !!request.neiId
         }
         ReqTabAction.changeTab(tab)
         ReqTabConAction.updateConByRequest(request, collection)

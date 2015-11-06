@@ -9,6 +9,7 @@ import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqTabConStore from '../../stores/reqtabconstore'
 import ReqURL from '../requrl/requrl.jsx'
+import NEIReqURL from '../requrl/neirequrl.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqBuilderTab from '../reqbuildertab/reqbuildertab.jsx'
 import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader.jsx'
@@ -16,7 +17,6 @@ import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 import Res from '../res/res.jsx'
 
-/** @namespace this.props.tabCons */
 class ReqTabCon extends React.Component {
 
     render() {
@@ -26,15 +26,16 @@ class ReqTabCon extends React.Component {
                 'reqtab-con': true,
                 'hide': activeTabIndex !== index
             })
+            let reqURLProps = {
+                tabIndex: index,
+                tab: tab,
+                tabCon: this.props.tabCons[index],
+                reqMethods: this.props.tabCons.reqMethods,
+                showMethodList: this.props.tabCons.reqCons[index].showReqMethodList
+            }
             return (
                 <div className={tabConClasses} key={index}>
-                    <ReqURL
-                        tabIndex={index}
-                        tab={tab}
-                        tabCon={this.props.tabCons[index]}
-                        reqMethods={this.props.tabCons.reqMethods}
-                        showMethodList={this.props.tabCons.reqCons[index].showReqMethodList}
-                        />
+                    {tab.isNEI ? <NEIReqURL {...reqURLProps} /> : <ReqURL {...reqURLProps} />}
                     <ReqBuilderTab
                         tabIndex={index}
                         builders={this.props.tabCons.reqCons[index].builders}

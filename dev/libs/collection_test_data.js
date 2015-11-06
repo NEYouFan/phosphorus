@@ -1,29 +1,29 @@
-var projectGroups = [{
+exports.projectGroups = [{
     "id": 10207,
-    "name": "²âÊÔ",
+    "name": "æµ‹è¯•",
     "creatorId": 10011,
     "type": 0,
     "fromUsrGroup": "0",
-    "creatorName": "°üÓÂÃ÷",
+    "creatorName": "åŒ…å‹‡æ˜",
     "projects": [{
         "id": 10597,
-        "name": "ÎğÉ¾",
+        "name": "å‹¿åˆ ",
         "type": 0,
         "creatorId": 10011,
-        "creatorName": "°üÓÂÃ÷",
+        "creatorName": "åŒ…å‹‡æ˜",
         "qbsId": 0
-    }, {"id": 10484, "name": "¹«¹²×ÊÔ´¿â", "type": 1, "creatorId": 10011, "creatorName": "°üÓÂÃ÷", "qbsId": 0}]
+    }, {"id": 10484, "name": "å…¬å…±èµ„æºåº“", "type": 1, "creatorId": 10011, "creatorName": "åŒ…å‹‡æ˜", "qbsId": 0}]
 }, {
     "id": 10088,
-    "name": "Ä¬ÈÏ·Ö×é",
+    "name": "é»˜è®¤åˆ†ç»„",
     "creatorId": 10011,
     "type": 1,
     "fromUsrGroup": "0",
-    "creatorName": "°üÓÂÃ÷",
-    "projects": [{"id": 10182, "name": "¹«¹²×ÊÔ´¿â", "type": 1, "creatorId": 10011, "creatorName": "°üÓÂÃ÷", "qbsId": 0}]
+    "creatorName": "åŒ…å‹‡æ˜",
+    "projects": [{"id": 10182, "name": "å…¬å…±èµ„æºåº“", "type": 1, "creatorId": 10011, "creatorName": "åŒ…å‹‡æ˜", "qbsId": 0}]
 }]
 
-var projects = {
+exports.projects = {
     "10182": {
         "pages": [],
         "interfaces": [],
@@ -40,7 +40,7 @@ var projects = {
             "updateTime": 1438067940000
         }],
         "attributes": [],
-        "project": {"id": 10182, "name": "¹«¹²×ÊÔ´¿â", "group": "Ä¬ÈÏ·Ö×é"},
+        "project": {"id": 10182, "name": "å…¬å…±èµ„æºåº“", "group": "é»˜è®¤åˆ†ç»„"},
         "timestamp": 1446812406533
     },
     "10484": {
@@ -59,14 +59,14 @@ var projects = {
             "updateTime": 1438067940000
         }],
         "attributes": [],
-        "project": {"id": 10484, "name": "¹«¹²×ÊÔ´¿â", "group": "²âÊÔ"},
+        "project": {"id": 10484, "name": "å…¬å…±èµ„æºåº“", "group": "æµ‹è¯•"},
         "timestamp": 1446812406461
     },
     "10597": {
         "pages": [],
         "interfaces": [{
             "id": 10670,
-            "name": "ËÑË÷½Ó¿ÚÁĞ±í",
+            "name": "æœç´¢æ¥å£åˆ—è¡¨",
             "description": "",
             "path": "/api/ndir/search",
             "method": 0,
@@ -82,7 +82,7 @@ var projects = {
                 "typeName": "String",
                 "isSysType": 1,
                 "isArray": 0,
-                "description": "ÏîÄ¿id",
+                "description": "é¡¹ç›®id",
                 "updateTime": 1446793783000
             }, {
                 "id": 10781,
@@ -197,7 +197,7 @@ var projects = {
             "updateTime": 1446803674000
         }, {
             "id": 10668,
-            "name": "»ñÈ¡ÏîÄ¿×éÁĞ±í",
+            "name": "è·å–é¡¹ç›®ç»„åˆ—è¡¨",
             "description": "",
             "path": "/api/projGroup/getProList",
             "method": 1,
@@ -237,8 +237,8 @@ var projects = {
             "updateTime": 1446790999000
         }, {
             "id": 10669,
-            "name": "»ñÈ¡ÓÃ»§×éÁĞ±í",
-            "description": "»ñÈ¡ÓÃ»§×é",
+            "name": "è·å–ç”¨æˆ·ç»„åˆ—è¡¨",
+            "description": "è·å–ç”¨æˆ·ç»„",
             "path": "/api/usrGroup/list",
             "method": 1,
             "isRest": 0,
@@ -250,7 +250,7 @@ var projects = {
                 "typeName": "Number",
                 "isSysType": 1,
                 "isArray": 0,
-                "description": "ÓÃ»§id",
+                "description": "ç”¨æˆ·id",
                 "updateTime": 1446791603000
             }],
             "outputs": [{
@@ -472,7 +472,7 @@ var projects = {
             "name": "pid",
             "type": 10001,
             "isArray": 0,
-            "description": "ÏîÄ¿id",
+            "description": "é¡¹ç›®id",
             "parentId": 10547
         }, {
             "id": 10781,
@@ -521,77 +521,77 @@ var projects = {
             "name": "creatorId",
             "type": 10002,
             "isArray": 0,
-            "description": "´´½¨Õßid",
+            "description": "åˆ›å»ºè€…id",
             "parentId": 10542
         }, {
             "id": 10756,
             "name": "creatorName",
             "type": 10001,
             "isArray": 0,
-            "description": "´´½¨ÕßĞÕÃû",
+            "description": "åˆ›å»ºè€…å§“å",
             "parentId": 10542
         }, {
             "id": 10757,
             "name": "fromUsrGroup",
             "type": 10001,
             "isArray": 0,
-            "description": "ÊÇ·ñÀ´×ÔÓÃ»§×é",
+            "description": "æ˜¯å¦æ¥è‡ªç”¨æˆ·ç»„",
             "parentId": 10542
         }, {
             "id": 10758,
             "name": "id",
             "type": 10002,
             "isArray": 0,
-            "description": "ÏîÄ¿×éid",
+            "description": "é¡¹ç›®ç»„id",
             "parentId": 10542
         }, {
             "id": 10759,
             "name": "name",
             "type": 10001,
             "isArray": 0,
-            "description": "ÏîÄ¿×éÃû³Æ",
+            "description": "é¡¹ç›®ç»„åç§°",
             "parentId": 10542
         }, {
             "id": 10760,
             "name": "type",
             "type": 10002,
             "isArray": 0,
-            "description": "ÏîÄ¿×éÀàĞÍ£º0ÊÇËûÈË´´½¨£¬1ÊÇ×Ô¼º´´½¨",
+            "description": "é¡¹ç›®ç»„ç±»å‹ï¼š0æ˜¯ä»–äººåˆ›å»ºï¼Œ1æ˜¯è‡ªå·±åˆ›å»º",
             "parentId": 10542
         }, {
             "id": 10761,
             "name": "projects",
             "type": 10543,
             "isArray": 1,
-            "description": "ÏîÄ¿×éÖĞµÄÏîÄ¿ÁĞ±í",
+            "description": "é¡¹ç›®ç»„ä¸­çš„é¡¹ç›®åˆ—è¡¨",
             "parentId": 10542
         }, {
             "id": 10762,
             "name": "creatorId",
             "type": 10002,
             "isArray": 0,
-            "description": "´´½¨Õßid",
+            "description": "åˆ›å»ºè€…id",
             "parentId": 10543
         }, {
             "id": 10763,
             "name": "creatorName",
             "type": 10001,
             "isArray": 0,
-            "description": "´´½¨ÕßĞÕÃû",
+            "description": "åˆ›å»ºè€…å§“å",
             "parentId": 10543
         }, {
             "id": 10764,
             "name": "id",
             "type": 10002,
             "isArray": 0,
-            "description": "ÏîÄ¿id",
+            "description": "é¡¹ç›®id",
             "parentId": 10543
         }, {
             "id": 10765,
             "name": "name",
             "type": 10001,
             "isArray": 0,
-            "description": "ÏîÄ¿Ãû³Æ",
+            "description": "é¡¹ç›®åç§°",
             "parentId": 10543
         }, {
             "id": 10766,
@@ -605,7 +605,7 @@ var projects = {
             "name": "type",
             "type": 10002,
             "isArray": 0,
-            "description": "ÏîÄ¿ÀàĞÍ£¬1ÊÇ¹«¹²×ÊÔ´¿â£¬0ÊÇ´´½¨µÄÏîÄ¿",
+            "description": "é¡¹ç›®ç±»å‹ï¼Œ1æ˜¯å…¬å…±èµ„æºåº“ï¼Œ0æ˜¯åˆ›å»ºçš„é¡¹ç›®",
             "parentId": 10543
         }, {
             "id": 10768,
@@ -650,7 +650,7 @@ var projects = {
             "description": "",
             "parentId": 10544
         }, {"id": 10774, "name": "members", "type": 10545, "isArray": 1, "description": "", "parentId": 10544}],
-        "project": {"id": 10597, "name": "ÎğÉ¾", "group": "²âÊÔ"},
+        "project": {"id": 10597, "name": "å‹¿åˆ ", "group": "æµ‹è¯•"},
         "timestamp": 1446812406389
     }
 }
