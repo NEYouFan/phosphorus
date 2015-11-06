@@ -10,8 +10,9 @@ const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_ITEMS = {
     //url: 'http://www.baidu.com/',
     //url: 'https://note.sdo.com/notecategory/list?_=1446469270609',
-    url: 'http://nei.hz.netease.com/api/dashboard/getAllData',
-    rurl: '',// rurl is the request url, it's path variable is replaced (done in tabConActions.checkReqSend(), see@reqtabconstore.js )
+    //url: 'http://nei.hz.netease.com/api/dashboard/getAllData',
+    url: '',
+    rurl: '',// rurl is the request url, it's path variables are replaced(done in tabConActions.checkReqSend(), see@reqtabconstore.js )
     method: 'POST',
     name: 'New tab',
     urlError: false

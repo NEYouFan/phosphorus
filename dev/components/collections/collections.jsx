@@ -4,6 +4,7 @@ import './collections.styl'
 import React from 'react'
 import classNames from 'classnames'
 import _ from 'lodash'
+import Util from '../../libs/util'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
@@ -226,20 +227,22 @@ class Collections extends React.Component {
     }
 
     onClickURL(url, reqId, folder, collection, evt) {
-        console.log(reqId)
-        console.log(folder)
-        console.log(collection)
         this.setState({
             activeReqURLId: reqId
         })
         let request = _.find(collection.requests, (req) => {
             return req.id === reqId
         })
-        if (collection.neiId) {
+        // request is from NEI
+        if (request.neiId) {
             if (request.method === 'GET') {
-                request.inputs.forEach((urlParam, index) => {
-                    
+                let queryParams =  request.inputs.map((urlParam, index) => {
+                    return {
+                        key: urlParam.name,
+                        checked: true
+                    }
                 })
+                url = Util.getURLByQueryParams(url, queryParams)
             }
         }
         let tab = {
@@ -248,6 +251,8 @@ class Collections extends React.Component {
             method: request.method
         }
         ReqTabAction.changeTab(tab)
+        ReqTabConAction.updateConByRequest(request, collection)
+        ReqTabConAction.changeMethod()
         ReqTabConAction.fillURLParams()
     }
 

@@ -100,7 +100,7 @@ const DEFAULT_CON_ITEM = {
         fetchResponseRawData: null,
         fetchResponseIsJSON: false,
         resShowType: Object.assign({}, DEFAULT_RES_SHOW_TYPE),
-        resFilePath: null
+        resFilePath: null // response local file path: preview iframe src
     },
     showBodyRawTypeList: false,
     showReqMethodList: false,
@@ -116,7 +116,7 @@ const DEFAULT_CON_ITEM = {
 let tabIndex = 0
 
 let tabCons = {
-    bodyTypes: ['raw', 'form-data', 'x-www-form-urlencoded', 'binary'],
+    bodyTypes: ['raw', 'x-www-form-urlencoded', 'form-data', 'binary'],
     rawTypes: [
         {
             value: 'text',
@@ -168,6 +168,13 @@ let tabConActions = {
 
     removeCon(tabIndex) {
         tabCons.items.splice(tabIndex, 1)
+    },
+
+    updateConByRequest(request, dataSource) {
+        console.log(request)
+        console.log(dataSource)
+        let newTabCon = _.cloneDeep(DEFAULT_CON_ITEM)
+        //tabCons.items[tabIndex] = Object.assign(_.cloneDeep(DEFAULT_CON_ITEM), request)
     },
 
     toggleReqMethodsList() {
@@ -341,8 +348,8 @@ let paramActions = {
 
     updateTabUrl() {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
-        let params = tabCons.items[tabIndex].builders.paramKVs
-        let newUrl = Util.setUrlQuery(tabUrl, params)
+        let queryParams = tabCons.items[tabIndex].builders.paramKVs
+        let newUrl = Util.getURLByQueryParams(tabUrl, queryParams)
         ReqTabStore.setTabUrl(tabIndex, newUrl)
     }
 }
@@ -629,6 +636,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_CONTENT_REMOVE:
             actions.removeCon(action.tabIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_CONTENT_UPDATE_BY_REQUEST:
+            actions.updateConByRequest(action.request, action.dataSource)
             ReqTabConStore.emitChange()
             break
 

@@ -69,7 +69,6 @@ let Requester = {
     __fetch(url, options, callback) {
         let res
         let startTime = Date.now()
-        console.log(options)
         fetch(url, options).then((response) => {
             res = response
             res.time = Date.now() - startTime

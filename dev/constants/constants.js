@@ -20,6 +20,7 @@ let AppConstants = keyMirror({
     REQ_CONTENT_FILL_URL_PARAMS: null,
     REQ_CONTENT_ADD: null,
     REQ_CONTENT_REMOVE: null,
+    REQ_CONTENT_UPDATE_BY_REQUEST: null,
     REQ_CONTENT_TOGGLE_METHODS_LIST: null,
     REQ_CONTENT_UPDATE_ACE_EDITOR: null,
     REQ_CONTENT_SEND: null,

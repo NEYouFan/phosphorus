@@ -90,6 +90,14 @@ class ReqTabConAction  {
         })
     }
 
+    static updateConByRequest(request, dataSource) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_CONTENT_UPDATE_BY_REQUEST,
+            request: request,
+            dataSource: dataSource
+        })
+    }
+
 }
 
 export default ReqTabConAction

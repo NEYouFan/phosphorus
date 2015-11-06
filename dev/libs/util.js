@@ -71,16 +71,16 @@ let Util = {
         return params
     },
 
-    setUrlQuery(url, params) {
+    getURLByQueryParams(url, queryParams) {
         let result = URL.parse(url)
         result.search = '' // URL.format: query (object; see querystring) will only be used if search is absent.
-        result.query = this.getQuery(params)
+        result.query = this.getQuery(queryParams)
         return URL.format(result)
     },
 
-    getQuery(params) {
+    getQuery(queryParams) {
         let query = {}
-        params.map((param, index) => {
+        queryParams.map((param, index) => {
             if (param.readonly) return
             if ((!param.key && !param.value) || !param.checked) return
             if (!query[param.key]) {
@@ -148,6 +148,7 @@ let Util = {
                     projects[p.id].interfaces.forEach((inter) => {
                         let request = {
                             id: UUID.v1(),
+                            neiId: inter.id,
                             path: inter.path,
                             method: methodMap[inter.method],
                             isRest: !!inter.isRest,
