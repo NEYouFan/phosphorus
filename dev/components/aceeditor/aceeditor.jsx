@@ -15,6 +15,41 @@ import Util from '../../libs/util'
 
 class AceEditor extends React.Component {
 
+    static update(appStates) {
+        let tabIndex = appStates.reqTab.activeIndex
+        let aceEditorConfig = appStates.reqTabCon.reqCons[tabIndex].aceEditorConfig
+        if (!aceEditorConfig.show) return
+        let builders = appStates.reqTabCon.reqCons[tabIndex].builders
+        let aceEditor = Ace.edit(appStates.reqTabCon.aceEditorId)
+        let text
+        if (aceEditorConfig.readOnly) {
+            aceEditor.setOption('readOnly', true)
+            let resShowType = builders.resShowType
+            text = builders.fetchResponseData
+            if (resShowType.type === 'Pretty') {
+                if (!text) {
+                    if (resShowType.prettyType === 'JSON') {
+                        try {
+                            text = JSON.stringify(JSON.parse(builders.fetchResponseRawData), null, '\t')
+                        } catch (err) {
+                            text = err.message
+                        }
+                    } else {
+                        text = builders.fetchResponseRawData
+                    }
+                }
+            } else {
+                text = builders.fetchResponseRawData
+            }
+        } else {
+            text = builders.bodyRawData
+            aceEditor.setOption('readOnly', false)
+        }
+        aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
+        // this function will trigger editor's change event
+        aceEditor.setValue(text, -1)
+    }
+
     componentDidMount() {
         this.editor = Ace.edit(this.props.id)
         this.editor.$blockScrolling = Infinity

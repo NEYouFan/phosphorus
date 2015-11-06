@@ -14,22 +14,23 @@ class EditCollHost extends ModalBody {
         }
     }
 
-    componentDidMount() {
-        ReactDOM.findDOMNode(this).querySelectorAll('input')[0].select()
-    }
-
     getBody() {
         return (
             <div className="mod-edit-host">
                 {this.getTip()}
                 <input
-                    autoFoucs="true"
+                    ref={(component)=>{this.selectInput(component)}}
                     type="text"
                     value={this.state.host}
                     onChange={(e) => {this.onChange(e)}}
                     placeholder="Input your host here"/>
             </div>
         )
+    }
+
+    selectInput(component) {
+        let input = ReactDOM.findDOMNode(component)
+        input && input.select()
     }
 
     getTip() {

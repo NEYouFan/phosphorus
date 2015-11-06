@@ -3,7 +3,6 @@
 
 import './index.styl'
 import React from 'react'
-import Ace from 'brace'
 import Util from '../../libs/util'
 import SideTabAction from '../../actions/sidtabaction'
 import SideTabStore from '../../stores/sidetabstore'
@@ -129,39 +128,7 @@ class Index extends React.Component {
     }
 
     updateAceEditor() {
-        let appStates = this.getAppStates()
-        let tabIndex = appStates.reqTab.activeIndex
-        let aceEditorConfig = this.state.reqTabCon.reqCons[tabIndex].aceEditorConfig
-        if (!aceEditorConfig.show) return
-        let builders = this.state.reqTabCon.reqCons[tabIndex].builders
-        let aceEditor = Ace.edit(this.state.reqTabCon.aceEditorId)
-        let text
-        if (aceEditorConfig.readOnly) {
-            aceEditor.setOption('readOnly', true)
-            let resShowType = builders.resShowType
-            text = builders.fetchResponseData
-            if (resShowType.type === 'Pretty') {
-                if (!text) {
-                    if (resShowType.prettyType === 'JSON') {
-                        try {
-                            text = JSON.stringify(JSON.parse(builders.fetchResponseRawData), null, '\t')
-                        } catch (err) {
-                            text = err.message
-                        }
-                    } else {
-                        text = builders.fetchResponseRawData
-                    }
-                }
-            } else {
-                text = builders.fetchResponseRawData
-            }
-        } else {
-            text = builders.bodyRawData
-            aceEditor.setOption('readOnly', false)
-        }
-        aceEditor.getSession().setMode('ace/mode/' + aceEditorConfig.mode)
-        // this function will trigger editor's change event
-        aceEditor.setValue(text, -1)
+        AceEditor.update(this.getAppStates())
     }
 
 }
