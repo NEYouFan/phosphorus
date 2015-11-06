@@ -7,11 +7,11 @@ import ReqURLParamsAction from '../../actions/requrlparamsaction'
 class NEIReqBuilderURLParams extends ReqBuilderURLParams {
 
     toggleURLParamsKV(rowIndex) {
-        // to nothing
+        // do nothing
     }
 
     addURLParamsKV() {
-        // to nothing
+        // do nothing
     }
 
     changeURLParamsKVValue(rowIndex, value) {
