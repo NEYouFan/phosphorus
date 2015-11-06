@@ -6,14 +6,6 @@ import ReqURL from './requrl.jsx'
 
 class NEIReqURL extends ReqURL {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            modClass: 'mod-requrl nei-requrl',
-            urlReadOnly: true
-        }
-    }
-
     toggleMethodList(evt) {
         evt.stopPropagation()
     }

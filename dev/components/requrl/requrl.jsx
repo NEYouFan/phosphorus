@@ -10,14 +10,6 @@ import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 
 class ReqURL extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            modClass: 'mod-requrl',
-            urlReadOnly: false
-        }
-    }
-
     render() {
         let reqWrapClasses = classNames({
             'requrl-wrap': true,
@@ -26,8 +18,9 @@ class ReqURL extends React.Component {
         let inpClass = classNames({
             'inp-error': this.props.tab.urlError
         })
+        let modClass = 'mod-requrl ' + (this.props.modClass || '')
         return (
-            <div className={this.state.modClass}>
+            <div className={modClass}>
                 <div className={reqWrapClasses}>
                     <div className="requrl-method" onClick={(e)=>{this.toggleMethodList(e)}}>
                         <span className="requrl-method-name">{this.props.tab.method}</span>
@@ -38,7 +31,7 @@ class ReqURL extends React.Component {
                     <div className="requrl-sep"></div>
                     <div className="requrl-url">
                         <input
-                            readOnly={this.state.urlReadOnly}
+                            readOnly={this.props.urlReadOnly}
                             autoFocus="true"
                             className={inpClass}
                             onChange={(e)=>{this.onChange(e)}}

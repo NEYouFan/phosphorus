@@ -26,10 +26,6 @@ class ReqURLParamsAction  {
         })
     }
 
-    static editURLParamsKV(tabIndex) {
-        //todo, bulk edit
-    }
-
     static changeURLParamsKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_URL_PARAMS_CHANGE_KV_KEY,

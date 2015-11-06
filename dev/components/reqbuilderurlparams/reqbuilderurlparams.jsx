@@ -12,18 +12,33 @@ class ReqBuilderURLParams extends React.Component {
         let className = classNames({
             hide: this.props.builders.activeTabName !== 'URL Params'
         })
+        let modClass = 'mod-reqbuilder-urlparams ' + (this.props.modClass || '')
+        let urlParams = 'This url has no parameters.'
+        if (this.props.builders.paramKVs.length) {
+            let kvProps = {
+                kvs: this.props.builders.paramKVs,
+                toggleKV: (rowIndex) => {
+                    this.toggleURLParamsKV(rowIndex)
+                },
+                addKV: () => {
+                    this.addURLParamsKV()
+                },
+                removeKV: (rowIndex) => {
+                    this.removeURLParamsKV(rowIndex)
+                },
+                changeKVKey: (rowIndex, value) => {
+                    this.changeURLParamsKVKey(rowIndex, value)
+                },
+                changeKVValue: (rowIndex, value) => {
+                    this.changeURLParamsKVValue(rowIndex, value)
+                }
+            }
+            urlParams = <KeyValue {...kvProps}/>
+        }
         return (
             <div className={className}>
-                <div className="mod-reqbuilder-urlparams">
-                    <KeyValue
-                        kvs={this.props.builders.paramKVs}
-                        toggleKV={(rowIndex) => {this.toggleURLParamsKV(rowIndex)}}
-                        addKV={() => {this.addURLParamsKV()}}
-                        removeKV={(rowIndex) => {this.removeURLParamsKV(rowIndex)}}
-                        editKV={() => {this.editURLParamsKV()}}
-                        changeKVKey={(rowIndex, value) => {this.changeURLParamsKVKey(rowIndex, value)}}
-                        changeKVValue={(rowIndex, value) => {this.changeURLParamsKVValue(rowIndex, value)}}
-                        />
+                <div className={modClass}>
+                    {urlParams}
                 </div>
             </div>
         )

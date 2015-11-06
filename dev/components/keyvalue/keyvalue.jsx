@@ -90,10 +90,6 @@ class KeyValue extends React.Component {
         this.props.removeKV(rowIndex)
     }
 
-    edit() {
-        this.props.editKV()
-    }
-
     changeKey(evt, rowIndex, kv) {
         kv.keyError = false
         this.props.changeKVKey(rowIndex, evt.target.value)

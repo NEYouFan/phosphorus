@@ -14,6 +14,7 @@ import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqBuilderTab from '../reqbuildertab/reqbuildertab.jsx'
 import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader.jsx'
 import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
+import NEIReqBuilderURLParams from '../reqbuilderurlparams/neireqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 import Res from '../res/res.jsx'
 
@@ -26,41 +27,58 @@ class ReqTabCon extends React.Component {
                 'reqtab-con': true,
                 'hide': activeTabIndex !== index
             })
+            let tabCons = this.props.tabCons
+            let builders = tabCons.reqCons[index].builders
             let reqURLProps = {
                 tabIndex: index,
                 tab: tab,
-                tabCon: this.props.tabCons[index],
-                reqMethods: this.props.tabCons.reqMethods,
-                showMethodList: this.props.tabCons.reqCons[index].showReqMethodList
+                tabCon: tabCons[index],
+                reqMethods: tabCons.reqMethods,
+                showMethodList: tabCons.reqCons[index].showReqMethodList
+            }
+            let reqBuilderURLParamsProps = {
+                tabIndex: index,
+                builders: builders
+            }
+            let reqURL = <NEIReqURL {...reqURLProps} />
+            let reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
+            // nei tab
+            if (tab.isNEI) {
+                reqURLProps.modClass = 'nei-requrl'
+                reqURL = <NEIReqURL {...reqURLProps} />
+
+                reqBuilderURLParamsProps.modClass = 'nei-reqbuilder-urlparams'
+                builders.paramKVs.pop()
+                builders.paramKVs.forEach((kv) => {
+                    kv.readonly = true
+                })
+                reqBuilderURLParams = <NEIReqBuilderURLParams {...reqBuilderURLParamsProps} />
             }
             return (
                 <div className={tabConClasses} key={index}>
-                    {tab.isNEI ? <NEIReqURL {...reqURLProps} /> : <ReqURL {...reqURLProps} />}
+                    {reqURL}
                     <ReqBuilderTab
                         tabIndex={index}
-                        builders={this.props.tabCons.reqCons[index].builders}
+                        builders={builders}
                         />
-                    <ReqBuilderURLParams
-                        tabIndex={index}
-                        builders={this.props.tabCons.reqCons[index].builders}
-                        />
+                    {reqBuilderURLParams}
                     <ReqBuilderBody
                         tabIndex={index}
-                        bodyTypes={this.props.tabCons.bodyTypes}
-                        rawTypes={this.props.tabCons.rawTypes}
-                        builders={this.props.tabCons.reqCons[index].builders}
-                        showRawTypeList={this.props.tabCons.reqCons[index].showBodyRawTypeList}
+                        bodyTypes={tabCons.bodyTypes}
+                        rawTypes={tabCons.rawTypes}
+                        builders={builders}
+                        showRawTypeList={tabCons.reqCons[index].showBodyRawTypeList}
                         />
                     <ReqBuilderHeader
                         tabIndex={index}
-                        builders={this.props.tabCons.reqCons[index].builders}
+                        builders={builders}
                         />
                     <Res
                         tabIndex={index}
-                        prettyTypes={this.props.tabCons.prettyTypes}
-                        builders={this.props.tabCons.reqCons[index].builders}
+                        prettyTypes={tabCons.prettyTypes}
+                        builders={builders}
                         tab={tab}
-                        showPrettyTypeList={this.props.tabCons.reqCons[index].showResPrettyTypeList}
+                        showPrettyTypeList={tabCons.reqCons[index].showResPrettyTypeList}
                         />
                 </div>
             )
