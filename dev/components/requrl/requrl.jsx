@@ -44,8 +44,8 @@ class ReqURL extends React.Component {
                             placeholder="Enter request URL here"/>
                     </div>
                 </div>
-                <button className="requrl-send" onClick={(e)=>{this.sendReq(e)}}>Send</button>
-                <button className="requrl-save" onClick={(e)=>{this.saveReq(e)}} disabled={!this.props.tab.isDirty}>Save</button>
+                <button className="requrl-send" onClick={()=>{this.sendReq()}}>Send</button>
+                <button className="requrl-save" onClick={()=>{this.saveReq()}} disabled={!this.props.tab.isDirty}>Save</button>
             </div>
         )
     }
@@ -94,9 +94,8 @@ class ReqURL extends React.Component {
         ReqTabConAction.sendReq()
     }
 
-    saveReq(evt) {
-        console.log('save request')
-        // todo
+    saveReq() {
+        ReqTabAction.saveTab()
     }
 
 }

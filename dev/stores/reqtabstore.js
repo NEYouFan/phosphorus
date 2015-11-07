@@ -46,6 +46,11 @@ let actions = {
         // if tab has no url, it can't be saved
         if (!tab.url) return
         tab.isDirty = isDirty
+    },
+
+    saveTab() {
+        let tab = tabs.items[tabs.activeIndex]
+
     }
 }
 
@@ -117,6 +122,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_SET_DIRTY:
             actions.setDirtyTab(action.isDirty)
+            ReqTabStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_SAVE:
+            actions.saveTab()
             ReqTabStore.emitChange()
             break
 

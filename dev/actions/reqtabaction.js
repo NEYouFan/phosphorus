@@ -44,6 +44,12 @@ class ReqTabAction {
         })
     }
 
+    static saveTab() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_TAB_SAVE
+        })
+    }
+
 }
 
 export default ReqTabAction

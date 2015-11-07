@@ -13,6 +13,7 @@ let AppConstants = keyMirror({
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,
     REQ_TAB_CHANGE: null,
+    REQ_TAB_SAVE: null,
     REQ_TAB_CHANGE_ACTIVE_INDEX: null,
     REQ_TAB_SET_DIRTY: null,
     // req content action
