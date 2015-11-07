@@ -235,7 +235,7 @@ let tabConActions = {
         // check all path variable has it's value
         let params = tabCons.items[tabIndex].builders.paramKVs
         params.forEach((param, index) => {
-            if (param.readonly) {
+            if (param.isPV) {
                 if (!param.value) {
                     param.valueError = true
                     canSend = false

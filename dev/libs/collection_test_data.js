@@ -68,7 +68,7 @@ exports.projects = {
             "id": 10670,
             "name": "搜索接口列表",
             "description": "",
-            "path": "/api/ndir/search",
+            "path": "/api/:id/:name/ndir/search",
             "method": 0,
             "isRest": 0,
             "inputs": [{
@@ -239,7 +239,7 @@ exports.projects = {
             "id": 10669,
             "name": "获取用户组列表",
             "description": "获取用户组",
-            "path": "/api/usrGroup/list",
+            "path": "/api/:id/:name/usrGroup/list",
             "method": 1,
             "isRest": 0,
             "inputs": [{

@@ -40,19 +40,28 @@ class ReqTabCon extends React.Component {
                 tabIndex: index,
                 builders: builders
             }
-            let reqURL = <NEIReqURL {...reqURLProps} />
-            let reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
-            // nei tab
+            let reqURL
+            let reqBuilderURLParams
             if (tab.isNEI) {
+                // nei tab
                 reqURLProps.modClass = 'nei-requrl'
                 reqURL = <NEIReqURL {...reqURLProps} />
 
                 reqBuilderURLParamsProps.modClass = 'nei-reqbuilder-urlparams'
-                builders.paramKVs.pop()
+                let lastParamKV = builders.paramKVs[builders.paramKVs.length -1]
+                // remove default blank row
+                if (lastParamKV && !lastParamKV.key) {
+                    builders.paramKVs.pop()
+                }
                 builders.paramKVs.forEach((kv) => {
                     kv.readonly = true
                 })
                 reqBuilderURLParams = <NEIReqBuilderURLParams {...reqBuilderURLParamsProps} />
+
+            } else {
+                // normal tab
+                reqURL = <NEIReqURL {...reqURLProps} />
+                reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
             }
             return (
                 <div className={tabConClasses} key={index}>
