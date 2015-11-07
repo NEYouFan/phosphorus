@@ -43,24 +43,45 @@
     }
 
     &-remove {
-      position: absolute
-      right: 22px;
-      top: 18px;
+      position: absolute;
+      right: 18px;
+      top: 12px;
       color: #ccc;
-      opacity 0
-      transition all ease .5s
+      opacity: 0
+      width: 24px;
+      height: 24px;
+      font-size: 16px;
+      text-align: center;
+      line-height: 26px;
+      transition: all ease 0.2s;
 
       &:hover {
         color: #ff5a19
       }
 
       &.dirty {
-        display block !important
-        opacity: 1;
-        background: #f27760;
-        border-radius: 50%;
-        width: 12px;
-        height: 12px;
+        opacity 1
+
+        .dirty-dot {
+          background: #f27760;
+          border-radius: 50%;
+          width: 14px;
+          height: 14px;
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          transition: all ease 0.1s;
+          opacity 1
+        }
+
+        &:hover {
+          .glyphicon-remove {
+            opacity 1
+          }
+          .dirty-dot {
+            opacity 0
+          }
+        }
       }
     }
 

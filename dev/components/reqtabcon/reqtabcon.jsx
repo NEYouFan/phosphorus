@@ -61,7 +61,7 @@ class ReqTabCon extends React.Component {
 
             } else {
                 // normal tab
-                reqURL = <NEIReqURL {...reqURLProps} />
+                reqURL = <ReqURL {...reqURLProps} />
                 reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
             }
             return (

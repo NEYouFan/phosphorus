@@ -17,9 +17,9 @@ class ReqTab extends React.Component {
                 active: this.props.activeIndex === index
             })
             let removeBtnClasses = classNames({
-                'glyphicon glyphicon-remove reqtab-remove': true,
+                'reqtab-remove': true,
                 'dirty': tab.isDirty,
-                'hide': tabNum === 1
+                'hide': !tab.isDirty && tabNum === 1
             })
             return (
                 <div className={tabClasses} key={index} title={tab.name}>
@@ -27,7 +27,10 @@ class ReqTab extends React.Component {
                     <span className="reqtab-name" onMouseUp={(e)=>{this.mouseUp(e,index)}}>
                         <em>{tab.name}</em>
                     </span>
-                    <span className={removeBtnClasses} onMouseUp={(e)=>{this.remove(e,index)}}></span>
+                    <div className={removeBtnClasses} onMouseUp={(e)=>{this.remove(e,index)}} title="Close tab">
+                        <em className="glyphicon glyphicon-remove"></em>
+                        <em className="dirty-dot"></em>
+                    </div>
                 </div>
             )
         })

@@ -44,8 +44,8 @@ class ReqURL extends React.Component {
                             placeholder="Enter request URL here"/>
                     </div>
                 </div>
-                <button className="requrl-send" onClick={()=>{this.sendReq()}}>Send</button>
-                <button className="requrl-save">Save</button>
+                <button className="requrl-send" onClick={(e)=>{this.sendReq(e)}}>Send</button>
+                <button className="requrl-save" onClick={(e)=>{this.saveReq(e)}} disabled={!this.props.tab.isDirty}>Save</button>
             </div>
         )
     }
@@ -72,10 +72,6 @@ class ReqURL extends React.Component {
         ReqTabConAction.changeMethod()
     }
 
-    sendReq() {
-        ReqTabConAction.sendReq()
-    }
-
     onKeyDown(evt) {
         if (evt.keyCode === 13) {
             this.sendReq()
@@ -91,6 +87,15 @@ class ReqURL extends React.Component {
 
     onBlur(evt) {
         evt.target.dataset.isFocused = '0'
+    }
+
+    sendReq() {
+        ReqTabConAction.sendReq()
+    }
+
+    saveReq(evt) {
+        console.log('save request')
+        // todo
     }
 
 }
