@@ -39,6 +39,7 @@ const DEFAULT_KV = {
     valueDataList: ''
 }
 const DEFAULT_HEADERS_KV = Object.assign({}, DEFAULT_KV, {
+    keyPlaceholder: 'Header',
     keyDataList: REQ_HEADERS_DATA_LIST
 })
 const DEFAULT_JSON_HEADER_KV = Object.assign({}, DEFAULT_HEADERS_KV, {

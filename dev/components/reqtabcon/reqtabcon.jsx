@@ -45,6 +45,7 @@ class ReqTabCon extends React.Component {
             if (tab.isNEI) {
                 // nei tab
                 reqURLProps.modClass = 'nei-requrl'
+                reqURLProps.urlReadOnly = true
                 reqURL = <NEIReqURL {...reqURLProps} />
 
                 reqBuilderURLParamsProps.modClass = 'nei-reqbuilder-urlparams'

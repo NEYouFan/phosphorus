@@ -7,18 +7,19 @@ import ReqTabActions from '../../actions/reqtabaction'
 import ReqTabConActions from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
-/** @namespace this.props.tabs */
 class ReqTab extends React.Component {
 
     render() {
-        let removeBtnClasses = classNames({
-            'glyphicon glyphicon-remove reqtab-remove': true,
-            'hide': this.props.tabs.length === 1
-        })
+        let tabNum = this.props.tabs.length
         let tabNodes = this.props.tabs.map((tab, index) => {
             let tabClasses = classNames({
                 reqtab: true,
                 active: this.props.activeIndex === index
+            })
+            let removeBtnClasses = classNames({
+                'glyphicon glyphicon-remove reqtab-remove': true,
+                'dirty': tab.isDirty,
+                'hide': tabNum === 1
             })
             return (
                 <div className={tabClasses} key={index} title={tab.name}>

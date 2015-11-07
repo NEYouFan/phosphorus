@@ -14,10 +14,6 @@ class NEIReqBuilderURLParams extends ReqBuilderURLParams {
         // do nothing
     }
 
-    changeURLParamsKVValue(rowIndex, value) {
-        ReqURLParamsAction.changeURLParamsKVValue(rowIndex, value)
-    }
-
 }
 
 

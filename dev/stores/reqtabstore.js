@@ -8,15 +8,14 @@ import Events from 'events'
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_ITEMS = {
-    //url: 'http://www.baidu.com/',
-    //url: 'https://note.sdo.com/notecategory/list?_=1446469270609',
-    //url: 'http://nei.hz.netease.com/api/dashboard/getAllData',
+    id: '', // if it has `id`, then it's user-input-data can saved to local storage
     url: '',
     rurl: '',// rurl is the request url, it's path variables are replaced(done in tabConActions.checkReqSend(), see@reqtabconstore.js )
     method: 'POST',
     name: 'New tab',
     urlError: false, // when click `save` button, if url is blank, then show error style
-    isNEI: false // nei tab, has some special logic, e.g.: it's url, method, url params and input params cannot be changed
+    isNEI: false, // nei tab, has some special logic, e.g.: it's url, method, url params and input params cannot be changed
+    isDirty: true // it's user-input-data is saved or not
 }
 
 let tabs = {
