@@ -69,6 +69,7 @@ class ReqURL extends React.Component {
         let tab = this.props.tab
         tab.method = methodName
         ReqTabAction.changeTab(tab)
+        ReqTabAction.setDirtyTab(true)
         ReqTabConAction.changeMethod()
     }
 

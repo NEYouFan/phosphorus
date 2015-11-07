@@ -39,6 +39,13 @@ let actions = {
     changeTab(tab) {
         tab.name = tab.name || DEFAULT_ITEMS.name
         tabs.items[tabs.activeIndex] = Object.assign(tabs.items[tabs.activeIndex], tab)
+    },
+
+    setDirtyTab(isDirty) {
+        let tab = tabs.items[tabs.activeIndex]
+        // if tab has no url, it can't be saved
+        if (!tab.url) return
+        tab.isDirty = isDirty
     }
 }
 
@@ -67,8 +74,9 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
     },
 
     setTabUrl(tabIndex, tabUrl) {
-        tabs.items[tabIndex].url = tabUrl
-        tabs.items[tabIndex].name = tabUrl || DEFAULT_ITEMS.name
+        let tab = tabs.items[tabIndex]
+        tab.url = tabUrl
+        tab.name = tabUrl || DEFAULT_ITEMS.name
     },
 
     emitChange() {
@@ -104,6 +112,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_TAB_CHANGE:
             actions.changeTab(action.tab)
+            ReqTabStore.emitChange()
+            break
+
+        case AppConstants.REQ_TAB_SET_DIRTY:
+            actions.setDirtyTab(action.isDirty)
             ReqTabStore.emitChange()
             break
 

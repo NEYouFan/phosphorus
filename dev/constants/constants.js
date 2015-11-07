@@ -14,6 +14,7 @@ let AppConstants = keyMirror({
     REQ_TAB_REMOVE: null,
     REQ_TAB_CHANGE: null,
     REQ_TAB_CHANGE_ACTIVE_INDEX: null,
+    REQ_TAB_SET_DIRTY: null,
     // req content action
     REQ_CONTENT_CHANGE_ACTIVE_INDEX: null,
     REQ_CONTENT_CHANGE_METHOD: null,
@@ -69,7 +70,7 @@ let AppConstants = keyMirror({
     MODAL_CLOSE: null,
     MODAL_OPEN: null,
     MODAL_EDIT_COLL_HOST: null,
-    MODAL_EDIT_FOLDER_HOST: null,
+    MODAL_EDIT_FOLDER_HOST: null
 })
 
 export default AppConstants

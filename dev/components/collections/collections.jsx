@@ -246,6 +246,7 @@ class Collections extends React.Component {
             }
         }
         let tab = {
+            id: request.neiId,
             name: url,
             url: url,
             method: request.method,

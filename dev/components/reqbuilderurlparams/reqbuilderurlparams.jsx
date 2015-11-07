@@ -5,6 +5,7 @@ import React from 'react'
 import classNames from 'classnames'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqURLParamsAction from '../../actions/requrlparamsaction'
+import ReqTabAction from '../../actions/reqtabaction'
 
 class ReqBuilderURLParams extends React.Component {
 
@@ -66,6 +67,7 @@ class ReqBuilderURLParams extends React.Component {
 
     changeURLParamsKVValue(rowIndex, value) {
         ReqURLParamsAction.changeURLParamsKVValue(rowIndex, value)
+        ReqTabAction.setDirtyTab(true)
     }
 
 }

@@ -19,7 +19,7 @@ class ReqTab extends React.Component {
             let removeBtnClasses = classNames({
                 'reqtab-remove': true,
                 'dirty': tab.isDirty,
-                'hide': !tab.isDirty && tabNum === 1
+                'hide': !tab.isDirty && tabNum === 1 && !tab.id
             })
             return (
                 <div className={tabClasses} key={index} title={tab.name}>
