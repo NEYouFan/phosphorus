@@ -72,30 +72,35 @@ class Index extends React.Component {
     }
 
     render() {
+        let sideTab = this.state.sideTab
+        let sideTabs = sideTab.tabs
+        let reqTab = this.state.reqTab
+        let reqTabTabs = reqTab.tabs
+        let reqTabCon = this.state.reqTabCon
         return (
             <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
                 <h1>Phosphorus</h1>
 
                 <div className="side">
                     <Search />
-                    <SideTab tabs={this.state.sideTab.tabs}/>
-                    <History tabs={this.state.sideTab.tabs} histories={this.state.sideTab.histories}/>
-                    <Collections sideTab={this.state.sideTab}/>
+                    <SideTab tabs={sideTabs}/>
+                    <History tabs={sideTabs} histories={sideTab.histories}/>
+                    <Collections sideTab={sideTab}/>
                 </div>
                 <div className="bd">
                     <ReqTab
-                        tabs={this.state.reqTab.tabs}
-                        activeIndex={this.state.reqTab.activeIndex}
+                        tabs={reqTabTabs}
+                        activeIndex={reqTab.activeIndex}
                         />
                     <ReqTabCon
-                        reqTabs={this.state.reqTab.tabs}
-                        activeTabIndex={this.state.reqTab.activeIndex}
-                        tabCons={this.state.reqTabCon}
+                        reqTabs={reqTabTabs}
+                        activeTabIndex={reqTab.activeIndex}
+                        tabCons={reqTabCon}
                         />
                     <AceEditor
                         onChange={(text)=>{this.onChangeEditorText(text)}}
-                        id={this.state.reqTabCon.aceEditorId}
-                        config={this.state.reqTabCon.reqCons[this.state.reqTab.activeIndex].aceEditorConfig}
+                        id={reqTabCon.aceEditorId}
+                        config={reqTabCon.reqCons[reqTab.activeIndex].aceEditorConfig}
                         />
                     <ReqHeadersDataList/>
                     <MediaTypesDataList/>
@@ -112,13 +117,14 @@ class Index extends React.Component {
     hideDropdownMenu() {
         let appStates = this.getAppStates()
         let tabIndex = appStates.reqTab.activeIndex
-        if (appStates.reqTabCon.reqCons[tabIndex].showReqMethodList) {
+        let reqCon = appStates.reqTabCon.reqCons[tabIndex]
+        if (reqCon.showReqMethodList) {
             ReqTabConAction.toggleMethodList()
         }
-        if (appStates.reqTabCon.reqCons[tabIndex].showBodyRawTypeList) {
+        if (reqCon.showBodyRawTypeList) {
             ReqBodyAction.toggleRawTypeList()
         }
-        if (appStates.reqTabCon.reqCons[tabIndex].showResPrettyTypeList) {
+        if (reqCon.showResPrettyTypeList) {
             ResAction.toggleResPrettyTypeList()
         }
     }
