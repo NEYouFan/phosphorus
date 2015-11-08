@@ -1,9 +1,13 @@
 //author @huntbao
 'use strict'
 
+import Events from 'events'
+import _ from 'lodash'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
-import Events from 'events'
+import RequestDataMap from '../libs/request_data_map'
+import ReqTabConStore from './reqtabconstore'
+import StorageArea from '../libs/storagearea'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_ACTIVE_INDEX = 0
@@ -48,9 +52,54 @@ let actions = {
         tab.isDirty = isDirty
     },
 
-    saveTab() {
+    saveTab(callback) {
         let tab = tabs.items[tabs.activeIndex]
-
+        // just for save check
+        if (!tab.url) return
+        let tabCon = ReqTabConStore.getCurrentCon().builders
+        let saveData = {}
+        _.each(RequestDataMap, (value, key) => {
+            let data = tab[key] || tabCon[key]
+            if (typeof value === 'object') {
+                if (Array.isArray(data)) {
+                    saveData[value.saveKey] = []
+                    _.each(data, (item) => {
+                        if (item[value.requiredField]) {
+                            let sItem = {}
+                            _.each(value.fields, (v, k) => {
+                                sItem[v] = item[k]
+                            })
+                            saveData[value.saveKey].push(sItem)
+                        }
+                    })
+                } else {
+                    if (data[value.requiredField]) {
+                        let sItem = {}
+                        _.each(value.fields, (v, k) => {
+                            sItem[v] = data[k]
+                        })
+                        saveData[value.saveKey] = sItem
+                    }
+                }
+            } else {
+                saveData[value] = data
+            }
+        })
+        // save to local storage
+        console.log(saveData)
+        if (saveData.id) {
+            // already have id, directly save it
+            StorageArea.get('requests', (result) => {
+                let requests = result.requests || {}
+                requests[saveData.id] = saveData
+                StorageArea.set({requests: requests}, () => {
+                    tab.isDirty = false
+                    callback()
+                })
+            })
+        } else {
+            // popup, select folder or create collect/folder to save it
+        }
     }
 }
 
@@ -126,8 +175,9 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_TAB_SAVE:
-            actions.saveTab()
-            ReqTabStore.emitChange()
+            actions.saveTab(() => {
+                ReqTabStore.emitChange()
+            })
             break
 
         default:

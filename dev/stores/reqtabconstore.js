@@ -3,10 +3,11 @@
 
 import Events from 'events'
 import _ from 'lodash'
+import Util from '../libs/util'
+import StorageArea from '../libs/storagearea'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import ReqTabStore from './reqtabstore'
-import Util from '../libs/util'
 import Requester from '../components/requester/requester'
 
 const CHANGE_EVENT = 'change'
@@ -175,6 +176,10 @@ let tabConActions = {
         console.log(request)
         console.log(dataSource)
         let newTabCon = _.cloneDeep(DEFAULT_CON_ITEM)
+        StorageArea.get('requests', (result) => {
+            let requests = result.requests || {}
+            console.log(requests[request.neiId])
+        })
         //tabCons.items[tabIndex] = Object.assign(_.cloneDeep(DEFAULT_CON_ITEM), request)
     },
 
@@ -599,6 +604,10 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 aceEditorId: tabCons.aceEditorId
             }
         }
+    },
+
+    getCurrentCon() {
+        return tabCons.items[tabIndex]
     },
 
     emitChange() {

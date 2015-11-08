@@ -3,20 +3,14 @@
 class StorageArea {
 
     static get(keys, callback) {
-        chrome.storage.local.get(keys, function (data) {
-            callback && callback(data)
+        chrome.storage.local.get(keys, function (result) {
+            callback(result)
         })
     }
 
     static set(data, callback) {
         chrome.storage.local.set(data, function () {
             callback && callback()
-        })
-    }
-
-    static getBytesInUse(keys, callback) {
-        chrome.storage.local.getBytesInUse(keys, (data) => {
-            callback && callback(data)
         })
     }
 
@@ -33,6 +27,30 @@ class StorageArea {
     }
 
 }
+
+/**
+ * save data structure
+ * {
+ *      hosts: {
+ *          collections: {
+ *              collection_id: xxx,
+ *              ...
+ *          },
+ *          folders: {
+ *              folder_id: xxx
+ *              ...
+ *          },
+ *      },
+ *
+ *      requests: {
+ *          request_id: {
+ *              // it's fields all declare in request_data_map.js
+ *          }
+ *      }
+ * }
+ *
+ *
+ */
 
 
 export default StorageArea

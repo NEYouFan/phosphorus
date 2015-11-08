@@ -14,7 +14,7 @@ class EditCollHost extends ModalBody {
         }
     }
 
-    componentDidUpdate() {
+    componentDidMount() {
         ReactDOM.findDOMNode(this).querySelectorAll('input')[0].select()
     }
 
@@ -24,17 +24,12 @@ class EditCollHost extends ModalBody {
                 {this.getTip()}
                 <input
                     autoFocus="true"
-                    type="text"
+                    type="url"
                     value={this.state.host}
                     onChange={(e) => {this.onChange(e)}}
                     placeholder="Input your host here"/>
             </div>
         )
-    }
-
-    selectInput(component) {
-        let input = ReactDOM.findDOMNode(component)
-        input && input.select()
     }
 
     getTip() {
