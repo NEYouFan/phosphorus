@@ -5,6 +5,7 @@ import React from 'react'
 import classNames from 'classnames'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqHeaderAction from '../../actions/reqheaderaction'
+import ReqTabAction from '../../actions/reqtabaction'
 
 class ReqBuilderHeader extends React.Component {
 
@@ -20,7 +21,6 @@ class ReqBuilderHeader extends React.Component {
                         toggleKV={(rowIndex) => {this.toggleHeaderKV(rowIndex)}}
                         addKV={() => {this.addHeaderKV()}}
                         removeKV={(rowIndex) => {this.removeHeaderKV(rowIndex)}}
-                        editKV={() => {this.editHeaderKV()}}
                         changeKVKey={(rowIndex, value) => {this.changeHeaderKVKey(rowIndex, value)}}
                         changeKVValue={(rowIndex, value) => {this.changeHeaderKVValue(rowIndex, value)}}
                         />
@@ -31,6 +31,7 @@ class ReqBuilderHeader extends React.Component {
 
     toggleHeaderKV(rowIndex) {
         ReqHeaderAction.toggleHeaderKV(rowIndex)
+        ReqTabAction.setDirtyTab()
     }
 
     addHeaderKV() {
@@ -39,18 +40,17 @@ class ReqBuilderHeader extends React.Component {
 
     removeHeaderKV(rowIndex) {
         ReqHeaderAction.removeHeaderKV(rowIndex)
-    }
-
-    editHeaderKV() {
-        ReqHeaderAction.editHeaderKV()
+        ReqTabAction.setDirtyTab()
     }
 
     changeHeaderKVKey(rowIndex, value) {
         ReqHeaderAction.changeHeaderKVKey(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
     changeHeaderKVValue(rowIndex, value) {
         ReqHeaderAction.changeHeaderKVValue(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
 }

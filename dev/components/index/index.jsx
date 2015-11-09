@@ -85,7 +85,7 @@ class Index extends React.Component {
                     <Search />
                     <SideTab tabs={sideTabs}/>
                     <History tabs={sideTabs} histories={sideTab.histories}/>
-                    <Collections sideTab={sideTab}/>
+                    <Collections sideTab={sideTab} reqTabs={reqTabTabs} activeReqTabIndex={reqTab.activeIndex}/>
                 </div>
                 <div className="bd">
                     <ReqTab

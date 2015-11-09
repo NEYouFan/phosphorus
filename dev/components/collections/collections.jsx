@@ -54,7 +54,7 @@ class Collections extends React.Component {
                         let displayName = request.name || url
                         return (
                             <div className={classes} key={index}
-                                 onClick={(e)=>{this.onClickURL(url,reqId,folder,collection,e)}}>
+                                 onClick={(e)=>{this.onClickURL(url,reqId,collection,e)}}>
                                 <div className={methodClasses}>{this.getMethodUIName(request.method)}</div>
                                 <div className="coll-req-url" title={url}>{displayName}</div>
                             </div>
@@ -226,7 +226,13 @@ class Collections extends React.Component {
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
-    onClickURL(url, reqId, folder, collection, evt) {
+    onClickURL(url, reqId, collection, evt) {
+        if (evt.currentTarget.classList.contains('active')) return
+        // check if tab is dirty
+        let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
+        if (activeReqTab.isDirty) {
+            return ModalAction.openLeavingUnsavedTab(reqId)
+        }
         this.setState({
             activeReqURLId: reqId
         })
@@ -236,7 +242,7 @@ class Collections extends React.Component {
         // request is from NEI
         if (request.isNEI) {
             if (request.method === 'GET') {
-                let queryParams =  request.inputs.map((urlParam, index) => {
+                let queryParams = request.inputs.map((urlParam, index) => {
                     return {
                         key: urlParam.name,
                         checked: true

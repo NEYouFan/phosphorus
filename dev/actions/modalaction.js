@@ -38,6 +38,13 @@ class ModalAction  {
         })
     }
 
+    static openLeavingUnsavedTab(nextRequestId) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_LEAVING_UNSAVED_TAB,
+            nextRequestId: nextRequestId
+        })
+    }
+
 }
 
 export default ModalAction
