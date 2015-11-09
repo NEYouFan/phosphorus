@@ -149,8 +149,8 @@ let Util = {
             }
             projectGroups.forEach((pg) => {
                 let collection = {
-                    id: UUID.v1(),
-                    neiId: pg.id,
+                    id: pg.id,
+                    isNEI: true,
                     host: hosts.collections[pg.id] || '', // all requests' host, could be override by folder's host
                     name: pg.name,
                     attributes: [],
@@ -160,16 +160,16 @@ let Util = {
                 }
                 pg.projects.forEach((p) => {
                     let folder = {
-                        id: UUID.v1(),
+                        id: p.id,
                         name: p.name,
-                        neiId: p.id,
+                        isNEI: true,
                         host: hosts.folders[p.id] || '', // folder's requests' host
                         orders: []
                     }
                     projects[p.id].interfaces.forEach((inter) => {
                         let request = {
-                            id: UUID.v1(),
-                            neiId: inter.id,
+                            id: inter.id,
+                            isNEI: true,
                             path: inter.path,
                             method: methodMap[inter.method],
                             isRest: !!inter.isRest,

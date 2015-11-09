@@ -234,7 +234,7 @@ class Collections extends React.Component {
             return req.id === reqId
         })
         // request is from NEI
-        if (request.neiId) {
+        if (request.isNEI) {
             if (request.method === 'GET') {
                 let queryParams =  request.inputs.map((urlParam, index) => {
                     return {
@@ -246,11 +246,11 @@ class Collections extends React.Component {
             }
         }
         let tab = {
-            id: request.neiId,
+            id: request.id,
             name: request.name || url,
             url: url,
             method: request.method,
-            isNEI: !!request.neiId,
+            isNEI: request.isNEI,
             isDirty: false,
             urlError: false
         }

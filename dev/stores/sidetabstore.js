@@ -54,20 +54,14 @@ let actions = {
         StorageArea.get('hosts', (result) => {
             let hosts = result.hosts || {}
             hosts.collections = hosts.collections || {}
-            hosts.collections[collection.neiId] = host
+            hosts.collections[collection.id] = host
             StorageArea.set({'hosts': hosts}, () => {
                 let activeTab = ReqTabStore.getActiveTab()
                 if (activeTab.url) {
                     let activeRequest
-                    if (activeTab.isNEI) {
-                        activeRequest = _.find(foundCollection.requests, (req) => {
-                            return req.neiId === activeTab.id
-                        })
-                    } else {
-                        activeRequest = _.find(foundCollection.requests, (req) => {
-                            return req.id === activeTab.id
-                        })
-                    }
+                    activeRequest = _.find(foundCollection.requests, (req) => {
+                        return req.id === activeTab.id
+                    })
                     if (activeRequest) {
                         let folder = _.find(foundCollection.folders, (folder) => {
                             return activeRequest.folderId === folder.id
@@ -93,20 +87,14 @@ let actions = {
         StorageArea.get('hosts', (result) => {
             let hosts = result.hosts || {}
             hosts.folders = hosts.folders || {}
-            hosts.folders[folder.neiId] = host
+            hosts.folders[folder.id] = host
             StorageArea.set({'hosts': hosts}, () => {
                 let activeTab = ReqTabStore.getActiveTab()
                 if (activeTab.url) {
                     let activeRequest
-                    if (activeTab.isNEI) {
-                        activeRequest = _.find(foundCollection.requests, (req) => {
-                            return req.neiId === activeTab.id
-                        })
-                    } else {
-                        activeRequest = _.find(foundCollection.requests, (req) => {
-                            return req.id === activeTab.id
-                        })
-                    }
+                    activeRequest = _.find(foundCollection.requests, (req) => {
+                        return req.id === activeTab.id
+                    })
                     if (activeRequest) {
                         // the active request is in the folder which has been changed host
                         // should change tab url's host

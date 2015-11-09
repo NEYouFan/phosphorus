@@ -140,6 +140,7 @@ class ReqBuilderBody extends React.Component {
 
     onSelectRawTypeValue(bodyType) {
         ReqBodyAction.changeBodyTypeValue(bodyType)
+        ReqTabAction.setDirtyTab()
     }
 
     toggleBodyFormDataKV(rowIndex) {

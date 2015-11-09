@@ -194,9 +194,11 @@ let tabConActions = {
         console.log(request)
         console.log(dataSource)
         let newTabCon = _.cloneDeep(DEFAULT_CON_ITEM)
+        // remove DEFAULT_JSON_HEADER_KV
+        newTabCon.builders.headerKVs.shift()
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
-            let savedRequest = requests[request.neiId]
+            let savedRequest = requests[request.id]
             console.log(savedRequest)
             if (savedRequest) {
                 let builders = newTabCon.builders
@@ -206,7 +208,6 @@ let tabConActions = {
                             if (Array.isArray(savedRequest[value.saveKey])) {
                                 if (savedRequest[value.saveKey].length) {
                                     let itemTpl = _.cloneDeep(builders[key][builders[key].length - 1])
-                                    builders[key] = []
                                     _.each(savedRequest[value.saveKey], (v, k) => {
                                         _.each(value.fields, (vv, kk) => {
                                             itemTpl[kk] = v[vv]
@@ -222,13 +223,21 @@ let tabConActions = {
                         }
                     }
                 })
+                // move the default blank item to the last
+                builders.bodyXFormKVs.push(builders.bodyXFormKVs.shift())
+                builders.bodyFormDataKVs.push(builders.bodyFormDataKVs.shift())
+                builders.paramKVs.push(builders.paramKVs.shift())
                 tabCons.items[tabIndex] = newTabCon
                 paramActions.updateTabUrl()
             } else {
                 tabCons.items[tabIndex] = newTabCon
                 paramActions.fillURLParams()
             }
-            this.changeAceEditorConfig()
+            // change edtior mode by bodyType
+            let rawType =  _.find(tabCons.rawTypes, (rawType) => {
+                return newTabCon.builders.bodyType.name === rawType.name
+            })
+            this.changeAceEditorConfig(rawType.editorMode)
             this.changeMethod()
             callback()
         })
