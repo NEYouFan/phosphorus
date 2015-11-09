@@ -3,6 +3,7 @@
 import './reqbuilderbody.styl'
 import React from 'react'
 import classNames from 'classnames'
+import ReqTabAction from '../../actions/reqtabaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
@@ -127,6 +128,7 @@ class ReqBuilderBody extends React.Component {
 
     onChange(evt) {
         ReqBodyAction.changeBodyType(evt.target.value)
+        ReqTabAction.setDirtyTab()
     }
 
     toggleRawTypeList(evt) {
