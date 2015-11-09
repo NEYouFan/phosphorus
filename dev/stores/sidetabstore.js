@@ -1,13 +1,14 @@
 //author @huntbao
 'use strict'
 
-import AppConstants from '../constants/constants'
-import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
 import _ from 'lodash'
+import AppConstants from '../constants/constants'
+import AppDispatcher from '../dispatcher/dispatcher'
 import Util from '../libs/util'
 import StorageArea from '../libs/storagearea'
 import Requester from '../components/requester/requester'
+import ReqTabStore from './reqtabstore'
 
 const CHANGE_EVENT = 'change'
 
@@ -55,6 +56,27 @@ let actions = {
             hosts.collections = hosts.collections || {}
             hosts.collections[collection.neiId] = host
             StorageArea.set({'hosts': hosts}, () => {
+                let activeTab = ReqTabStore.getActiveTab()
+                if (activeTab.url) {
+                    let activeRequest
+                    if (activeTab.isNEI) {
+                        activeRequest = _.find(foundCollection.requests, (req) => {
+                            return req.neiId === activeTab.id
+                        })
+                    } else {
+                        activeRequest = _.find(foundCollection.requests, (req) => {
+                            return req.id === activeTab.id
+                        })
+                    }
+                    if (activeRequest) {
+                        let folder = _.find(foundCollection.folders, (folder) => {
+                            return activeRequest.folderId === folder.id
+                        })
+                        // the active request is in the folder which has been changed host
+                        // should change tab url's host
+                        activeTab.url = Util.replaceURLHost(activeTab.url, folder.host || host)
+                    }
+                }
                 callback()
             })
         })
@@ -73,6 +95,24 @@ let actions = {
             hosts.folders = hosts.folders || {}
             hosts.folders[folder.neiId] = host
             StorageArea.set({'hosts': hosts}, () => {
+                let activeTab = ReqTabStore.getActiveTab()
+                if (activeTab.url) {
+                    let activeRequest
+                    if (activeTab.isNEI) {
+                        activeRequest = _.find(foundCollection.requests, (req) => {
+                            return req.neiId === activeTab.id
+                        })
+                    } else {
+                        activeRequest = _.find(foundCollection.requests, (req) => {
+                            return req.id === activeTab.id
+                        })
+                    }
+                    if (activeRequest) {
+                        // the active request is in the folder which has been changed host
+                        // should change tab url's host
+                        activeTab.url = Util.replaceURLHost(activeTab.url, host || foundCollection.host)
+                    }
+                }
                 callback()
             })
         })
