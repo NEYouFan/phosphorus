@@ -93,6 +93,25 @@ let Util = {
         return query
     },
 
+    replaceURLHost(url, newHost) {
+        let result = URL.parse(url)
+        result.href = null
+        if (!newHost) {
+            result.host = null
+            result.hostname = null
+            result.protocol = null
+            result.auth = null
+            result.slashes = false
+        } else {
+            let result1 = URL.parse(newHost)
+            result.host = result1.host
+            result.hostname = result1.hostname
+            result.protocol = result1.protocol
+            result.auth = result1.auth
+        }
+        return URL.format(result)
+    },
+
     stripScriptTag(text) {
         if (!text) return text;
         var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
