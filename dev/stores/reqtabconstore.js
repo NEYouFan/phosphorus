@@ -198,28 +198,6 @@ let tabConActions = {
             let requests = result.requests || {}
             let savedRequest = requests[request.neiId]
             console.log(savedRequest)
-            if (request.neiId) {
-                if (request.isRest) {
-                    newTabCon.builders.bodyType = {
-                        type: 'raw',
-                        name: 'JSON(application/json)'
-                    }
-                    tabCons.bodyTypes.forEach((bodyType, index) => {
-                        bodyType.disabled = bodyType.type !== 'raw'
-                    })
-                } else {
-                    newTabCon.builders.bodyType = {
-                        type: 'x-www-form-urlencoded'
-                    }
-                    tabCons.bodyTypes.forEach((bodyType, index) => {
-                        bodyType.disabled = bodyType.type !== 'x-www-form-urlencoded'
-                    })
-                }
-            } else {
-                tabCons.bodyTypes.forEach((bodyType, index) => {
-                    bodyType.disabled = false
-                })
-            }
             if (savedRequest) {
                 let builders = newTabCon.builders
                 _.each(RequestDataMap, (value, key) => {
@@ -230,7 +208,10 @@ let tabConActions = {
                                     let itemTpl = _.cloneDeep(builders[key][builders[key].length - 1])
                                     builders[key] = []
                                     _.each(savedRequest[value.saveKey], (v, k) => {
-                                        builders[key].push(Object.assign({}, itemTpl, v))
+                                        _.each(value.fields, (vv, kk) => {
+                                            itemTpl[kk] = v[vv]
+                                        })
+                                        builders[key].push(Object.assign({}, itemTpl))
                                     })
                                 }
                             } else {
@@ -241,9 +222,14 @@ let tabConActions = {
                         }
                     }
                 })
+                tabCons.items[tabIndex] = newTabCon
+                paramActions.updateTabUrl()
+            } else {
+                tabCons.items[tabIndex] = newTabCon
+                paramActions.fillURLParams()
             }
-            tabCons.items[tabIndex] = newTabCon
             this.changeAceEditorConfig()
+            this.changeMethod()
             callback()
         })
 

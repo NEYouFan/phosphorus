@@ -45,32 +45,36 @@ let actions = {
         })
     },
 
-    changeCollHost(collection, host) {
-        let result = _.find(collectionsData, (c) => {
+    changeCollHost(collection, host, callback) {
+        let foundCollection = _.find(collectionsData, (c) => {
             return c.id = collection.id
         })
-        result.host = host
+        foundCollection.host = host
         StorageArea.get('hosts', (result) => {
             let hosts = result.hosts || {}
             hosts.collections = hosts.collections || {}
             hosts.collections[collection.neiId] = host
-            StorageArea.set({'hosts': hosts})
+            StorageArea.set({'hosts': hosts}, () => {
+                callback()
+            })
         })
     },
 
-    changeFolderHost(folder, host) {
-        let collection = _.find(collectionsData, (c) => {
+    changeFolderHost(folder, host, callback) {
+        let foundCollection = _.find(collectionsData, (c) => {
             return c.id == folder.collectionId
         })
-        let result = _.find(collection.folders, (f) => {
+        let foundFolder = _.find(foundCollection.folders, (f) => {
             return f.id == folder.id
         })
-        result.host = host
+        foundFolder.host = host
         StorageArea.get('hosts', (result) => {
             let hosts = result.hosts || {}
             hosts.folders = hosts.folders || {}
             hosts.folders[folder.neiId] = host
-            StorageArea.set({'hosts': hosts})
+            StorageArea.set({'hosts': hosts}, () => {
+                callback()
+            })
         })
     }
 }
@@ -120,13 +124,15 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.SIDE_CHANGE_COLL_HOST:
-            actions.changeCollHost(action.collection, action.host)
-            SideTabStore.emitChange()
+            actions.changeCollHost(action.collection, action.host, () => {
+                SideTabStore.emitChange()
+            })
             break
 
         case AppConstants.SIDE_CHANGE_FOLDER_HOST:
-            actions.changeFolderHost(action.folder, action.host)
-            SideTabStore.emitChange()
+            actions.changeFolderHost(action.folder, action.host, () => {
+                SideTabStore.emitChange()
+            })
             break
 
         default:

@@ -256,8 +256,6 @@ class Collections extends React.Component {
         }
         ReqTabAction.changeTab(tab)
         ReqTabConAction.updateConByRequest(request, collection)
-        ReqTabConAction.changeMethod()
-        ReqTabConAction.fillURLParams()
     }
 
 }

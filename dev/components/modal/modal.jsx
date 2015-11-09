@@ -34,7 +34,7 @@ class Modal extends React.Component {
         switch (this.props.modal.type) {
             case AppConstants.MODAL_EDIT_COLL_HOST:
                 return (
-                    <EditCollHost modal={this.props.modal} />
+                    <EditCollHost modal={this.props.modal} onChange={()=>{this.onChange()}} />
                 )
 
             case AppConstants.MODAL_EDIT_FOLDER_HOST:
