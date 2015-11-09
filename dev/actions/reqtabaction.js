@@ -37,10 +37,9 @@ class ReqTabAction {
         })
     }
 
-    static setDirtyTab(isDirty) {
+    static setDirtyTab() {
         AppDispatcher.dispatch({
-            actionType: AppConstants.REQ_TAB_SET_DIRTY,
-            isDirty: isDirty
+            actionType: AppConstants.REQ_TAB_SET_DIRTY
         })
     }
 

@@ -85,6 +85,17 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_SAVE_BLANK_URL_TIP:
+            actions.openModal({
+                type: AppConstants.MODAL_SAVE_BLANK_URL_TIP,
+                title: 'Tips',
+                data: {
+                    tip: 'Please input your request url if you want to save this request.'
+                }
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }

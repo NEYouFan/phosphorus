@@ -71,7 +71,8 @@ let AppConstants = keyMirror({
     MODAL_CLOSE: null,
     MODAL_OPEN: null,
     MODAL_EDIT_COLL_HOST: null,
-    MODAL_EDIT_FOLDER_HOST: null
+    MODAL_EDIT_FOLDER_HOST: null,
+    MODAL_SAVE_BLANK_URL_TIP: null
 })
 
 export default AppConstants

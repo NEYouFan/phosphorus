@@ -5,6 +5,7 @@ import './requrl.styl'
 import React from 'react'
 import classNames from 'classnames'
 import ReqTabAction from '../../actions/reqtabaction'
+import ModalAction from '../../actions/modalaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 
@@ -62,13 +63,14 @@ class ReqURL extends React.Component {
         tab.urlError = false
         ReqTabAction.changeTab(tab)
         ReqTabConAction.fillURLParams()
+        ReqTabAction.setDirtyTab()
     }
 
     onSelectMethod(methodName) {
         let tab = this.props.tab
         tab.method = methodName
         ReqTabAction.changeTab(tab)
-        ReqTabAction.setDirtyTab(true)
+        ReqTabAction.setDirtyTab()
         ReqTabConAction.changeMethod()
     }
 
@@ -94,6 +96,9 @@ class ReqURL extends React.Component {
     }
 
     saveReq() {
+        if(!this.props.tab.url.trim()) {
+            return ModalAction.openSavingBlankURLTip()
+        }
         ReqTabAction.saveTab()
     }
 

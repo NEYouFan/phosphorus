@@ -32,6 +32,12 @@ class ModalAction  {
         })
     }
 
+    static openSavingBlankURLTip() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_SAVE_BLANK_URL_TIP
+        })
+    }
+
 }
 
 export default ModalAction

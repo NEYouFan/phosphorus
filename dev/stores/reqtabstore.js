@@ -44,17 +44,20 @@ let actions = {
         tabs.items[tabs.activeIndex] = Object.assign(tabs.items[tabs.activeIndex], tab)
     },
 
-    setDirtyTab(isDirty) {
+    setDirtyTab() {
         let tab = tabs.items[tabs.activeIndex]
         // if tab has no url, it can't be saved
         if (!tab.url) return
-        tab.isDirty = isDirty
+        tab.isDirty = true
     },
 
     saveTab(callback) {
         let tab = tabs.items[tabs.activeIndex]
         // just for save check
-        if (!tab.url) return
+        if (!tab.url) {
+            callback()
+            return
+        }
         let tabCon = ReqTabConStore.getCurrentCon().builders
         let saveData = {}
         _.each(RequestDataMap, (value, key) => {
@@ -172,7 +175,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_TAB_SET_DIRTY:
-            actions.setDirtyTab(action.isDirty)
+            actions.setDirtyTab()
             ReqTabStore.emitChange()
             break
 

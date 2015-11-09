@@ -7,6 +7,7 @@ import AppConstants from '../../constants/constants'
 import ModalAction from '../../actions/modalaction'
 import EditCollHost from './edit.coll.host.jsx'
 import EditFolderHost from './edit.folder.host.jsx'
+import TipModal from './tip.modal.jsx'
 
 class Modal extends React.Component {
 
@@ -40,6 +41,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_EDIT_FOLDER_HOST:
                 return (
                     <EditFolderHost modal={this.props.modal} />
+                )
+
+            case AppConstants.MODAL_SAVE_BLANK_URL_TIP:
+                return (
+                    <TipModal modal={this.props.modal} />
                 )
 
             default:
