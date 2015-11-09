@@ -25,7 +25,7 @@ class ReqTab extends React.Component {
                 <div className={tabClasses} key={index} title={tab.name}>
                     <div className="reqtab-box"></div>
                     <span className="reqtab-name" onMouseUp={(e)=>{this.mouseUp(e,index)}}>
-                        <em>{tab.name}</em>
+                        <em>{tab.name || tab.url || 'New tab'}</em>
                     </span>
                     <div className={removeBtnClasses} onMouseUp={(e)=>{this.remove(e,index)}} title="Close tab">
                         <em className="glyphicon glyphicon-remove"></em>

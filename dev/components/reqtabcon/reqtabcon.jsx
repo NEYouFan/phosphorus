@@ -49,14 +49,14 @@ class ReqTabCon extends React.Component {
                 reqURL = <NEIReqURL {...reqURLProps} />
 
                 reqBuilderURLParamsProps.modClass = 'nei-reqbuilder-urlparams'
-                let lastParamKV = builders.paramKVs[builders.paramKVs.length -1]
-                // remove default blank row
-                if (lastParamKV && !lastParamKV.key) {
-                    builders.paramKVs.pop()
+                for (let i = builders.paramKVs.length - 1; i >= 0; i--) {
+                    if (builders.paramKVs[i].key) {
+                        builders.paramKVs[i].readonly = true
+                    } else {
+                        // remove if key is blank
+                        builders.paramKVs.splice(i, 1)
+                    }
                 }
-                builders.paramKVs.forEach((kv) => {
-                    kv.readonly = true
-                })
                 reqBuilderURLParams = <NEIReqBuilderURLParams {...reqBuilderURLParamsProps} />
 
             } else {

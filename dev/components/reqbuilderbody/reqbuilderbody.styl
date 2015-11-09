@@ -42,8 +42,17 @@
       display: flex
       cursor: pointer
 
+      &.disabled {
+        cursor: default
+        color: #ccc
+      }
+
       input {
         cursor: pointer
+
+        &:disabled {
+          cursor: default
+        }
       }
 
       span {

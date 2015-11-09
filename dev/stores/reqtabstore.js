@@ -16,7 +16,7 @@ const DEFAULT_ITEMS = {
     url: '',
     rurl: '',// rurl is the request url, it's path variables are replaced(done in tabConActions.checkReqSend(), see@reqtabconstore.js )
     method: 'POST',
-    name: 'New tab',
+    name: '',
     urlError: false, // when click `save` button, if url is blank, then show error style
     isNEI: false, // nei tab, has some special logic, e.g.: it's url, method, url params and input params cannot be changed
     isDirty: false // it's user-input-data is saved or not
@@ -41,7 +41,6 @@ let actions = {
     },
 
     changeTab(tab) {
-        tab.name = tab.name || DEFAULT_ITEMS.name
         tabs.items[tabs.activeIndex] = Object.assign(tabs.items[tabs.activeIndex], tab)
     },
 
@@ -130,7 +129,6 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
     setTabUrl(tabIndex, tabUrl) {
         let tab = tabs.items[tabIndex]
         tab.url = tabUrl
-        tab.name = tabUrl || DEFAULT_ITEMS.name
     },
 
     emitChange() {

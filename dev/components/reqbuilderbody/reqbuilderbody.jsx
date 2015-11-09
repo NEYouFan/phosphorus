@@ -31,15 +31,24 @@ class ReqBuilderBody extends React.Component {
 
     render() {
         let bodyType = this.props.builders.bodyType
-        let typeNodes = this.props.bodyTypes.map((type, index) => {
-            let isChecked = type === bodyType.type
-            let rawNodes = this.getRawNodes(type, isChecked, bodyType)
+        let typeNodes = this.props.bodyTypes.map((item, index) => {
+            let isChecked = item.type === bodyType.type
+            let rawNodes = this.getRawNodes(item.type, isChecked, bodyType)
+            let labelClasses = classNames({
+                disabled: item.disabled
+            })
             return (
                 <li key={index}>
-                    <label>
-                        <input type="radio" value={type} name="type" checked={isChecked}
-                               onChange={(e)=>{this.onChange(e)}}/>
-                        <span>{type}</span>
+                    <label className={labelClasses}>
+                        <input
+                            type="radio"
+                            value={item.type}
+                            name="type"
+                            checked={isChecked}
+                            disabled={item.disabled}
+                            onChange={(e)=>{this.onChange(e)}}
+                            />
+                        <span>{item.type}</span>
                     </label>
                     {rawNodes}
                 </li>

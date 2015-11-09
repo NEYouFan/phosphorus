@@ -5,6 +5,7 @@ import Events from 'events'
 import _ from 'lodash'
 import Util from '../libs/util'
 import StorageArea from '../libs/storagearea'
+import RequestDataMap from '../libs/request_data_map'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import ReqTabStore from './reqtabstore'
@@ -118,7 +119,24 @@ const DEFAULT_CON_ITEM = {
 let tabIndex = 0
 
 let tabCons = {
-    bodyTypes: ['raw', 'x-www-form-urlencoded', 'form-data', 'binary'],
+    bodyTypes: [
+        {
+            type: 'raw',
+            disabled: false
+        },
+        {
+            type: 'x-www-form-urlencoded',
+            disabled: false
+        },
+        {
+            type: 'form-data',
+            disabled: false
+        },
+        {
+            type: 'binary',
+            disabled: false
+        }
+    ],
     rawTypes: [
         {
             value: 'text',
@@ -172,15 +190,64 @@ let tabConActions = {
         tabCons.items.splice(tabIndex, 1)
     },
 
-    updateConByRequest(request, dataSource) {
+    updateConByRequest(request, dataSource, callback) {
         console.log(request)
         console.log(dataSource)
         let newTabCon = _.cloneDeep(DEFAULT_CON_ITEM)
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
-            console.log(requests[request.neiId])
+            let savedRequest = requests[request.neiId]
+            console.log(savedRequest)
+            if (request.neiId) {
+                if (request.isRest) {
+                    newTabCon.builders.bodyType = {
+                        type: 'raw',
+                        name: 'JSON(application/json)'
+                    }
+                    tabCons.bodyTypes.forEach((bodyType, index) => {
+                        bodyType.disabled = bodyType.type !== 'raw'
+                    })
+                } else {
+                    newTabCon.builders.bodyType = {
+                        type: 'x-www-form-urlencoded'
+                    }
+                    tabCons.bodyTypes.forEach((bodyType, index) => {
+                        bodyType.disabled = bodyType.type !== 'x-www-form-urlencoded'
+                    })
+                }
+            } else {
+                tabCons.bodyTypes.forEach((bodyType, index) => {
+                    bodyType.disabled = false
+                })
+            }
+            if (savedRequest) {
+                let builders = newTabCon.builders
+                _.each(RequestDataMap, (value, key) => {
+                    if (builders.hasOwnProperty(key)) {
+                        if (typeof value === 'object') {
+                            if (Array.isArray(savedRequest[value.saveKey])) {
+                                if (savedRequest[value.saveKey].length) {
+                                    let itemTpl = _.cloneDeep(builders[key][builders[key].length - 1])
+                                    builders[key] = []
+                                    _.each(savedRequest[value.saveKey], (v, k) => {
+                                        builders[key].push(Object.assign({}, itemTpl, v))
+                                    })
+                                }
+                            } else {
+                                builders[key] = savedRequest[value.saveKey]
+                            }
+                        } else {
+                            builders[key] = savedRequest[value]
+                        }
+                    }
+                })
+            }
+            tabCons.items[tabIndex] = newTabCon
+            this.changeAceEditorConfig()
+            callback()
         })
-        //tabCons.items[tabIndex] = Object.assign(_.cloneDeep(DEFAULT_CON_ITEM), request)
+
+
     },
 
     toggleReqMethodsList() {
@@ -650,8 +717,10 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_CONTENT_UPDATE_BY_REQUEST:
-            actions.updateConByRequest(action.request, action.dataSource)
-            ReqTabConStore.emitChange()
+            actions.updateConByRequest(action.request, action.dataSource, () => {
+                ReqTabConStore.emitChange()
+                ReqTabConStore.emitAceEditorUpdate()
+            })
             break
 
         case AppConstants.REQ_CONTENT_TOGGLE_METHODS_LIST:

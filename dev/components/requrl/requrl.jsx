@@ -58,7 +58,6 @@ class ReqURL extends React.Component {
     onChange(evt) {
         let url = evt.target.value
         let tab = this.props.tab
-        tab.name = url
         tab.url = url
         tab.urlError = false
         ReqTabAction.changeTab(tab)
