@@ -101,9 +101,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_LEAVING_UNSAVED_TAB,
                 title: 'Please confirm',
                 okText: 'Leave anyway!',
-                data: {
-                    nextRequestId: action.nextRequestId
-                }
+                data: action.data
             })
             ModalStore.emitChange()
             break

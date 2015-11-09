@@ -228,14 +228,6 @@ class Collections extends React.Component {
 
     onClickURL(url, reqId, collection, evt) {
         if (evt.currentTarget.classList.contains('active')) return
-        // check if tab is dirty
-        let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
-        if (activeReqTab.isDirty) {
-            return ModalAction.openLeavingUnsavedTab(reqId)
-        }
-        this.setState({
-            activeReqURLId: reqId
-        })
         let request = _.find(collection.requests, (req) => {
             return req.id === reqId
         })
@@ -260,6 +252,20 @@ class Collections extends React.Component {
             isDirty: false,
             urlError: false
         }
+        // check if tab is dirty
+        let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
+        if (activeReqTab.isDirty) {
+            return ModalAction.openLeavingUnsavedTab({
+                reqId: reqId,
+                tab: tab,
+                request: request,
+                collection: collection
+            })
+        }
+        // todo: move state to sideTabStore
+        this.setState({
+            activeReqURLId: reqId
+        })
         ReqTabAction.changeTab(tab)
         ReqTabConAction.updateConByRequest(request, collection)
     }

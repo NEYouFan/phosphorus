@@ -38,10 +38,10 @@ class ModalAction  {
         })
     }
 
-    static openLeavingUnsavedTab(nextRequestId) {
+    static openLeavingUnsavedTab(data) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_LEAVING_UNSAVED_TAB,
-            nextRequestId: nextRequestId
+            data: data
         })
     }
 

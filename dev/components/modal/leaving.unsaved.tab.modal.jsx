@@ -1,6 +1,8 @@
 //author @huntbao
 'use strict'
 import ModalBody from './modal.body.jsx'
+import ReqTabAction from '../../actions/reqtabaction'
+import ReqTabConAction from '../../actions/reqtabconaction'
 
 class LeavingUnsavedTabModal extends ModalBody {
 
@@ -16,7 +18,9 @@ class LeavingUnsavedTabModal extends ModalBody {
     onClickOk(evt) {
         evt.preventDefault()
         this.close()
-        console.log(this.props.modal.data.nextRequestId)
+        let data = this.props.modal.data
+        ReqTabAction.changeTab(data.tab)
+        ReqTabConAction.updateConByRequest(data.request, data.collection)
     }
 
 }
