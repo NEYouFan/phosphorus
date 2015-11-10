@@ -228,26 +228,14 @@ let Util = {
 
     convertNEIInputsToJSON(request, dataSource, savedData) {
         let result = {}
-        savedData = savedData || ''
-        if (typeof savedData === 'string') {
-            try {
-                savedData = JSON.parse(savedData)
-            } catch (err) {
-                savedData = {}
-            }
-        }
-        let tryToGetValue = (key, data) => {
-            let value = ''
-            if (data.hasOwnProperty(key)) {
-                value = data[key]
-            }
-            return value
-        }
-        let convertValue = (value, type) => {
+        let getPrimiteValue = (type, value) => {
             switch (type) {
+                case 10001:
+                    // string
+                    return String(value)
                 case 10002:
                     // number
-                    return Number(value) || 0
+                    return Number(value)
                 case 10003:
                     // boolean
                     return Boolean(value)
@@ -255,71 +243,74 @@ let Util = {
                     return value
             }
         }
-        let getPrimiteValue = (type) => {
-            switch (type) {
-                case 10001:
-                    // string
-                    return ''
-                case 10002:
-                    // number
-                    return '0'
-                case 10003:
-                    // boolean
-                    return 'true'
-                default:
-                    return value
+        let typeMap = {
+            10001: 'string',
+            10002: 'number',
+            10003: 'boolean'
+        }
+        let checkValueIsType = (value, type) => {
+            return typeof(value) === typeMap[type]
+        }
+        let isAllValueValidType = (arr, type) => {
+            if (Array.isArray(arr)) {
+                let result = true
+                arr.forEach((value) => {
+                    result = checkValueIsType(value, type)
+                })
+                return result
+            } else {
+                return false
             }
+        }
+        let isSysType = (type) => {
+            return /^(10001|10002|10003)$/.test(type)
         }
         let getInputValue = (input, data) => {
-            let result
-            if (input.isPrimite) {
-                result = data || getPrimiteValue(input.type)
-            } else {
-                result = {}
-                let name = input.name
-                if (input.isSysType) {
-                    if (input.isArray) {
-                        let arr = []
-                        result[name] = arr
+            let tempResult = {}
+            if (input.isSysType) {
+                if (input.isArray) {
+                    if (isAllValueValidType(data[input.name], input.type)) {
+                        tempResult = data[input.name]
                     } else {
-
+                        tempResult = []
                     }
                 } else {
-                    if (input.isArray) {
-                        let arr = []
-                        result[name] = arr
-
+                    if (checkValueIsType(data[input.name], input.type)) {
+                        tempResult = data[input.name]
                     } else {
-
+                        tempResult = getPrimiteValue(input.type, '')
                     }
                 }
-            }
-            return result
-        }
-        _.forEach(request.inputs, (input) => {
-            if (input.isPrimite) {
-                result = savedData || getPrimiteValue(input.type)
             } else {
-                result[input.name] = getInputValue(input, savedData)
+                let attributes = []
+                dataSource.attributes.forEach((ds) => {
+                    if (ds.parentId === input.type) {
+                        attributes.push(ds)
+                    }
+                })
+                attributes.forEach((attr) => {
+                    attr.isSysType = isSysType(attr.type)
+                    tempResult[attr.name] = getInputValue(attr, data[input.name] || {})
+                })
             }
-            //let iv = getInputValue(input, dataSource)
-            //let name = input.name
-            //if (input.isSysType) {
-            //    if (input.isArray) {
-            //        result[name] = []
-            //    } else {
-            //        result[name] = convertValue(tryToGetValue(name, savedData), input.type)
-            //    }
-            //} else {
-            //    let obj = {}
-            //    let allAttributes = _.filter(dataSource.attributes, (attr) => {
-            //        return attr.parentId === input.type
-            //    })
-            //    _.forEach(allAttributes, (attr) => {
-            //        obj[attr.name] = attr;
-            //    })
-            //}
-        })
+            return tempResult
+        }
+        let getTestData = (inputs, data) => {
+            inputs.forEach((input) => {
+                if (input.isPrimite) {
+                    result = getPrimiteValue(input.type, data || '')
+                } else {
+                    result[input.name] = getInputValue(input, data || {})
+                }
+            })
+        }
+
+        try {
+            savedData = JSON.parse(savedData)
+        } catch (err) {
+            savedData = {}
+        }
+        getTestData(request.inputs, savedData)
         return JSON.stringify(result, null, '\t')
     }
 }
