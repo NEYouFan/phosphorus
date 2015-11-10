@@ -196,12 +196,13 @@ let tabConActions = {
         let newTabCon = _.cloneDeep(DEFAULT_CON_ITEM)
         // remove DEFAULT_JSON_HEADER_KV
         newTabCon.builders.headerKVs.shift()
+        this.__dealNEIRequest(request, newTabCon)
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
             let savedRequest = requests[request.id]
+            let builders = newTabCon.builders
             console.log(savedRequest)
             if (savedRequest) {
-                let builders = newTabCon.builders
                 _.each(RequestDataMap, (value, key) => {
                     if (builders.hasOwnProperty(key)) {
                         if (typeof value === 'object') {
@@ -223,25 +224,59 @@ let tabConActions = {
                         }
                     }
                 })
-                // move the default blank item to the last
-                builders.bodyXFormKVs.push(builders.bodyXFormKVs.shift())
-                builders.bodyFormDataKVs.push(builders.bodyFormDataKVs.shift())
-                builders.paramKVs.push(builders.paramKVs.shift())
-                tabCons.items[tabIndex] = newTabCon
-                paramActions.updateTabUrl()
-            } else {
-                tabCons.items[tabIndex] = newTabCon
-                paramActions.fillURLParams()
             }
+            // move the default blank item to the last
+            //builders.bodyXFormKVs.push(builders.bodyXFormKVs.shift())
+            //builders.bodyFormDataKVs.push(builders.bodyFormDataKVs.shift())
+            //builders.paramKVs.push(builders.paramKVs.shift())
+            //builders.headerKVs.push(builders.headerKVs.shift())
+            tabCons.items[tabIndex] = newTabCon
+            paramActions.updateTabUrl()
+            paramActions.fillURLParams()
             // change edtior mode by bodyType
-            let rawType =  _.find(tabCons.rawTypes, (rawType) => {
+            let rawType = _.find(tabCons.rawTypes, (rawType) => {
                 return newTabCon.builders.bodyType.name === rawType.name
             })
-            this.changeAceEditorConfig(rawType.editorMode)
+            this.changeAceEditorConfig(rawType && rawType.editorMode)
             this.changeMethod()
             callback()
         })
 
+    },
+
+    __dealNEIRequest(request, newTabCon) {
+        let builders = newTabCon.builders
+        if (request.isNEI) {
+            tabCons.bodyTypes.forEach((bodyType) => {
+                bodyType.disabled = true
+            })
+            // nei request special logic
+            if (!Util.isNoBodyMethod(request.method)) {
+                if (request.isRest) {
+                    // restful request
+                    builders.bodyType = {
+                        type: 'raw',
+                        name: 'JSON(application/json)'
+                    }
+                    // init request inputs
+                } else {
+                    builders.bodyType.type = 'x-www-form-urlencoded'
+                    // init request inputs
+                    let itemTpl = _.cloneDeep(builders.bodyXFormKVs[0])
+                    builders.bodyXFormKVs = []
+                    request.inputs.forEach((input) => {
+                        builders.bodyXFormKVs.push(Object.assign({}, itemTpl, {
+                            key: input.name,
+                            readonly: true
+                        }))
+                    })
+                }
+            }
+        } else {
+            tabCons.bodyTypes.forEach((bodyType) => {
+                bodyType.disabled = false
+            })
+        }
 
     },
 
@@ -251,13 +286,13 @@ let tabConActions = {
 
     changeMethod() {
         let tab = ReqTabStore.getTab(tabIndex)
-        let isGetMethod = tab.method.toLowerCase() === 'get'
+        let isNoBodyMethod = Util.isNoBodyMethod(tab.method)
         let builders = tabCons.items[tabIndex].builders
         let bodyBuilder = _.find(builders.items, (builder) => {
             return builder.name === REQUEST_BODY_STR
         })
-        bodyBuilder.disabled = isGetMethod
-        if (isGetMethod && builders.activeTabName === REQUEST_BODY_STR) {
+        bodyBuilder.disabled = isNoBodyMethod
+        if (isNoBodyMethod && builders.activeTabName === REQUEST_BODY_STR) {
             this.switchBuilderTab(URL_PARAMS_STR)
         }
     },

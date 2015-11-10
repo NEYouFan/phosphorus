@@ -12,11 +12,11 @@ import AceEditor from '../aceeditor/aceeditor.jsx'
 
 class ReqBuilderBody extends React.Component {
 
-    getRawNodes(type, isChecked, bodyType) {
+    getRawNodes(type, isChecked, isDisabled, bodyType) {
         if (type !== 'raw') return
         let rawTypeClasses = classNames({
             'reqbuilder-body-rawtype': true,
-            'show-raw-value': isChecked,
+            'show-raw-value': isChecked && !isDisabled,
             'show-raw-list': this.props.showRawTypeList
         })
         return (
@@ -34,7 +34,7 @@ class ReqBuilderBody extends React.Component {
         let bodyType = this.props.builders.bodyType
         let typeNodes = this.props.bodyTypes.map((item, index) => {
             let isChecked = item.type === bodyType.type
-            let rawNodes = this.getRawNodes(item.type, isChecked, bodyType)
+            let rawNodes = this.getRawNodes(item.type, isChecked, item.disabled, bodyType)
             let labelClasses = classNames({
                 disabled: item.disabled
             })
@@ -93,7 +93,7 @@ class ReqBuilderBody extends React.Component {
         return (
             <KeyValueX
                 kvs={this.props.builders.bodyFormDataKVs}
-                toggleKV={(rowIndex) => {this.toggleBodyFormDataKV(rowIndex)}}
+                toggleKV={(rowIndex,kv) => {this.toggleBodyFormDataKV(rowIndex,kv)}}
                 addKV={() => {this.addBodyFormDataKV()}}
                 removeKV={(rowIndex) => {this.removeBodyFormDataKV(rowIndex)}}
                 changeKVKey={(rowIndex, value) => {this.changeBodyFormDataKVKey(rowIndex, value)}}
@@ -109,7 +109,7 @@ class ReqBuilderBody extends React.Component {
             <KeyValue
                 showKV={true}
                 kvs={this.props.builders.bodyXFormKVs}
-                toggleKV={(rowIndex) => {this.toggleBodyXFormKV(rowIndex)}}
+                toggleKV={(rowIndex,kv) => {this.toggleBodyXFormKV(rowIndex,kv)}}
                 addKV={() => {this.addBodyXFormKV()}}
                 removeKV={(rowIndex) => {this.removeBodyXFormKV(rowIndex)}}
                 changeKVKey={(rowIndex, value) => {this.changeBodyXFormKVKey(rowIndex, value)}}
@@ -141,9 +141,11 @@ class ReqBuilderBody extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
-    toggleBodyFormDataKV(rowIndex) {
+    toggleBodyFormDataKV(rowIndex,kv) {
         ReqBodyAction.toggleBodyFormDataKV(rowIndex)
-        ReqTabAction.setDirtyTab()
+        if (!kv.readonly) {
+            ReqTabAction.setDirtyTab()
+        }
     }
 
     addBodyFormDataKV() {
@@ -174,9 +176,11 @@ class ReqBuilderBody extends React.Component {
         ReqBodyAction.changeBodyFormDataKVFileValue(rowIndex, fileInput)
     }
 
-    toggleBodyXFormKV(rowIndex) {
+    toggleBodyXFormKV(rowIndex, kv) {
         ReqBodyAction.toggleBodyXFormKV(rowIndex)
-        ReqTabAction.setDirtyTab()
+        if (!kv.readonly) {
+            ReqTabAction.setDirtyTab()
+        }
     }
 
     addBodyXFormKV() {

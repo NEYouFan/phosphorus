@@ -68,7 +68,7 @@ exports.projects = {
             "id": 10670,
             "name": "搜索接口列表",
             "description": "",
-            "path": "/api/:id/:name/ndir/search",
+            "path": "/api/ndir/search",
             "method": 0,
             "isRest": 0,
             "inputs": [{

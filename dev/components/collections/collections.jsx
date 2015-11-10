@@ -227,7 +227,7 @@ class Collections extends React.Component {
         })
         // request is from NEI
         if (request.isNEI) {
-            if (request.method === 'GET') {
+            if (Util.isNoBodyMethod(request.method)) {
                 let queryParams = request.inputs.map((urlParam, index) => {
                     return {
                         key: urlParam.name,

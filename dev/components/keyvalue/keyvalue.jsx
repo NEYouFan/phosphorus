@@ -42,7 +42,7 @@ class KeyValue extends React.Component {
             let inputs = this.getInputs(kv, index, keyInputProps, valueInputProps)
             return (
                 <div className={rowClasses} key={index}>
-                    <div className={okSignClasses} onClick={()=>{this.toggle(index)}}></div>
+                    <div className={okSignClasses} onClick={()=>{this.toggle(index, kv)}}></div>
                     {inputs}
                     <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(index)}}></div>
                 </div>
@@ -71,8 +71,8 @@ class KeyValue extends React.Component {
         // for extend column use
     }
 
-    toggle(rowIndex) {
-        this.props.toggleKV(rowIndex)
+    toggle(rowIndex, kv) {
+        this.props.toggleKV(rowIndex, kv)
     }
 
     focus(rowIndex, evt) {

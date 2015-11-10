@@ -219,6 +219,10 @@ let Util = {
         }).then((json) => {
             getDetail(json.result)
         })
+    },
+
+    isNoBodyMethod(method) {
+        return /^(get|copy|head|purge|unlock|view)$/.test(method.toLowerCase())
     }
 }
 
