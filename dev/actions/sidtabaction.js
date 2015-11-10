@@ -36,6 +36,13 @@ class SideTabAction  {
         })
     }
 
+    static changeActiveReqId(reqId) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_CHANGE_ACTIVE_REQ_ID,
+            reqId: reqId
+        })
+    }
+
 }
 
 export default SideTabAction

@@ -38,9 +38,9 @@ class ModalAction  {
         })
     }
 
-    static openLeavingUnsavedTab(data) {
+    static openLeavingDirtyTab(data) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.MODAL_LEAVING_UNSAVED_TAB,
+            actionType: AppConstants.MODAL_LEAVING_DIRTY_TAB,
             data: data
         })
     }

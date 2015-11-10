@@ -6,18 +6,12 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import Util from '../../libs/util'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
+import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ModalAction from '../../actions/modalaction'
 
 class Collections extends React.Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            activeReqURLId: null
-        }
-    }
 
     getMethodUIName(methodName) {
         let methodMap = {
@@ -48,7 +42,7 @@ class Collections extends React.Component {
                         let methodClasses = 'coll-req-method method-' + request.method.toLowerCase()
                         let classes = classNames({
                             'coll-req': true,
-                            'active': this.state.activeReqURLId === reqId
+                            'active': this.props.sideTab.tabs.activeReqId === reqId
                         })
                         let url = (folder.host || collection.host) + request.path
                         let displayName = request.name || url
@@ -255,17 +249,14 @@ class Collections extends React.Component {
         // check if tab is dirty
         let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
         if (activeReqTab.isDirty) {
-            return ModalAction.openLeavingUnsavedTab({
+            return ModalAction.openLeavingDirtyTab({
                 reqId: reqId,
                 tab: tab,
                 request: request,
                 collection: collection
             })
         }
-        // todo: move state to sideTabStore
-        this.setState({
-            activeReqURLId: reqId
-        })
+        SideTabAction.changeActiveReqId(reqId)
         ReqTabAction.changeTab(tab)
         ReqTabConAction.updateConByRequest(request, collection)
     }

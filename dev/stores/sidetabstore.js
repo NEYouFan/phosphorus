@@ -13,7 +13,8 @@ import ReqTabStore from './reqtabstore'
 const CHANGE_EVENT = 'change'
 
 let tabs = {
-    activeTabName: 'Collections'
+    activeTabName: 'Collections',
+    activeReqId: null
 }
 
 //let NEI_SERVER_URL = 'http://nei.hz.netease.com'
@@ -104,6 +105,10 @@ let actions = {
                 callback()
             })
         })
+    },
+
+    changeActiveReqId(reqId) {
+        tabs.activeReqId = reqId
     }
 }
 
@@ -161,6 +166,11 @@ AppDispatcher.register((action) => {
             actions.changeFolderHost(action.folder, action.host, () => {
                 SideTabStore.emitChange()
             })
+            break
+
+        case AppConstants.SIDE_CHANGE_ACTIVE_REQ_ID:
+            actions.changeActiveReqId(action.reqId)
+            SideTabStore.emitChange()
             break
 
         default:

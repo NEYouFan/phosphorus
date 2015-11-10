@@ -1,6 +1,7 @@
 //author @huntbao
 'use strict'
 import ModalBody from './modal.body.jsx'
+import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 
@@ -19,6 +20,7 @@ class LeavingUnsavedTabModal extends ModalBody {
         evt.preventDefault()
         this.close()
         let data = this.props.modal.data
+        SideTabAction.changeActiveReqId(data.reqId)
         ReqTabAction.changeTab(data.tab)
         ReqTabConAction.updateConByRequest(data.request, data.collection)
     }

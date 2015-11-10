@@ -9,6 +9,7 @@ let AppConstants = keyMirror({
     SIDE_TAB_FETCH_COLLECTIONS: null,
     SIDE_CHANGE_COLL_HOST: null,
     SIDE_CHANGE_FOLDER_HOST: null,
+    SIDE_CHANGE_ACTIVE_REQ_ID: null,
     // req tab action
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,
@@ -73,7 +74,7 @@ let AppConstants = keyMirror({
     MODAL_EDIT_COLL_HOST: null,
     MODAL_EDIT_FOLDER_HOST: null,
     MODAL_SAVE_BLANK_URL_TIP: null,
-    MODAL_LEAVING_UNSAVED_TAB: null,
+    MODAL_LEAVING_DIRTY_TAB: null,
 })
 
 export default AppConstants

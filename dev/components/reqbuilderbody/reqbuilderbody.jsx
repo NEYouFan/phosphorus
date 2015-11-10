@@ -96,7 +96,6 @@ class ReqBuilderBody extends React.Component {
                 toggleKV={(rowIndex) => {this.toggleBodyFormDataKV(rowIndex)}}
                 addKV={() => {this.addBodyFormDataKV()}}
                 removeKV={(rowIndex) => {this.removeBodyFormDataKV(rowIndex)}}
-                editKV={() => {this.editBodyFormDataKV()}}
                 changeKVKey={(rowIndex, value) => {this.changeBodyFormDataKVKey(rowIndex, value)}}
                 changeKVValue={(rowIndex, value) => {this.changeBodyFormDataKVValue(rowIndex, value)}}
                 changeKVValueType={(rowIndex, value) => {this.changeBodyFormDataKVValueType(rowIndex, value)}}
@@ -113,7 +112,6 @@ class ReqBuilderBody extends React.Component {
                 toggleKV={(rowIndex) => {this.toggleBodyXFormKV(rowIndex)}}
                 addKV={() => {this.addBodyXFormKV()}}
                 removeKV={(rowIndex) => {this.removeBodyXFormKV(rowIndex)}}
-                editKV={() => {this.editBodyXFormKV()}}
                 changeKVKey={(rowIndex, value) => {this.changeBodyXFormKVKey(rowIndex, value)}}
                 changeKVValue={(rowIndex, fileInput) => {this.changeBodyXFormKVValue(rowIndex, fileInput)}}
                 />
@@ -145,6 +143,7 @@ class ReqBuilderBody extends React.Component {
 
     toggleBodyFormDataKV(rowIndex) {
         ReqBodyAction.toggleBodyFormDataKV(rowIndex)
+        ReqTabAction.setDirtyTab()
     }
 
     addBodyFormDataKV() {
@@ -153,22 +152,22 @@ class ReqBuilderBody extends React.Component {
 
     removeBodyFormDataKV(rowIndex) {
         ReqBodyAction.removeBodyFormDataKV(rowIndex)
-    }
-
-    editBodyFormDataKV() {
-        ReqBodyAction.editBodyFormDataKV()
+        ReqTabAction.setDirtyTab()
     }
 
     changeBodyFormDataKVKey(rowIndex, value) {
         ReqBodyAction.changeBodyFormDataKVKey(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
     changeBodyFormDataKVValue(rowIndex, value) {
         ReqBodyAction.changeBodyFormDataKVValue(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
     changeBodyFormDataKVValueType(rowIndex, value) {
         ReqBodyAction.changeBodyFormDataKVValueType(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
     changeBodyFormDataKVFileValue(rowIndex, fileInput) {
@@ -177,6 +176,7 @@ class ReqBuilderBody extends React.Component {
 
     toggleBodyXFormKV(rowIndex) {
         ReqBodyAction.toggleBodyXFormKV(rowIndex)
+        ReqTabAction.setDirtyTab()
     }
 
     addBodyXFormKV() {
@@ -185,18 +185,17 @@ class ReqBuilderBody extends React.Component {
 
     removeBodyXFormKV(rowIndex) {
         ReqBodyAction.removeBodyXFormKV(rowIndex)
-    }
-
-    editBodyXFormKV() {
-        ReqBodyAction.editBodyXFormKV()
+        ReqTabAction.setDirtyTab()
     }
 
     changeBodyXFormKVKey(rowIndex, value) {
         ReqBodyAction.changeBodyXFormKVKey(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
     changeBodyXFormKVValue(rowIndex, value) {
         ReqBodyAction.changeBodyXFormKVValue(rowIndex, value)
+        ReqTabAction.setDirtyTab()
     }
 
     changeBinaryData(evt) {

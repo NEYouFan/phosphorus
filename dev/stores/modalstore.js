@@ -96,9 +96,9 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
-        case AppConstants.MODAL_LEAVING_UNSAVED_TAB:
+        case AppConstants.MODAL_LEAVING_DIRTY_TAB:
             actions.openModal({
-                type: AppConstants.MODAL_LEAVING_UNSAVED_TAB,
+                type: AppConstants.MODAL_LEAVING_DIRTY_TAB,
                 title: 'Please confirm',
                 okText: 'Leave anyway!',
                 data: action.data

@@ -8,7 +8,7 @@ import ModalAction from '../../actions/modalaction'
 import EditCollHost from './edit.coll.host.jsx'
 import EditFolderHost from './edit.folder.host.jsx'
 import TipModal from './tip.modal.jsx'
-import LeavingUnsavedTabModal from './leaving.unsaved.tab.modal.jsx'
+import LeavingDirtyTabModal from './leaving.dirty.tab.modal.jsx'
 
 class Modal extends React.Component {
 
@@ -49,9 +49,9 @@ class Modal extends React.Component {
                     <TipModal modal={this.props.modal} />
                 )
 
-            case AppConstants.MODAL_LEAVING_UNSAVED_TAB:
+            case AppConstants.MODAL_LEAVING_DIRTY_TAB:
                 return (
-                    <LeavingUnsavedTabModal modal={this.props.modal} />
+                    <LeavingDirtyTabModal modal={this.props.modal} />
                 )
 
             default:
