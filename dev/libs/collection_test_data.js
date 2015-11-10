@@ -28,42 +28,60 @@ exports.projects = {
         "pages": [],
         "interfaces": [],
         "templates": [],
-        "datatypes": [{"id": 10000, "name": "Variable", "format": 0, "updateTime": 1438067940000}, {
-            "id": 10001,
-            "name": "String",
+        "datatypes": [{"id": 10003, "name": "Boolean", "format": 0, "updateTime": 1438067940000}, {
+            "id": 10002,
+            "name": "Number",
             "format": 0,
             "updateTime": 1438067940000
-        }, {"id": 10002, "name": "Number", "format": 0, "updateTime": 1438067940000}, {
-            "id": 10003,
-            "name": "Boolean",
+        }, {"id": 10001, "name": "String", "format": 0, "updateTime": 1438067940000}, {
+            "id": 10000,
+            "name": "Variable",
             "format": 0,
             "updateTime": 1438067940000
         }],
         "attributes": [],
         "project": {"id": 10182, "name": "公共资源库", "group": "默认分组"},
-        "timestamp": 1446812406533
+        "timestamp": 1447154077617
     },
     "10484": {
         "pages": [],
         "interfaces": [],
         "templates": [],
-        "datatypes": [{"id": 10000, "name": "Variable", "format": 0, "updateTime": 1438067940000}, {
-            "id": 10001,
-            "name": "String",
+        "datatypes": [{"id": 10003, "name": "Boolean", "format": 0, "updateTime": 1438067940000}, {
+            "id": 10002,
+            "name": "Number",
             "format": 0,
             "updateTime": 1438067940000
-        }, {"id": 10002, "name": "Number", "format": 0, "updateTime": 1438067940000}, {
-            "id": 10003,
-            "name": "Boolean",
+        }, {"id": 10001, "name": "String", "format": 0, "updateTime": 1438067940000}, {
+            "id": 10000,
+            "name": "Variable",
             "format": 0,
             "updateTime": 1438067940000
         }],
         "attributes": [],
         "project": {"id": 10484, "name": "公共资源库", "group": "测试"},
-        "timestamp": 1446812406461
+        "timestamp": 1447154077545
     },
     "10597": {
-        "pages": [],
+        "pages": [{
+            "id": 10085,
+            "path": "/user/profile/:id/",
+            "name": "页面测试1",
+            "templates": [10200],
+            "interfaces": [10670],
+            "description": "页面测试1",
+            "parameters": [],
+            "updateTime": 1447049357000
+        }, {
+            "id": 10086,
+            "path": "/profile/user/p:id",
+            "name": "1页面测试",
+            "templates": [10199],
+            "interfaces": [10668],
+            "description": "1页面测试",
+            "parameters": [],
+            "updateTime": 1447049388000
+        }],
         "interfaces": [{
             "id": 10670,
             "name": "搜索接口列表",
@@ -72,6 +90,16 @@ exports.projects = {
             "method": 0,
             "isRest": 1,
             "inputs": [{
+                "id": 13315,
+                "name": "complex",
+                "type": 10543,
+                "isPrimite": 0,
+                "typeName": "Project",
+                "isSysType": 0,
+                "isArray": 0,
+                "description": "",
+                "updateTime": 1447153055000
+            }, {
                 "id": 10780,
                 "datatypeId": 10547,
                 "datatypeName": "SearchParam",
@@ -194,7 +222,67 @@ exports.projects = {
                 "description": "",
                 "updateTime": 1446793664000
             }],
-            "updateTime": 1446803674000
+            "updateTime": 1447040034000
+        }, {
+            "id": 10678,
+            "name": "获取测试数据",
+            "description": "",
+            "path": "/api/parameter/getTestData",
+            "method": 0,
+            "isRest": 0,
+            "inputs": [{
+                "id": 13316,
+                "name": "id",
+                "type": 10002,
+                "isPrimite": 0,
+                "typeName": "Number",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "test data id",
+                "updateTime": 1447153216000
+            }, {
+                "id": 13317,
+                "name": "type",
+                "type": 10001,
+                "isPrimite": 0,
+                "typeName": "String",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "test data type",
+                "updateTime": 1447153216000
+            }],
+            "outputs": [{
+                "id": 13318,
+                "name": "code",
+                "type": 10002,
+                "isPrimite": 0,
+                "typeName": "Number",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "",
+                "updateTime": 1447153216000
+            }, {
+                "id": 13319,
+                "name": "msg",
+                "type": 10001,
+                "isPrimite": 0,
+                "typeName": "String",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "",
+                "updateTime": 1447153216000
+            }, {
+                "id": 13320,
+                "name": "result",
+                "type": 10001,
+                "isPrimite": 0,
+                "typeName": "String",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "",
+                "updateTime": 1447153216000
+            }],
+            "updateTime": 1447153216000
         }, {
             "id": 10668,
             "name": "获取项目组列表",
@@ -234,7 +322,7 @@ exports.projects = {
                 "description": "",
                 "updateTime": 1446791451000
             }],
-            "updateTime": 1446790999000
+            "updateTime": 1447040016000
         }, {
             "id": 10669,
             "name": "获取用户组列表",
@@ -284,17 +372,122 @@ exports.projects = {
                 "description": "",
                 "updateTime": 1446791603000
             }],
-            "updateTime": 1446791612000
+            "updateTime": 1447040025000
         }],
-        "templates": [],
-        "datatypes": [{"id": 10000, "name": "Variable", "format": 0, "updateTime": 1438067940000}, {
-            "id": 10001,
-            "name": "String",
+        "templates": [{
+            "id": 10200,
+            "path": "/page/index.ftl",
+            "name": "首页",
+            "description": "首页",
+            "parameters": [{
+                "id": 10755,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "creatorId",
+                "originalType": 10002,
+                "type": 10002,
+                "typeName": "Number",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "创建者id",
+                "updateTime": 1447122101000
+            }, {
+                "id": 10756,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "creatorName",
+                "originalType": 10001,
+                "type": 10001,
+                "typeName": "String",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "创建者姓名",
+                "updateTime": 1447122101000
+            }, {
+                "id": 10757,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "fromUsrGroup",
+                "originalType": 10001,
+                "type": 10001,
+                "typeName": "String",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "是否来自用户组",
+                "updateTime": 1447122101000
+            }, {
+                "id": 10758,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "id",
+                "originalType": 10002,
+                "type": 10002,
+                "typeName": "Number",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "项目组id",
+                "updateTime": 1447122101000
+            }, {
+                "id": 10759,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "name",
+                "originalType": 10001,
+                "type": 10001,
+                "typeName": "String",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "项目组名称",
+                "updateTime": 1447122101000
+            }, {
+                "id": 10760,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "type",
+                "originalType": 10002,
+                "type": 10002,
+                "typeName": "Number",
+                "isSysType": 1,
+                "isArray": 0,
+                "description": "项目组类型：0是他人创建，1是自己创建",
+                "updateTime": 1447122101000
+            }, {
+                "id": 10761,
+                "datatypeId": 10542,
+                "datatypeName": "ProjectGroup",
+                "projectId": 10597,
+                "name": "projects",
+                "originalType": 10543,
+                "type": 10543,
+                "typeName": "Project",
+                "isSysType": 0,
+                "isArray": 1,
+                "description": "项目组中的项目列表",
+                "updateTime": 1447122101000
+            }],
+            "updateTime": 1447040856000
+        }, {
+            "id": 10199,
+            "path": "/page/test.ftl",
+            "name": "Template",
+            "description": "暂无",
+            "parameters": [],
+            "updateTime": 1447040819000
+        }],
+        "datatypes": [{"id": 10003, "name": "Boolean", "format": 0, "updateTime": 1438067940000}, {
+            "id": 10002,
+            "name": "Number",
             "format": 0,
             "updateTime": 1438067940000
-        }, {"id": 10002, "name": "Number", "format": 0, "updateTime": 1438067940000}, {
-            "id": 10003,
-            "name": "Boolean",
+        }, {"id": 10001, "name": "String", "format": 0, "updateTime": 1438067940000}, {
+            "id": 10000,
+            "name": "Variable",
             "format": 0,
             "updateTime": 1438067940000
         }, {"id": 10548, "name": "Interface", "format": 0, "updateTime": 1446793643000}, {
@@ -468,54 +661,47 @@ exports.projects = {
             "description": "",
             "parentId": 10545
         }, {
-            "id": 10780,
-            "name": "pid",
+            "id": 10762,
+            "name": "creatorId",
+            "type": 10002,
+            "isArray": 0,
+            "description": "创建者id",
+            "parentId": 10543
+        }, {
+            "id": 10763,
+            "name": "creatorName",
             "type": 10001,
+            "isArray": 0,
+            "description": "创建者姓名",
+            "parentId": 10543
+        }, {
+            "id": 10764,
+            "name": "id",
+            "type": 10002,
             "isArray": 0,
             "description": "项目id",
-            "parentId": 10547
+            "parentId": 10543
         }, {
-            "id": 10781,
-            "name": "offset",
-            "type": 10002,
-            "isArray": 0,
-            "description": "",
-            "parentId": 10547
-        }, {
-            "id": 10782,
-            "name": "limit",
-            "type": 10002,
-            "isArray": 0,
-            "description": "",
-            "parentId": 10547
-        }, {
-            "id": 10783,
-            "name": "key",
+            "id": 10765,
+            "name": "name",
             "type": 10001,
             "isArray": 0,
-            "description": "",
-            "parentId": 10547
+            "description": "项目名称",
+            "parentId": 10543
         }, {
-            "id": 10784,
+            "id": 10766,
+            "name": "qbsId",
+            "type": 10002,
+            "isArray": 0,
+            "description": "qbs id",
+            "parentId": 10543
+        }, {
+            "id": 10767,
             "name": "type",
-            "type": 10001,
-            "isArray": 0,
-            "description": "",
-            "parentId": 10547
-        }, {
-            "id": 10785,
-            "name": "table",
-            "type": 10001,
-            "isArray": 0,
-            "description": "",
-            "parentId": 10547
-        }, {
-            "id": 10786,
-            "name": "isExact",
             "type": 10002,
             "isArray": 0,
-            "description": "",
-            "parentId": 10547
+            "description": "项目类型，1是公共资源库，0是创建的项目",
+            "parentId": 10543
         }, {
             "id": 10755,
             "name": "creatorId",
@@ -566,47 +752,54 @@ exports.projects = {
             "description": "项目组中的项目列表",
             "parentId": 10542
         }, {
-            "id": 10762,
-            "name": "creatorId",
-            "type": 10002,
-            "isArray": 0,
-            "description": "创建者id",
-            "parentId": 10543
-        }, {
-            "id": 10763,
-            "name": "creatorName",
+            "id": 10780,
+            "name": "pid",
             "type": 10001,
-            "isArray": 0,
-            "description": "创建者姓名",
-            "parentId": 10543
-        }, {
-            "id": 10764,
-            "name": "id",
-            "type": 10002,
             "isArray": 0,
             "description": "项目id",
-            "parentId": 10543
+            "parentId": 10547
         }, {
-            "id": 10765,
-            "name": "name",
+            "id": 10781,
+            "name": "offset",
+            "type": 10002,
+            "isArray": 0,
+            "description": "",
+            "parentId": 10547
+        }, {
+            "id": 10782,
+            "name": "limit",
+            "type": 10002,
+            "isArray": 0,
+            "description": "",
+            "parentId": 10547
+        }, {
+            "id": 10783,
+            "name": "key",
             "type": 10001,
             "isArray": 0,
-            "description": "项目名称",
-            "parentId": 10543
+            "description": "",
+            "parentId": 10547
         }, {
-            "id": 10766,
-            "name": "qbsId",
-            "type": 10002,
-            "isArray": 0,
-            "description": "qbs id",
-            "parentId": 10543
-        }, {
-            "id": 10767,
+            "id": 10784,
             "name": "type",
+            "type": 10001,
+            "isArray": 0,
+            "description": "",
+            "parentId": 10547
+        }, {
+            "id": 10785,
+            "name": "table",
+            "type": 10001,
+            "isArray": 0,
+            "description": "",
+            "parentId": 10547
+        }, {
+            "id": 10786,
+            "name": "isExact",
             "type": 10002,
             "isArray": 0,
-            "description": "项目类型，1是公共资源库，0是创建的项目",
-            "parentId": 10543
+            "description": "",
+            "parentId": 10547
         }, {
             "id": 10768,
             "name": "createTime",
@@ -651,6 +844,6 @@ exports.projects = {
             "parentId": 10544
         }, {"id": 10774, "name": "members", "type": 10545, "isArray": 1, "description": "", "parentId": 10544}],
         "project": {"id": 10597, "name": "勿删", "group": "测试"},
-        "timestamp": 1446812406389
+        "timestamp": 1447154077479
     }
 }

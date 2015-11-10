@@ -205,7 +205,7 @@ let tabConActions = {
             let savedRequest = requests[request.id]
             let builders = newTabCon.builders
             console.log(savedRequest)
-            this.__dealRequest(request, savedRequest, newTabCon)
+            this.__dealRequest(request, dataSource, savedRequest, newTabCon)
             tabCons.items[tabIndex] = newTabCon
             //paramActions.updateTabUrl()
             paramActions.fillURLParams(savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey])
@@ -220,7 +220,7 @@ let tabConActions = {
 
     },
 
-    __dealRequest(request, savedRequest, newTabCon) {
+    __dealRequest(request, dataSource, savedRequest, newTabCon) {
         let builders = newTabCon.builders
         if (request.isNEI) {
             tabCons.bodyTypes.forEach((bodyType) => {
@@ -236,14 +236,13 @@ let tabConActions = {
                         name: 'JSON(application/json)'
                     }
                     // init request inputs, build json
-                    // saved data should be `bodyRawData`
-                    // if `bodyRawData` is null, try to find in `bodyXFormKVs`, because nei user maybe change `isRest` flag
-                    let savedData = savedRequest[RequestDataMap.bodyRawData] || savedRequest[RequestDataMap.bodyXFormKVs.saveKey]
-                    builders.bodyRawData = Util.convertNEIInputsToJSON(request, savedData)
+                    // saved data is `bodyRawData`
+                    let savedData = savedRequest[RequestDataMap.bodyRawData]
+                    builders.bodyRawData = Util.convertNEIInputsToJSON(request, dataSource, savedData)
                     builders.bodyRawDataOriginal = builders.bodyRawData
                 } else {
                     let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
-                    if (savedHeaders.length) {
+                    if (savedHeaders && savedHeaders.length) {
                         builders.headerKVs = []
                         let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
                         _.each(savedHeaders, (headerKV) => {
