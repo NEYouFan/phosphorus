@@ -286,7 +286,7 @@ let dataSource = {
         {
             "id": 10767,
             "name": "type",
-            "type": 10002,
+            "type": 10001,
             "isArray": 0,
             "description": "项目类型，1是公共资源库，0是创建的项目",
             "parentId": 10543
@@ -504,6 +504,9 @@ let isSysType = (type) => {
     return /^(10001|10002|10003)$/.test(type)
 }
 
+
+let traversedDataTypes = []
+let traversedLayers = 0
 let getInputValue = (input, data) => {
     let result = {}
     if (input.isSysType) {
@@ -521,6 +524,12 @@ let getInputValue = (input, data) => {
             }
         }
     } else {
+        if (traversedDataTypes.indexOf(input.type) !== -1) {
+            // circular reference
+            return Object.keys(data).length ? data :('Circular reference: ' + input.type)
+        }
+        traversedDataTypes.push(input.type)
+        traversedLayers++
         let attributes = []
         dataSource.attributes.forEach((ds) => {
             if (ds.parentId === input.type) {
@@ -540,6 +549,10 @@ let getTestData = (inputs, savedData) => {
         if (input.isPrimite) {
             result = getPrimiteValue(input.type, savedData || '')
         } else {
+            for(let i = 0; i < traversedLayers; i++) {
+                traversedDataTypes.pop()
+            }
+            traversedLayers = 0
             result[input.name] = getInputValue(input, savedData || {})
         }
     })
@@ -557,122 +570,24 @@ let inputs = [
         "isArray": 0,
         "description": "",
         "updateTime": 1447153055000
-    },
-    {
-        "id": 10780,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "pid",
-        "originalType": 10001,
-        "type": 10001,
-        "typeName": "String",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "项目id",
-        "updateTime": 1446793783000
-    },
-    {
-        "id": 10781,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "offset",
-        "originalType": 10002,
-        "type": 10002,
-        "typeName": "Number",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "",
-        "updateTime": 1446793783000
-    },
-    {
-        "id": 10782,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "limit",
-        "originalType": 10002,
-        "type": 10002,
-        "typeName": "Number",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "",
-        "updateTime": 1446793783000
-    },
-    {
-        "id": 10783,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "key",
-        "originalType": 10001,
-        "type": 10001,
-        "typeName": "String",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "",
-        "updateTime": 1446793783000
-    },
-    {
-        "id": 10784,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "type",
-        "originalType": 10001,
-        "type": 10001,
-        "typeName": "String",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "",
-        "updateTime": 1446793783000
-    },
-    {
-        "id": 10785,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "table",
-        "originalType": 10001,
-        "type": 10001,
-        "typeName": "String",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "",
-        "updateTime": 1446793783000
-    },
-    {
-        "id": 10786,
-        "datatypeId": 10547,
-        "datatypeName": "SearchParam",
-        "projectId": 10597,
-        "name": "isExact",
-        "originalType": 10002,
-        "type": 10002,
-        "typeName": "Number",
-        "isSysType": 1,
-        "isArray": 0,
-        "description": "",
-        "updateTime": 1446793783000
     }
 ]
 let saveData = {
-    //"complex": {
-    //    "creatorId": 10086,
-    //    "creatorName": "HuntBao",
-    //    "id": 10011,
-    //    "name": "bao",
-    //    "qbsId": 10,
-    //    "type": 9
-    //},
-    //"pid": "999",
-    //"offset": 111,
-    //"limit": 22,
-    //"key": "22",
-    //"type": "2",
-    //"table": "222",
-    //"isExact": 333
+    "complex": {
+        "creatorId": 10086,
+        "creatorName": "HuntBao",
+        "id": 10011,
+        "name": "bao",
+        "qbsId": 10,
+        "type": 9
+    },
+    "pid": "999",
+    "offset": 111,
+    "limit": 22,
+    "key": "22",
+    "type": "2",
+    "table": "222",
+    "isExact": 333
 }
 getTestData(inputs, saveData)
 console.log(JSON.stringify(result))

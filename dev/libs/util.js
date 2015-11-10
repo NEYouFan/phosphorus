@@ -265,6 +265,9 @@ let Util = {
         let isSysType = (type) => {
             return /^(10001|10002|10003)$/.test(type)
         }
+
+        let traversedDataTypes = []
+        let traversedLayers = 0
         let getInputValue = (input, data) => {
             let tempResult = {}
             if (input.isSysType) {
@@ -282,6 +285,16 @@ let Util = {
                     }
                 }
             } else {
+                if (traversedDataTypes.indexOf(input.type) !== -1) {
+                    // circular reference
+                    // return Object.keys(data).length ? data :('Circular reference: ' + input.type)
+                    let datatype = _.find(dataSource.datatypes, (dt) => {
+                        return dt.id === input.type
+                    })
+                    return 'Circular reference: <' + datatype.name + '>'
+                }
+                traversedDataTypes.push(input.type)
+                traversedLayers++
                 let attributes = []
                 dataSource.attributes.forEach((ds) => {
                     if (ds.parentId === input.type) {
@@ -295,11 +308,15 @@ let Util = {
             }
             return tempResult
         }
-        let getTestData = (inputs, data) => {
+        let getData = (inputs, data) => {
             inputs.forEach((input) => {
                 if (input.isPrimite) {
                     result = getPrimiteValue(input.type, data || '')
                 } else {
+                    for (let i = 0; i < traversedLayers; i++) {
+                        traversedDataTypes.pop()
+                    }
+                    traversedLayers = 0
                     result[input.name] = getInputValue(input, data || {})
                 }
             })
@@ -310,7 +327,7 @@ let Util = {
         } catch (err) {
             savedData = {}
         }
-        getTestData(request.inputs, savedData)
+        getData(request.inputs, savedData)
         return JSON.stringify(result, null, '\t')
     }
 }
