@@ -143,9 +143,7 @@ class ReqBuilderBody extends React.Component {
 
     toggleBodyFormDataKV(rowIndex,kv) {
         ReqBodyAction.toggleBodyFormDataKV(rowIndex)
-        if (!kv.readonly) {
-            ReqTabAction.setDirtyTab()
-        }
+        ReqTabAction.setDirtyTab()
     }
 
     addBodyFormDataKV() {
@@ -178,9 +176,7 @@ class ReqBuilderBody extends React.Component {
 
     toggleBodyXFormKV(rowIndex, kv) {
         ReqBodyAction.toggleBodyXFormKV(rowIndex)
-        if (!kv.readonly) {
-            ReqTabAction.setDirtyTab()
-        }
+        ReqTabAction.setDirtyTab()
     }
 
     addBodyXFormKV() {

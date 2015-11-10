@@ -70,7 +70,7 @@ exports.projects = {
             "description": "",
             "path": "/api/ndir/search",
             "method": 0,
-            "isRest": 0,
+            "isRest": 1,
             "inputs": [{
                 "id": 10780,
                 "datatypeId": 10547,
@@ -239,7 +239,7 @@ exports.projects = {
             "id": 10669,
             "name": "获取用户组列表",
             "description": "获取用户组",
-            "path": "/api/:id/:name/usrGroup/list",
+            "path": "/api/usrGroup/list",
             "method": 1,
             "isRest": 0,
             "inputs": [{

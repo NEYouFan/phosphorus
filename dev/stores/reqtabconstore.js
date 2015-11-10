@@ -50,6 +50,11 @@ const DEFAULT_JSON_HEADER_KV = Object.assign({}, DEFAULT_HEADERS_KV, {
     key: 'Content-Type',
     value: 'application/json'
 })
+const DEFAULT_XFORM_HEADER_KV = Object.assign({}, DEFAULT_HEADERS_KV, {
+    key: CONTENT_TYPE_STR,
+    value: XFORM_CONTENT_TYPE_VALUE,
+    valueDataList: REQ_MIDIATYPES_DATA_LIST
+})
 const DEFAULT_PARAMS_KV = Object.assign({}, DEFAULT_KV, {
     keyPlaceholder: 'URL Parameter Key'
 })
@@ -98,6 +103,7 @@ const DEFAULT_CON_ITEM = {
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
         bodyBinaryFileInput: null,
         bodyRawData: null,
+        bodyRawDataOriginal: null, // original body raw data, check if changes really happened
         reqStatus: REQ_PREPARE,
         fetchResponse: null,
         fetchResponseRawData: null,
@@ -194,14 +200,79 @@ let tabConActions = {
         console.log(request)
         console.log(dataSource)
         let newTabCon = _.cloneDeep(DEFAULT_CON_ITEM)
-        // remove DEFAULT_JSON_HEADER_KV
-        newTabCon.builders.headerKVs.shift()
-        this.__dealNEIRequest(request, newTabCon)
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
             let savedRequest = requests[request.id]
             let builders = newTabCon.builders
             console.log(savedRequest)
+            this.__dealRequest(request, savedRequest, newTabCon)
+            tabCons.items[tabIndex] = newTabCon
+            //paramActions.updateTabUrl()
+            paramActions.fillURLParams(savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey])
+            // change editor mode by bodyType
+            let rawType = _.find(tabCons.rawTypes, (rawType) => {
+                return newTabCon.builders.bodyType.name === rawType.name
+            })
+            this.changeAceEditorConfig(rawType && rawType.editorMode)
+            this.changeMethod()
+            callback()
+        })
+
+    },
+
+    __dealRequest(request, savedRequest, newTabCon) {
+        let builders = newTabCon.builders
+        if (request.isNEI) {
+            tabCons.bodyTypes.forEach((bodyType) => {
+                bodyType.disabled = true
+            })
+            savedRequest = savedRequest || {}
+            // nei request special logic
+            if (!Util.isNoBodyMethod(request.method)) {
+                if (request.isRest) {
+                    // restful request
+                    builders.bodyType = {
+                        type: 'raw',
+                        name: 'JSON(application/json)'
+                    }
+                    // init request inputs, build json
+                    // saved data should be `bodyRawData`
+                    // if `bodyRawData` is null, try to find in `bodyXFormKVs`, because nei user maybe change `isRest` flag
+                    let savedData = savedRequest[RequestDataMap.bodyRawData] || savedRequest[RequestDataMap.bodyXFormKVs.saveKey]
+                    builders.bodyRawData = Util.convertNEIInputsToJSON(request, savedData)
+                    builders.bodyRawDataOriginal = builders.bodyRawData
+                } else {
+                    let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
+                    if (savedHeaders.length) {
+                        builders.headerKVs = []
+                        let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
+                        _.each(savedHeaders, (headerKV) => {
+                            builders.headerKVs.push(Object.assign({}, headerKVTpl, headerKV))
+                        })
+                    } else {
+                        builders.headerKVs.shift()
+                        builders.headerKVs.unshift(DEFAULT_XFORM_HEADER_KV)
+                    }
+                    builders.bodyType.type = 'x-www-form-urlencoded'
+                    // init request inputs
+                    let xFormKVTpl = _.cloneDeep(DEFAULT_BODY_XFORM_KV)
+                    let savedBodyXFormKVs = savedRequest[RequestDataMap.bodyXFormKVs.saveKey]
+                    _.forEachRight(request.inputs, (input) => {
+                        let foundSavedField = _.find(savedBodyXFormKVs, (kv) => {
+                            return kv.key === input.name
+                        })
+                        builders.bodyXFormKVs.unshift(Object.assign({}, xFormKVTpl, {
+                            key: input.name,
+                            value: foundSavedField && foundSavedField.value,
+                            readonly: true
+                        }))
+                    })
+                }
+            }
+        } else {
+            tabCons.bodyTypes.forEach((bodyType) => {
+                bodyType.disabled = false
+            })
             if (savedRequest) {
                 _.each(RequestDataMap, (value, key) => {
                     if (builders.hasOwnProperty(key)) {
@@ -209,6 +280,7 @@ let tabConActions = {
                             if (Array.isArray(savedRequest[value.saveKey])) {
                                 if (savedRequest[value.saveKey].length) {
                                     let itemTpl = _.cloneDeep(builders[key][builders[key].length - 1])
+                                    builders[key] = []
                                     _.each(savedRequest[value.saveKey], (v, k) => {
                                         _.each(value.fields, (vv, kk) => {
                                             itemTpl[kk] = v[vv]
@@ -225,57 +297,6 @@ let tabConActions = {
                     }
                 })
             }
-            // move the default blank item to the last
-            //builders.bodyXFormKVs.push(builders.bodyXFormKVs.shift())
-            //builders.bodyFormDataKVs.push(builders.bodyFormDataKVs.shift())
-            //builders.paramKVs.push(builders.paramKVs.shift())
-            //builders.headerKVs.push(builders.headerKVs.shift())
-            tabCons.items[tabIndex] = newTabCon
-            paramActions.updateTabUrl()
-            paramActions.fillURLParams()
-            // change edtior mode by bodyType
-            let rawType = _.find(tabCons.rawTypes, (rawType) => {
-                return newTabCon.builders.bodyType.name === rawType.name
-            })
-            this.changeAceEditorConfig(rawType && rawType.editorMode)
-            this.changeMethod()
-            callback()
-        })
-
-    },
-
-    __dealNEIRequest(request, newTabCon) {
-        let builders = newTabCon.builders
-        if (request.isNEI) {
-            tabCons.bodyTypes.forEach((bodyType) => {
-                bodyType.disabled = true
-            })
-            // nei request special logic
-            if (!Util.isNoBodyMethod(request.method)) {
-                if (request.isRest) {
-                    // restful request
-                    builders.bodyType = {
-                        type: 'raw',
-                        name: 'JSON(application/json)'
-                    }
-                    // init request inputs
-                } else {
-                    builders.bodyType.type = 'x-www-form-urlencoded'
-                    // init request inputs
-                    let itemTpl = _.cloneDeep(builders.bodyXFormKVs[0])
-                    builders.bodyXFormKVs = []
-                    request.inputs.forEach((input) => {
-                        builders.bodyXFormKVs.push(Object.assign({}, itemTpl, {
-                            key: input.name,
-                            readonly: true
-                        }))
-                    })
-                }
-            }
-        } else {
-            tabCons.bodyTypes.forEach((bodyType) => {
-                bodyType.disabled = false
-            })
         }
 
     },
@@ -402,7 +423,7 @@ let tabConActions = {
 
 let paramActions = {
 
-    fillURLParams() {
+    fillURLParams(savedURLParams) {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = Util.getUrlParams(tabUrl)
         params = params.map((param) => {
@@ -410,10 +431,24 @@ let paramActions = {
         })
         params.push(Object.assign({}, DEFAULT_PARAMS_KV))
         tabCons.items[tabIndex].builders.paramKVs = params
-        // if has path variable, active url params tab
-        let hasPathVariable = _.find(params, (param) => {
-            return param.readonly
+        let hasPathVariable
+        _.each(params, (param) => {
+            let foundSavedPV
+            if (param.isPV) {
+                hasPathVariable = true
+                foundSavedPV = _.find(savedURLParams, (p) => {
+                    return p.is_pv && p.key === param.key
+                })
+            } else {
+                foundSavedPV = _.find(savedURLParams, (p) => {
+                    return p.key === param.key
+                })
+            }
+            if (foundSavedPV) {
+                param.value = foundSavedPV.value
+            }
         })
+        // if has path variable, active url params tab
         if (hasPathVariable) {
             tabConActions.switchBuilderTab(URL_PARAMS_STR)
         }
@@ -526,11 +561,7 @@ let bodyActions = {
                 contentType.value = XFORM_CONTENT_TYPE_VALUE
             } else {
                 // add header `Content-type`
-                headers.unshift(Object.assign({}, DEFAULT_HEADERS_KV, {
-                    key: CONTENT_TYPE_STR,
-                    value: XFORM_CONTENT_TYPE_VALUE,
-                    valueDataList: REQ_MIDIATYPES_DATA_LIST
-                }))
+                headers.unshift(DEFAULT_XFORM_HEADER_KV)
             }
         } else if (bodyType === 'raw') {
             let rawType = _.find(tabCons.rawTypes, (rt) => {

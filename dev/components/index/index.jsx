@@ -12,6 +12,7 @@ import ModalStore from '../../stores/modalstore'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
 import ResAction from '../../actions/resaction'
+import ReqTabAction from '../../actions/reqtabaction'
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
@@ -131,10 +132,19 @@ class Index extends React.Component {
 
     onChangeEditorText(text) {
         ReqBodyAction.changeBodyRawData(text)
+        this.checkIfSetDirty()
     }
 
     updateAceEditor() {
         AceEditor.update(this.getAppStates())
+    }
+
+    checkIfSetDirty() {
+        let tabIndex = this.state.reqTab.activeIndex
+        let builders = this.state.reqTabCon.reqCons[tabIndex].builders
+        if (builders.bodyRawDataOriginal !== builders.bodyRawData) {
+            ReqTabAction.setDirtyTab()
+        }
     }
 
 }

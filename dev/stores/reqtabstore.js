@@ -101,6 +101,8 @@ let actions = {
             })
         } else {
             // popup, select folder or create collect/folder to save it
+            tab.isDirty = false
+            callback()
         }
     }
 }

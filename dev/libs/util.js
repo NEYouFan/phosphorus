@@ -5,6 +5,7 @@ import URL from 'url'
 import UUID from 'node-uuid'
 import async from 'async'
 import QueryString from 'querystring'
+import _ from 'lodash'
 import TestData from './collection_test_data'
 
 const DEFAULT_PATH_VARIABLE_PLACEHOLDER = 'Path Variable Key'
@@ -223,6 +224,61 @@ let Util = {
 
     isNoBodyMethod(method) {
         return /^(get|copy|head|purge|unlock|view)$/.test(method.toLowerCase())
+    },
+
+    convertNEIInputsToJSON(request, savedData) {
+        let result = {}
+        savedData = savedData || ''
+        if (typeof savedData === 'string') {
+            try {
+                savedData = JSON.parse(savedData)
+            } catch (err) {
+                savedData = {}
+            }
+        }
+        let tryToGetValue = (key) => {
+            let value = ''
+            let foundItem
+            if (Array.isArray(savedData)) {
+                foundItem = _.find(savedData, (d) => {
+                    return d.key === key
+                })
+                if (foundItem) {
+                    value = foundItem.value
+                }
+            } else {
+                if (savedData.hasOwnProperty(key)) {
+                    value = savedData[key]
+                }
+            }
+            return value
+        }
+        let convertValue = (value, type) => {
+            switch (type) {
+                case 10002:
+                    // number
+                    return Number(value) || 0
+                case 10003:
+                    // boolean
+                    return Boolean(value)
+                default:
+                    return value
+            }
+        }
+        let tryToGetSavedValue
+        _.each(request.inputs, (input) => {
+            let name = input.name
+            if (input.isSysType) {
+                if (input.isArray) {
+                    result[name] = []
+                } else {
+                    result[name] = convertValue(tryToGetValue(name), input.type)
+                }
+            } else {
+
+            }
+        })
+        return JSON.stringify(result, null, '\t')
     }
 }
 

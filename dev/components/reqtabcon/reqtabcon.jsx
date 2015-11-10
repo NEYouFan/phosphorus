@@ -4,6 +4,7 @@
 import './reqtabcon.styl'
 import React from 'react'
 import classNames from 'classnames'
+import _ from 'lodash'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqTabStore from '../../stores/reqtabstore'
@@ -16,6 +17,7 @@ import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader.jsx'
 import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import NEIReqBuilderURLParams from '../reqbuilderurlparams/neireqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
+import NEIReqBuilderBody from '../reqbuilderbody/neireqbuilderbody.jsx'
 import Res from '../res/res.jsx'
 
 class ReqTabCon extends React.Component {
@@ -40,29 +42,44 @@ class ReqTabCon extends React.Component {
                 tabIndex: index,
                 builders: builders
             }
+            let reqBuilderBodyProps = {
+                tabIndex: index,
+                bodyTypes: tabCons.bodyTypes,
+                rawTypes: tabCons.rawTypes,
+                builders: builders,
+                showRawTypeList: tabCons.reqCons[index].showBodyRawTypeList
+            }
             let reqURL
             let reqBuilderURLParams
+            let reqBuilderBody
             if (tab.isNEI) {
                 // nei tab
+                // req url
                 reqURLProps.modClass = 'nei-requrl'
                 reqURLProps.urlReadOnly = true
                 reqURL = <NEIReqURL {...reqURLProps} />
-
+                // req builder url params
+                _.remove(builders.paramKVs, (kv) => {
+                    kv.readonly = true
+                    return !kv.key
+                })
                 reqBuilderURLParamsProps.modClass = 'nei-reqbuilder-urlparams'
-                for (let i = builders.paramKVs.length - 1; i >= 0; i--) {
-                    if (builders.paramKVs[i].key) {
-                        builders.paramKVs[i].readonly = true
-                    } else {
-                        // remove if key is blank
-                        builders.paramKVs.splice(i, 1)
-                    }
-                }
                 reqBuilderURLParams = <NEIReqBuilderURLParams {...reqBuilderURLParamsProps} />
-
+                // req builder body
+                _.remove(builders.bodyXFormKVs, (kv) => {
+                    kv.readonly = true
+                    return !kv.key
+                })
+                _.remove(builders.bodyFormDataKVs, (kv) => {
+                    kv.readonly = true
+                    return !kv.key
+                })
+                reqBuilderBody = <NEIReqBuilderBody {...reqBuilderBodyProps}/>
             } else {
                 // normal tab
                 reqURL = <ReqURL {...reqURLProps} />
                 reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
+                reqBuilderBody = <ReqBuilderBody {...reqBuilderBodyProps}/>
             }
             return (
                 <div className={tabConClasses} key={index}>
@@ -72,13 +89,7 @@ class ReqTabCon extends React.Component {
                         builders={builders}
                         />
                     {reqBuilderURLParams}
-                    <ReqBuilderBody
-                        tabIndex={index}
-                        bodyTypes={tabCons.bodyTypes}
-                        rawTypes={tabCons.rawTypes}
-                        builders={builders}
-                        showRawTypeList={tabCons.reqCons[index].showBodyRawTypeList}
-                        />
+                    {reqBuilderBody}
                     <ReqBuilderHeader
                         tabIndex={index}
                         builders={builders}
