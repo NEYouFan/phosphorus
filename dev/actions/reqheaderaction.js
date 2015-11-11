@@ -26,10 +26,6 @@ class ReqHeaderAction {
         })
     }
 
-    static editHeaderKV() {
-        //todo, bulk edit
-    }
-
     static changeHeaderKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_HEADER_CHANGE_KV_KEY,

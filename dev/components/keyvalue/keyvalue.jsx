@@ -5,7 +5,6 @@ import './keyvalue.styl'
 import React from 'react'
 import classNames from 'classnames'
 
-/** @namespace this.props.kvs */
 class KeyValue extends React.Component {
 
     render() {

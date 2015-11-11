@@ -287,10 +287,10 @@ let Util = {
             } else {
                 if (traversedDataTypes.indexOf(input.type) !== -1) {
                     // circular reference
-                    // return Object.keys(data).length ? data :('Circular reference: ' + input.type)
                     let datatype = _.find(dataSource.datatypes, (dt) => {
                         return dt.id === input.type
                     })
+                    // return data[input.name] || 'Circular reference: <' + datatype.name + '>'
                     return 'Circular reference: <' + datatype.name + '>'
                 }
                 traversedDataTypes.push(input.type)

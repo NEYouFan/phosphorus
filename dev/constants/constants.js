@@ -68,13 +68,20 @@ let AppConstants = keyMirror({
     RES_CHANGE_PRETTY_TYPE_VALUE: null,
     RES_CHANGE_SHOW_TYPE: null,
     RES_EMIT_CHANGE: null,
+    // response checker kv action
+    RES_CHECKER_TOGGLE_KV: null,
+    RES_CHECKER_ADD_KV: null,
+    RES_CHECKER_REMOVE_KV: null,
+    RES_CHECKER_CHANGE_KV_KEY: null,
+    RES_CHECKER_CHANGE_KV_VALUE: null,
+    RES_CHECKER_CHANGE_KV_VALUE_TYPE: null,
     // modal actions
     MODAL_CLOSE: null,
     MODAL_OPEN: null,
     MODAL_EDIT_COLL_HOST: null,
     MODAL_EDIT_FOLDER_HOST: null,
     MODAL_SAVE_BLANK_URL_TIP: null,
-    MODAL_LEAVING_DIRTY_TAB: null,
+    MODAL_LEAVING_DIRTY_TAB: null
 })
 
 export default AppConstants

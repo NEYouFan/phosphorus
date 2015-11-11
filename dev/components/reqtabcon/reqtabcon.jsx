@@ -18,6 +18,7 @@ import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import NEIReqBuilderURLParams from '../reqbuilderurlparams/neireqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 import NEIReqBuilderBody from '../reqbuilderbody/neireqbuilderbody.jsx'
+import ResChecker from '../reschecker/reschecker.jsx'
 import Res from '../res/res.jsx'
 
 class ReqTabCon extends React.Component {
@@ -93,6 +94,11 @@ class ReqTabCon extends React.Component {
                     <ReqBuilderHeader
                         tabIndex={index}
                         builders={builders}
+                        />
+                    <ResChecker
+                        tabIndex={index}
+                        builders={builders}
+                        tab={tab}
                         />
                     <Res
                         tabIndex={index}

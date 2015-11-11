@@ -63,6 +63,9 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
     fileInput: null
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
+const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
+    valueType: 'string'
+})
 const DEFAULT_RES_SHOW_TYPE = {
     type: 'Pretty',
     prettyType: 'HTML'
@@ -92,7 +95,7 @@ const DEFAULT_CON_ITEM = {
             }
         ],
         paramKVs: [DEFAULT_PARAMS_KV],
-        activeTabName: REQUEST_BODY_STR,
+        activeTabName: RESPONSE_CHECKER_STR,
         headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
             type: 'raw',
@@ -109,13 +112,14 @@ const DEFAULT_CON_ITEM = {
         fetchResponseRawData: null,
         fetchResponseIsJSON: false,
         resShowType: Object.assign({}, DEFAULT_RES_SHOW_TYPE),
-        resFilePath: null // response local file path: preview iframe src
+        resFilePath: null, // response local file path: preview iframe src
+        resCheckerKVs: [DEFAULT_RES_CHECKER_KV]
     },
     showBodyRawTypeList: false,
     showReqMethodList: false,
     showResPrettyTypeList: false,
     aceEditorConfig: {
-        show: true,
+        show: false,
         mode: 'json',
         readOnly: false
     }
@@ -217,7 +221,6 @@ let tabConActions = {
             this.changeMethod()
             callback()
         })
-
     },
 
     __dealRequest(request, dataSource, savedRequest, newTabCon) {
@@ -682,6 +685,40 @@ let bodyActions = {
 
 }
 
+let resCheckerActions = {
+
+    toggleResCheckerKV(rowIndex) {
+        let kv = tabCons.items[tabIndex].builders.resCheckerKVs[rowIndex]
+        if (kv.readonly) return
+        kv.checked = !tabCons.items[tabIndex].builders.resCheckerKVs[rowIndex].checked
+    },
+
+    addResCheckerKV() {
+        tabCons.items[tabIndex].builders.resCheckerKVs.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+    },
+
+    removeResCheckerKV(rowIndex) {
+        tabCons.items[tabIndex].builders.resCheckerKVs.splice(rowIndex, 1)
+    },
+
+    changeResCheckerKVKey(rowIndex, value) {
+        this.changeResChecker(rowIndex, value, 'key')
+    },
+
+    changeResCheckerKVValue(rowIndex, value) {
+        this.changeResChecker(rowIndex, value, 'value')
+    },
+
+    changeResCheckerKVValueType(rowIndex, value) {
+        console.log(rowIndex)
+        console.log(value)
+    },
+
+    changeResChecker(rowIndex, value, type) {
+
+    }
+}
+
 let resActions = {
 
     toggleResPrettyTypeList() {
@@ -716,7 +753,7 @@ let resActions = {
 
 }
 
-let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions, resActions)
+let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions, resCheckerActions, resActions)
 
 let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 
@@ -982,6 +1019,38 @@ AppDispatcher.register((action) => {
         case AppConstants.RES_EMIT_CHANGE:
             ReqTabConStore.emitChange()
             break
+
+        // response checker action --->
+        case AppConstants.RES_CHECKER_TOGGLE_KV:
+            actions.toggleResCheckerKV(action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_ADD_KV:
+            actions.addResCheckerKV()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_REMOVE_KV:
+            actions.removeResCheckerKV(action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_CHANGE_KV_KEY:
+            actions.changeResCheckerKVKey(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_CHANGE_KV_VALUE:
+            actions.changeResCheckerKVValue(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_CHANGE_KV_VALUE_TYPE:
+            actions.changeResCheckerKVValueType(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+        // response checker action <---
 
         default:
             break
