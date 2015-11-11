@@ -13,9 +13,10 @@ class ReqResCheckerAction {
         })
     }
 
-    static addResCheckerKV() {
+    static addResCheckerKV(rowIndex) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.RES_CHECKER_ADD_KV
+            actionType: AppConstants.RES_CHECKER_ADD_KV,
+            rowIndex: rowIndex
         })
     }
 
@@ -29,14 +30,6 @@ class ReqResCheckerAction {
     static changeResCheckerKVKey(rowIndex, value) {
         AppDispatcher.dispatch({
             actionType: AppConstants.RES_CHECKER_CHANGE_KV_KEY,
-            rowIndex: rowIndex,
-            value: value
-        })
-    }
-
-    static changeResCheckerKVValue(rowIndex, value) {
-        AppDispatcher.dispatch({
-            actionType: AppConstants.RES_CHECKER_CHANGE_KV_VALUE,
             rowIndex: rowIndex,
             value: value
         })

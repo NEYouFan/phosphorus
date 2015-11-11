@@ -19,7 +19,7 @@ class ResChecker extends React.Component {
                     <KeyValueT
                         kvs={this.props.builders.resCheckerKVs}
                         toggleKV={(rowIndex) => {this.toggleResCheckerKV(rowIndex)}}
-                        addKV={() => {this.addResCheckerKV()}}
+                        addKV={(rowIndex) => {this.addResCheckerKV(rowIndex)}}
                         removeKV={(rowIndex) => {this.removeResCheckerKV(rowIndex)}}
                         changeKVKey={(rowIndex, value) => {this.changeResCheckerKVKey(rowIndex, value)}}
                         changeKVValue={(rowIndex, value) => {this.changeResCheckerKVValue(rowIndex, value)}}
@@ -35,8 +35,8 @@ class ResChecker extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
-    addResCheckerKV() {
-        ResCheckerAction.addResCheckerKV()
+    addResCheckerKV(rowIndex) {
+        ResCheckerAction.addResCheckerKV(rowIndex)
     }
 
     removeResCheckerKV(rowIndex) {

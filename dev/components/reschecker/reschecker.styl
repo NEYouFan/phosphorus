@@ -12,16 +12,54 @@
       }
 
       .input-wrap {
-        flex  inherit
+        flex inherit
       }
 
       &-wrap {
         display: flex
       }
 
-      > .kv-row {
-        margin: 0 0 0 20px
+      .sub-kv-row {
+        padding: 0 0 0 20px
+        border-radius 5px
+        transition all ease .3s
+
+        .kv-row-wrap {
+          margin: 0 0 0 20px
+        }
+
+        .sub-kv-row {
+          padding-left: 40px
+        }
+
+        &.hover {
+          background-color: #f8f8f8
+        }
       }
+    }
+
+    .kv-row-array:first-child:before {
+      content '[' !important
+      font-size: 18px
+      color: #ccc
+    }
+
+    .kv-row-array:last-child:after {
+      content ']'
+      font-size: 18px
+      color: #ccc
+    }
+
+    .kv-row-object:first-child:before {
+      content '{' !important
+      font-size: 18px
+      color: #ccc
+    }
+
+    .kv-row-object:last-child:after {
+      content '}'
+      font-size: 18px
+      color: #ccc
     }
   }
 }

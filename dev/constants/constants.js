@@ -73,7 +73,6 @@ let AppConstants = keyMirror({
     RES_CHECKER_ADD_KV: null,
     RES_CHECKER_REMOVE_KV: null,
     RES_CHECKER_CHANGE_KV_KEY: null,
-    RES_CHECKER_CHANGE_KV_VALUE: null,
     RES_CHECKER_CHANGE_KV_VALUE_TYPE: null,
     // modal actions
     MODAL_CLOSE: null,

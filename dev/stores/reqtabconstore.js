@@ -64,7 +64,8 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
-    valueType: 'string'
+    valueType: 'string',
+    value: []
 })
 const DEFAULT_RES_SHOW_TYPE = {
     type: 'Pretty',
@@ -687,35 +688,60 @@ let bodyActions = {
 
 let resCheckerActions = {
 
-    toggleResCheckerKV(rowIndex) {
-        let kv = tabCons.items[tabIndex].builders.resCheckerKVs[rowIndex]
-        if (kv.readonly) return
-        kv.checked = !tabCons.items[tabIndex].builders.resCheckerKVs[rowIndex].checked
+    getResCheckerRow(rowIndex) {
+        let resCheckerKVs = tabCons.items[tabIndex].builders.resCheckerKVs
+        let indexes = rowIndex.split('.')
+        let parentRow = resCheckerKVs
+        let targetRow = resCheckerKVs
+        for (let i = 0; i < indexes.length; i++) {
+            parentRow = targetRow
+            targetRow = (targetRow.value || targetRow)[indexes[i]]
+        }
+        return {
+            targetIndex: indexes[indexes.length - 1],
+            target: targetRow,
+            parent: parentRow.value || parentRow
+        }
     },
 
-    addResCheckerKV() {
-        tabCons.items[tabIndex].builders.resCheckerKVs.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+    toggleResCheckerKV(rowIndex) {
+        let row = this.getResCheckerRow(rowIndex)
+        if (row.target.readonly) return
+        let checked = !row.target.checked
+        row.target.checked = checked
+        let dealChild = (target) => {
+            _.each(target.value, (kv) => {
+                kv.checked = checked
+                dealChild(kv)
+            })
+        }
+        dealChild(row.target)
+    },
+
+    addResCheckerKV(rowIndex) {
+        let row = this.getResCheckerRow(rowIndex)
+        if (+row.targetIndex === row.parent.length - 1) {
+            row.parent.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+        }
     },
 
     removeResCheckerKV(rowIndex) {
-        tabCons.items[tabIndex].builders.resCheckerKVs.splice(rowIndex, 1)
+        let row = this.getResCheckerRow(rowIndex)
+        row.parent.splice(row.targetIndex, 1)
     },
 
     changeResCheckerKVKey(rowIndex, value) {
-        this.changeResChecker(rowIndex, value, 'key')
+        let row = this.getResCheckerRow(rowIndex)
+        row.target.key = value
     },
 
-    changeResCheckerKVValue(rowIndex, value) {
-        this.changeResChecker(rowIndex, value, 'value')
-    },
-
-    changeResCheckerKVValueType(rowIndex, value) {
-        console.log(rowIndex)
-        console.log(value)
-    },
-
-    changeResChecker(rowIndex, value, type) {
-
+    changeResCheckerKVValueType(rowIndex, valueType) {
+        let row = this.getResCheckerRow(rowIndex)
+        row.target.value = []
+        row.target.valueType = valueType
+        if (/^(object|array)$/.test(valueType)) {
+            row.target.value.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+        }
     }
 }
 
@@ -1027,7 +1053,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.RES_CHECKER_ADD_KV:
-            actions.addResCheckerKV()
+            actions.addResCheckerKV(action.rowIndex)
             ReqTabConStore.emitChange()
             break
 
@@ -1038,11 +1064,6 @@ AppDispatcher.register((action) => {
 
         case AppConstants.RES_CHECKER_CHANGE_KV_KEY:
             actions.changeResCheckerKVKey(action.rowIndex, action.value)
-            ReqTabConStore.emitChange()
-            break
-
-        case AppConstants.RES_CHECKER_CHANGE_KV_VALUE:
-            actions.changeResCheckerKVValue(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
 
