@@ -413,12 +413,17 @@ let tabConActions = {
                 tabCon.aceEditorConfig.show = true
                 builders.resShowType = Object.assign({}, DEFAULT_RES_SHOW_TYPE)
                 try {
-                    builders.fetchResponseData = JSON.stringify(JSON.parse(data), null, '\t')
+                    let jsonData = JSON.parse(data)
+                    builders.fetchResponseData = JSON.stringify(jsonData, null, '\t')
                     builders.resShowType.prettyType = 'JSON'
                     tabCon.aceEditorConfig.mode = 'json'
                     builders.fetchResponseIsJSON = true
+                    // response checker
+                    builders.resCheckerResult = Util.checkResponseResult(builders.resCheckerKVs, jsonData)
+                    console.log(builders.resCheckerResult)
                 } catch (e) {
                     //
+                    console.log(e)
                     builders.resShowType.prettyType = 'HTML'
                     tabCon.aceEditorConfig.mode = 'html'
                 }
