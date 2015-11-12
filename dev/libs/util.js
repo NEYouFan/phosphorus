@@ -403,7 +403,7 @@ let Util = {
                     } else {
                         return {
                             status: 'failed',
-                            info: `Field ${key}'s type should be: ${resultKeyType}`
+                            info: `Field "${key}"'s type should be "${rc.valueType}", but it is "${resultKeyType}"`
                         }
                     }
                 } else {
