@@ -342,6 +342,15 @@ let Util = {
             10002: 'number',
             10003: 'boolean'
         }
+        let getEnumType = (enumName) => {
+            if ((+enumName).toString() === enumName) {
+                return typeMap[10002]
+            }
+            if (/^(true|false)$/.test(enumName)) {
+                return typeMap[10003]
+            }
+            return typeMap[10001]
+        }
         let traversedDataTypes = []
         let traversedLayers = 0
         let getItem = (output, resultContainer) => {
@@ -371,18 +380,33 @@ let Util = {
                 }
                 traversedDataTypes.push(output.type)
                 traversedLayers++
-                let tempItem = Object.assign({}, itemTemplate, {
-                    key: output.name,
-                    value: [],
-                    valueType: output.isArray ? 'array' : 'object'
+                let dataType = _.find(dataSource.datatypes, (dt) => {
+                    return dt.id === output.type
                 })
-                resultContainer.push(tempItem)
                 let attributes = _.filter(dataSource.attributes, (attr) => {
                     return attr.parentId === output.type
                 })
-                attributes.forEach((attr) => {
-                    getItem(attr, tempItem.value)
-                })
+                // dataSource has bug, attributes maybe duplicated
+                attributes = _.uniq(attributes, 'id')
+                if (dataType.format === 1) {
+                    //enums
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: output.name,
+                        value: [],
+                        valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
+                    })
+                    resultContainer.push(tempItem)
+                } else {
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: output.name,
+                        value: [],
+                        valueType: output.isArray ? 'array' : 'object'
+                    })
+                    resultContainer.push(tempItem)
+                    attributes.forEach((attr) => {
+                        getItem(attr, tempItem.value)
+                    })
+                }
             }
         }
         let getData = (outputs) => {

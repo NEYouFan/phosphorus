@@ -420,7 +420,6 @@ let tabConActions = {
                     builders.fetchResponseIsJSON = true
                     // response checker
                     builders.resCheckerResult = Util.checkResponseResult(builders.resCheckerKVs, jsonData)
-                    console.log(builders.resCheckerResult)
                 } catch (e) {
                     //
                     console.log(e)
