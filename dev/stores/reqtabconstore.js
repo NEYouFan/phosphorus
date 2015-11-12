@@ -97,7 +97,7 @@ const DEFAULT_CON_ITEM = {
             }
         ],
         paramKVs: [DEFAULT_PARAMS_KV],
-        activeTabName: RESPONSE_CHECKER_STR,
+        activeTabName: REQUEST_BODY_STR,
         headerKVs: [DEFAULT_JSON_HEADER_KV, DEFAULT_HEADERS_KV],
         bodyType: {
             type: 'raw',
@@ -122,7 +122,7 @@ const DEFAULT_CON_ITEM = {
     showReqMethodList: false,
     showResPrettyTypeList: false,
     aceEditorConfig: {
-        show: false,
+        show: true,
         mode: 'json',
         readOnly: false
     }

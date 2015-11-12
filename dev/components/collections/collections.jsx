@@ -32,6 +32,10 @@ class Collections extends React.Component {
         let collectionNodes
         if (collections) {
             collectionNodes = collections.map((collection, index) => {
+                let collClasses = classNames({
+                    'coll': true,
+                    'coll-nei': collection.isNEI
+                })
                 let foldersHeight = collection.folders.length * 40
                 let folderNodes = collection.folders.map((folder, index) => {
                     let reqsHeight = folder.orders.length * 30
@@ -81,7 +85,7 @@ class Collections extends React.Component {
                     )
                 })
                 return (
-                    <div className="coll" key={index}>
+                    <div className={collClasses} key={index}>
                         <div className="coll-wrap"
                              onClick={(e) => {this.toggleCollSlide(e)}}
                              onMouseLeave={(e)=>{this.onMouseLeaveColl(e)}}
@@ -127,6 +131,10 @@ class Collections extends React.Component {
         }
         return (
             <div className={className}>
+                <div className="mod-collection-actions">
+                    <em className="glyphicon glyphicon-briefcase"></em>
+                    <span>Add</span>
+                </div>
                 <div className="mod-collections">{collectionNodes}</div>
             </div>
         )
