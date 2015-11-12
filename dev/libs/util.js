@@ -13,6 +13,26 @@ const pathVariableExp = new RegExp('/:(\\w+?[^/]*)', 'g')
 
 let Util = {
 
+    getLocaleDate(ms) {
+        if (!ms) return
+        let date = new Date(ms)
+        let y = date.getFullYear()
+        let m = date.getMonth() + 1
+        let d = date.getDate()
+        let h = date.getHours()
+        let mu = date.getMinutes()
+        let s = date.getSeconds()
+        function f(ff) {
+            return ff < 10 ? '0' + ff : ff
+        }
+        m = f(m)
+        h = f(h)
+        d = f(d)
+        mu = f(mu)
+        s = f(s)
+        return y + '-' + m + '-' + d
+    },
+
     getUrlParams(url) {
         let params = []
         if (!url) return params

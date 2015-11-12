@@ -84,6 +84,7 @@ class Collections extends React.Component {
                         </div>
                     )
                 })
+                let requestNum = collection.requests.length
                 return (
                     <div className={collClasses} key={index}>
                         <div className="coll-wrap"
@@ -97,7 +98,16 @@ class Collections extends React.Component {
                                 <div className="coll-name">{collection.name}</div>
                                 <div className="coll-reqnum">
                                     <div className="coll-dot"></div>
-                                    <div className="coll-reqnum-text">{collection.requests.length} requests</div>
+                                    <div className="coll-reqnum-text">
+                                        {
+                                            requestNum === 0 ? 'No Request' : (
+                                                requestNum === 1 ? '1 Request' : (
+                                                    requestNum + ' Requests'
+                                                )
+                                            )
+                                        }
+                                    </div>
+                                    <div className="coll-date">{Util.getLocaleDate(collection.createTime)}</div>
                                 </div>
                             </div>
                             <div className="coll-actions">
