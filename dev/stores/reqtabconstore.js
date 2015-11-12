@@ -115,7 +115,8 @@ const DEFAULT_CON_ITEM = {
         fetchResponseIsJSON: false,
         resShowType: Object.assign({}, DEFAULT_RES_SHOW_TYPE),
         resFilePath: null, // response local file path: preview iframe src
-        resCheckerKVs: [DEFAULT_RES_CHECKER_KV]
+        resCheckerKVs: [DEFAULT_RES_CHECKER_KV],
+        resCheckerResult: null
     },
     showBodyRawTypeList: false,
     showReqMethodList: false,

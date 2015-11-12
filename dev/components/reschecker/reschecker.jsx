@@ -13,14 +13,19 @@ class ResChecker extends React.Component {
         let className = classNames({
             hide: this.props.builders.activeTabName !== 'Response Checker'
         })
-        let con
+        let checkResult
+        let resCheckerResult = this.props.builders.resCheckerResult
+        if (resCheckerResult !== null && resCheckerResult !== true) {
+            checkResult = <div className="error-tip">{resCheckerResult.info}</div>
+        }
+        let mainCon
         if (this.props.builders.resCheckerKVs === 'Circular Reference') {
-            con =
+            mainCon =
                 <div className="error-tip">
                     Your outputs definition has Circular Reference, please check it.
                 </div>
         } else {
-            con =
+            mainCon =
                 <KeyValueT
                     kvs={this.props.builders.resCheckerKVs}
                     toggleKV={(rowIndex) => {this.toggleResCheckerKV(rowIndex)}}
@@ -38,7 +43,8 @@ class ResChecker extends React.Component {
                         <em className="glyphicon glyphicon-exclamation-sign"></em>
                         <span>Response Checker is mainly for checking JSON data response result. You can define your response JSON data's keys and types.</span>
                     </div>
-                    {con}
+                    {checkResult}
+                    {mainCon}
                 </div>
             </div>
         )

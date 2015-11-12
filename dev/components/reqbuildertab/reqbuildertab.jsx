@@ -29,8 +29,18 @@ class ReqBuilderTab extends React.Component {
                 </li>
             )
         })
+        let resCheckerTip
+        let resCheckerResult = this.props.builders.resCheckerResult
+        if (resCheckerResult !== null) {
+            let classes = classNames({
+                'res-check-tip': true,
+                'failed': resCheckerResult !== true
+            })
+            resCheckerTip = <div className={classes}></div>
+        }
         return (
             <div className="mod-reqbuilder-tab">
+                {resCheckerTip}
                 <ol className="clr">
                     {nodes}
                 </ol>
