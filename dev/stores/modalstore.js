@@ -106,6 +106,16 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+
+        case AppConstants.MODAL_CREATE_COLLECTION:
+            actions.openModal({
+                type: AppConstants.MODAL_CREATE_COLLECTION,
+                title: 'Create a new collection',
+                okText: 'Create'
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }

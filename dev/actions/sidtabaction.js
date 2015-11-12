@@ -43,6 +43,13 @@ class SideTabAction  {
         })
     }
 
+    static createCollection(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_CREATE_COLLECTION,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

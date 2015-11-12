@@ -45,6 +45,12 @@ class ModalAction  {
         })
     }
 
+    static openCreateCollModal(data) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_CREATE_COLLECTION
+        })
+    }
+
 }
 
 export default ModalAction

@@ -3,6 +3,7 @@
 
 import Events from 'events'
 import _ from 'lodash'
+import UUID from 'node-uuid'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Util from '../libs/util'
@@ -11,6 +12,30 @@ import Requester from '../components/requester/requester'
 import ReqTabStore from './reqtabstore'
 
 const CHANGE_EVENT = 'change'
+const DEFAULT_HISTORY = {
+    id: null,
+    name: null,
+    url: null,
+    requests: []
+}
+const DEFAULT_COLLECTION = {
+    id: null,
+    name: null,
+    host: null,
+    description: null,
+    requests: [],
+    folders: [],
+    createTime: null
+}
+const DEFAULT_REQUEST = {
+    collectionId: null,
+    description: null,
+    folderId: null,
+    id: null,
+    method: null,
+    name: null,
+    path: null
+}
 
 let tabs = {
     activeTabName: 'Collections',
@@ -35,13 +60,14 @@ let actions = {
         if (collectionsData !== null) return
         //StorageArea.clear()
         //return
-        StorageArea.get('hosts', (result) => {
+        StorageArea.get(['hosts', 'collections'], (result) => {
             console.log(result)
             let hosts = result.hosts || {}
             hosts.collections = hosts.collections || {}
             hosts.folders = hosts.folders || {}
+            collectionsData = result.collections || []
             Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
-                collectionsData = collections
+                collectionsData.unshift(...collections)
                 callback()
             })
         })
@@ -109,6 +135,26 @@ let actions = {
 
     changeActiveReqId(reqId) {
         tabs.activeReqId = reqId
+    },
+
+    createCollection(options, callback) {
+        if (!options || !options.name) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            let item = Object.assign({}, DEFAULT_COLLECTION, {
+                id: UUID.v1(),
+                name: options.name,
+                description: options.description,
+                createTime: Date.now()
+            })
+            collections.push(item)
+            StorageArea.set({'collections': collections}, () => {
+                collectionsData.push(item)
+                callback()
+            })
+        })
     }
 }
 
@@ -171,6 +217,12 @@ AppDispatcher.register((action) => {
         case AppConstants.SIDE_CHANGE_ACTIVE_REQ_ID:
             actions.changeActiveReqId(action.reqId)
             SideTabStore.emitChange()
+            break
+
+        case AppConstants.SIDE_CREATE_COLLECTION:
+            actions.createCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
             break
 
         default:

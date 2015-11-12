@@ -2,7 +2,6 @@
 'use strict'
 
 import URL from 'url'
-import UUID from 'node-uuid'
 import async from 'async'
 import QueryString from 'querystring'
 import _ from 'lodash'

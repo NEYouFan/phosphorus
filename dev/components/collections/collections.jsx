@@ -132,8 +132,10 @@ class Collections extends React.Component {
         return (
             <div className={className}>
                 <div className="mod-collection-actions">
-                    <em className="glyphicon glyphicon-briefcase"></em>
-                    <span>Add</span>
+                    <span className="icon-wrap" onClick={(e)=>{this.createCollection(e)}}>
+                        <em className="glyphicon glyphicon-briefcase"></em>
+                        <em className="glyphicon glyphicon-plus"></em>
+                    </span>
                 </div>
                 <div className="mod-collections">{collectionNodes}</div>
             </div>
@@ -267,6 +269,10 @@ class Collections extends React.Component {
         SideTabAction.changeActiveReqId(reqId)
         ReqTabAction.changeTab(tab)
         ReqTabConAction.updateConByRequest(request, collection)
+    }
+
+    createCollection(e) {
+        ModalAction.openCreateCollModal()
     }
 
 }

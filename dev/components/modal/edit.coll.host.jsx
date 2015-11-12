@@ -1,7 +1,7 @@
 //author @huntbao
 'use strict'
-import ReactDOM from 'react-dom'
 import './edit.coll.host.styl'
+import ReactDOM from 'react-dom'
 import ModalBody from './modal.body.jsx'
 import SideTabAction from '../../actions/sidtabaction'
 

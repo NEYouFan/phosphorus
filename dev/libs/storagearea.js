@@ -29,7 +29,7 @@ class StorageArea {
 }
 
 /**
- * save data structure
+ * saved data structure
  * {
  *      hosts: {
  *          collections: {
@@ -44,8 +44,12 @@ class StorageArea {
  *
  *      requests: {
  *          request_id: {
- *              // it's fields all declare in request_data_map.js
+ *              // it's fields are declared in request_data_map.js
  *          }
+ *      },
+ *
+ *      collections: {
+ *          // it's fields are declared in sidetabstore.js@DEFAULT_COLLECTION
  *      }
  * }
  *
