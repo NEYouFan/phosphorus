@@ -19,6 +19,7 @@ import NEIReqBuilderURLParams from '../reqbuilderurlparams/neireqbuilderurlparam
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
 import NEIReqBuilderBody from '../reqbuilderbody/neireqbuilderbody.jsx'
 import ResChecker from '../reschecker/reschecker.jsx'
+import NEIResChecker from '../reschecker/neireschecker.jsx'
 import Res from '../res/res.jsx'
 
 class ReqTabCon extends React.Component {
@@ -50,9 +51,15 @@ class ReqTabCon extends React.Component {
                 builders: builders,
                 showRawTypeList: tabCons.reqCons[index].showBodyRawTypeList
             }
+            let resCheckerProps = {
+                tabIndex: index,
+                builders: builders,
+                tab: tab
+            }
             let reqURL
             let reqBuilderURLParams
             let reqBuilderBody
+            let resChecker
             if (tab.isNEI) {
                 // nei tab
                 // req url
@@ -76,11 +83,14 @@ class ReqTabCon extends React.Component {
                     return !kv.key
                 })
                 reqBuilderBody = <NEIReqBuilderBody {...reqBuilderBodyProps}/>
+                // response checker
+                resChecker = <NEIResChecker {...resCheckerProps} />
             } else {
                 // normal tab
                 reqURL = <ReqURL {...reqURLProps} />
                 reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
                 reqBuilderBody = <ReqBuilderBody {...reqBuilderBodyProps}/>
+                resChecker = <ResChecker {...resCheckerProps} />
             }
             return (
                 <div className={tabConClasses} key={index}>
@@ -95,11 +105,7 @@ class ReqTabCon extends React.Component {
                         tabIndex={index}
                         builders={builders}
                         />
-                    <ResChecker
-                        tabIndex={index}
-                        builders={builders}
-                        tab={tab}
-                        />
+                    {resChecker}
                     <Res
                         tabIndex={index}
                         prettyTypes={tabCons.prettyTypes}

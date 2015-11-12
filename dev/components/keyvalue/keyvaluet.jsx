@@ -78,7 +78,7 @@ class KeyValueT extends KeyValue {
         return (
             <div className={classes} onFocus={(e)=>{this.focus(rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
-                <select value={valueType} onChange={(e) => {this.changeKVValueType(rowIndex,e)}}>
+                <select value={valueType} onChange={(e) => {this.changeKVValueType(rowIndex,e)}} disabled={!kv.typeChangeable}>
                     {optionNodes}
                 </select>
             </div>

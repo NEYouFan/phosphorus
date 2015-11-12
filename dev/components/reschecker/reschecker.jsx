@@ -16,6 +16,10 @@ class ResChecker extends React.Component {
         return (
             <div className={className}>
                 <div className="mod-res-checker">
+                    <div className="res-checker-tip">
+                        <em className="glyphicon glyphicon-exclamation-sign"></em>
+                        <span>Response Checker is mainly for checking JSON data response result. You can define your response JSON data's keys and types.</span>
+                    </div>
                     <KeyValueT
                         kvs={this.props.builders.resCheckerKVs}
                         toggleKV={(rowIndex) => {this.toggleResCheckerKV(rowIndex)}}

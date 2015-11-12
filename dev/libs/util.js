@@ -329,6 +329,48 @@ let Util = {
         }
         getData(request.inputs, savedData)
         return JSON.stringify(result, null, '\t')
+    },
+
+    convertNEIOutputsToJSON(request, dataSource, itemTemplate) {
+        let result = []
+        let isSysType = (type) => {
+            return /^(10001|10002|10003)$/.test(type)
+        }
+        let typeMap = {
+            10001: 'string',
+            10002: 'number',
+            10003: 'boolean'
+        }
+        let getItem = (output, resultContainer) => {
+            if (isSysType(output.type)) {
+                let tempItem = Object.assign({}, itemTemplate, {
+                    key: output.name,
+                    value: [],
+                    valueType: typeMap[output.type]
+                })
+                resultContainer.push(tempItem)
+            } else {
+                let tempItem = Object.assign({}, itemTemplate, {
+                    key: output.name,
+                    value: [],
+                    valueType: output.isArray ? 'array' : 'object'
+                })
+                resultContainer.push(tempItem)
+                let attributes = _.filter(dataSource.attributes, (attr) => {
+                    return attr.parentId === output.type
+                })
+                attributes.forEach((attr) => {
+                    getItem(attr, tempItem.value)
+                })
+            }
+        }
+        let getData = (outputs) => {
+            outputs.forEach((output) => {
+                getItem(output, result)
+            })
+        }
+        getData(request.outputs)
+        return result
     }
 }
 

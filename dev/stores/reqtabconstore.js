@@ -65,7 +65,8 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'string',
-    value: []
+    value: [],
+    typeChangeable: true
 })
 const DEFAULT_RES_SHOW_TYPE = {
     type: 'Pretty',
@@ -239,8 +240,7 @@ let tabConActions = {
                         type: 'raw',
                         name: 'JSON(application/json)'
                     }
-                    // init request inputs, build json
-                    // saved data is `bodyRawData`
+                    // init request inputs, build json, saved data is `bodyRawData`
                     let savedData = savedRequest[RequestDataMap.bodyRawData]
                     builders.bodyRawData = Util.convertNEIInputsToJSON(request, dataSource, savedData)
                     builders.bodyRawDataOriginal = builders.bodyRawData
@@ -272,6 +272,11 @@ let tabConActions = {
                     })
                 }
             }
+            // set response checker by it's outputs
+            builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
+                readonly: true,
+                typeChangeable: false
+            }))
         } else {
             tabCons.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = false
