@@ -333,6 +333,7 @@ let Util = {
 
     convertNEIOutputsToJSON(request, dataSource, itemTemplate) {
         let result = []
+        let error = false
         let isSysType = (type) => {
             return /^(10001|10002|10003)$/.test(type)
         }
@@ -341,6 +342,8 @@ let Util = {
             10002: 'number',
             10003: 'boolean'
         }
+        let traversedDataTypes = []
+        let traversedLayers = 0
         let getItem = (output, resultContainer) => {
             if (isSysType(output.type)) {
                 let tempItem = Object.assign({}, itemTemplate, {
@@ -350,6 +353,24 @@ let Util = {
                 })
                 resultContainer.push(tempItem)
             } else {
+                if (traversedDataTypes.indexOf(output.type) !== -1) {
+                    // circular reference
+                    let valueType
+                    if (output.type === traversedDataTypes[traversedDataTypes.length - 1]) {
+                        valueType = 'parent'
+                    } else {
+                        error = 'Circular Reference'
+                    }
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: output.name,
+                        value: [],
+                        valueType: valueType
+                    })
+                    resultContainer.push(tempItem)
+                    return
+                }
+                traversedDataTypes.push(output.type)
+                traversedLayers++
                 let tempItem = Object.assign({}, itemTemplate, {
                     key: output.name,
                     value: [],
@@ -367,10 +388,14 @@ let Util = {
         let getData = (outputs) => {
             outputs.forEach((output) => {
                 getItem(output, result)
+                for (let i = 0; i < traversedLayers; i++) {
+                    traversedDataTypes.pop()
+                }
+                traversedLayers = 0
             })
         }
         getData(request.outputs)
-        return result
+        return error || result
     },
 
     checkResponseResult(resChecker, resData) {

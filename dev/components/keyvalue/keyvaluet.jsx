@@ -70,7 +70,7 @@ class KeyValueT extends KeyValue {
         let inputValueOptions = ['String', 'Number', 'Boolean', 'Array', 'Object']
         let layers = rowIndex.split('.').length
         if (layers > 1) {
-            inputValueOptions.push('<Parent>')
+            inputValueOptions.push('Parent')
         }
         let optionNodes = inputValueOptions.map((io, index) => {
             return <option value={io.toLowerCase()} key={index}>{io}</option>

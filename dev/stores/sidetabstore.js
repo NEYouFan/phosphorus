@@ -17,8 +17,8 @@ let tabs = {
     activeReqId: null
 }
 
-//let NEI_SERVER_URL = 'http://nei.hz.netease.com'
-let NEI_SERVER_URL = 'http://127.0.0.1'
+let NEI_SERVER_URL = 'http://nei.hz.netease.com'
+//let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = null
 let collectionsData = null
 let collectionActionMenus = ['Edit host']
