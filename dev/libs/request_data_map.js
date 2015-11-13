@@ -53,7 +53,17 @@ const REQUEST_DATA_MAP = {
             value: 'value'
         }
     },
-    bodyRawData: 'body_raw_data'
+    bodyRawData: 'body_raw_data',
+    resCheckerKVs: {
+        saveKey: 'res_checker_data',
+        requiredField: 'key',
+        fields: {
+            checked: 'checked',
+            key: 'key',
+            value: 'value',
+            valueType: 'value_type'
+        }
+    }
 }
 
 export default REQUEST_DATA_MAP

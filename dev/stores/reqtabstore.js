@@ -59,19 +59,19 @@ let actions = {
             return
         }
         let tabCon = ReqTabConStore.getCurrentCon().builders
-        let saveData = {}
+        let savedData = {}
         _.each(RequestDataMap, (value, key) => {
             let data = tab[key] || tabCon[key]
             if (typeof value === 'object') {
                 if (Array.isArray(data)) {
-                    saveData[value.saveKey] = []
+                    savedData[value.saveKey] = []
                     _.each(data, (item) => {
                         if (item[value.requiredField]) {
                             let sItem = {}
                             _.each(value.fields, (v, k) => {
                                 sItem[v] = item[k]
                             })
-                            saveData[value.saveKey].push(sItem)
+                            savedData[value.saveKey].push(sItem)
                         }
                     })
                 } else {
@@ -80,20 +80,47 @@ let actions = {
                         _.each(value.fields, (v, k) => {
                             sItem[v] = data[k]
                         })
-                        saveData[value.saveKey] = sItem
+                        savedData[value.saveKey] = sItem
                     }
                 }
             } else {
-                saveData[value] = data
+                savedData[value] = data
             }
         })
+        // refine `res_checker_data`
+        if (savedData['is_nei']) {
+            savedData.res_checker_data = null
+        } else {
+            let refineRecCheckerData = (data) => {
+                let result = []
+                data.value.forEach((item) => {
+                    if (item.key) {
+                        if (item.value.length) {
+                            item.value.forEach((item) => {
+                                refineRecCheckerData(item)
+                            })
+                        }
+                        result.push({
+                            checked: item.checked,
+                            key: item.key,
+                            value: item.value,
+                            valueType: item.valueType
+                        })
+                    }
+                })
+                data.value = result
+            }
+            savedData.res_checker_data.forEach((item) => {
+                refineRecCheckerData(item)
+            })
+        }
         // save to local storage
-        console.log(saveData)
-        if (saveData.id) {
+        console.log(savedData)
+        if (savedData.id) {
             // already have id, directly save it
             StorageArea.get('requests', (result) => {
                 let requests = result.requests || {}
-                requests[saveData.id] = saveData
+                requests[savedData.id] = savedData
                 StorageArea.set({requests: requests}, () => {
                     tab.isDirty = false
                     callback()

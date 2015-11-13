@@ -52,7 +52,7 @@ class Modal extends React.Component {
 
             case AppConstants.MODAL_SAVE_BLANK_URL_TIP:
                 return (
-                    <TipModal modal={this.props.modal}/>
+                    <Tip modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_LEAVING_DIRTY_TAB:
