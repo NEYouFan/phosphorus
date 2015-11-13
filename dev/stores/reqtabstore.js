@@ -91,27 +91,25 @@ let actions = {
         if (savedData['is_nei']) {
             savedData.res_checker_data = null
         } else {
-            let refineRecCheckerData = (data) => {
-                let result = []
-                data.value.forEach((item) => {
+            let refineData = (data) => {
+                let result = data.value.map((item) => {
                     if (item.key) {
-                        if (item.value.length) {
-                            item.value.forEach((item) => {
-                                refineRecCheckerData(item)
-                            })
-                        }
-                        result.push({
-                            checked: item.checked,
+                        return {
                             key: item.key,
-                            value: item.value,
-                            valueType: item.valueType
-                        })
+                            checked: item.checked,
+                            value: refineData(item),
+                            'value_type': item.valueType
+                        }
                     }
                 })
-                data.value = result
+                // remove null elements
+                result = result.filter((item) => {
+                    return item
+                })
+                return result
             }
             savedData.res_checker_data.forEach((item) => {
-                refineRecCheckerData(item)
+                item.value = refineData(item)
             })
         }
         // save to local storage

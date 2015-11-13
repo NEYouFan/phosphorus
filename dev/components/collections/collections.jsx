@@ -30,7 +30,7 @@ class Collections extends React.Component {
         })
         let collections = this.props.sideTab.collections
         let collectionNodes
-        if (collections) {
+        if (collections && collections.length) {
             collectionNodes = collections.map((collection, index) => {
                 let collectionActionMenu = this.props.sideTab.actionMenus.collection
                 if (collection.isNEI) {
