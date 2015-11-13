@@ -74,9 +74,8 @@ class Collections extends React.Component {
                                     <span className="glyphicon glyphicon-folder-open"></span>
                                 </div>
                                 <div className="coll-folder-name">{folder.name}</div>
-                                <div className="coll-folder-actions">
-                                    <div className="coll-folder-actions-menus"
-                                         onClick={(e)=>{this.toggleFolderActionMenu(e)}}>
+                                <div className="coll-folder-actions" onClick={(e)=>{this.toggleFolderActionMenu(e, index)}}>
+                                    <div className="coll-folder-actions-menus">
                                         <em className="glyphicon glyphicon-option-horizontal"></em>
                                     </div>
                                 </div>
@@ -130,9 +129,7 @@ class Collections extends React.Component {
                                     <em className="glyphicon glyphicon-arrow-right"></em>
                                     <em className="glyphicon glyphicon-arrow-left"></em>
                                 </div>
-                                <div className="coll-actions-menus"
-                                     onClick={(e)=>{this.toggleCollActionMenu(e)}}
-                                    >
+                                <div className="coll-actions-menus" onClick={(e)=>{this.toggleCollActionMenu(e)}}>
                                     <em className="glyphicon glyphicon-option-horizontal"></em>
                                 </div>
                             </div>
@@ -231,9 +228,11 @@ class Collections extends React.Component {
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
-    toggleFolderActionMenu(evt) {
+    toggleFolderActionMenu(evt, index) {
         evt.stopPropagation()
-        evt.currentTarget.parentNode.parentNode.classList.toggle('show-action-menu')
+        let target = evt.currentTarget
+        target.parentNode.classList.toggle('show-action-menu')
+        target.nextSibling.style.top = (106 + index * 40) + 'px'
     }
 
     onClickCollectionMenuItem(menuItem, collection, evt) {
