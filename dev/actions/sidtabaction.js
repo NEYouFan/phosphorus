@@ -50,6 +50,13 @@ class SideTabAction  {
         })
     }
 
+    static editCollection(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_EDIT_COLLECTION,
+            options: options
+        })
+    }
+
     static createFolder(options) {
         AppDispatcher.dispatch({
             actionType: AppConstants.SIDE_CREATE_FOLDER,

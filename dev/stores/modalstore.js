@@ -110,7 +110,18 @@ AppDispatcher.register((action) => {
             actions.openModal({
                 type: AppConstants.MODAL_CREATE_COLLECTION,
                 title: 'Create a new collection',
-                okText: 'Create'
+                okText: 'Create',
+                data: {}
+            })
+            ModalStore.emitChange()
+            break
+
+        case AppConstants.MODAL_EDIT_COLLECTION:
+            actions.openModal({
+                type: AppConstants.MODAL_EDIT_COLLECTION,
+                title: 'Edit collection',
+                okText: 'Save',
+                data: action.collection
             })
             ModalStore.emitChange()
             break

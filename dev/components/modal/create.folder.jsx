@@ -1,7 +1,7 @@
 //author @huntbao
 'use strict'
 
-import CreateCollection from './create.collection.modal.jsx'
+import CreateCollection from './create.collection.jsx'
 import SideTabAction from '../../actions/sidtabaction'
 
 class CreateFolder extends CreateCollection {
@@ -14,7 +14,7 @@ class CreateFolder extends CreateCollection {
         super(props)
     }
 
-    create() {
+    doIt() {
         SideTabAction.createFolder({
             name: this.state.name,
             description: this.state.description,

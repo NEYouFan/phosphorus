@@ -7,12 +7,13 @@ import AppConstants from '../../constants/constants'
 import ModalAction from '../../actions/modalaction'
 import EditCollHost from './edit.coll.host.jsx'
 import EditFolderHost from './edit.folder.host.jsx'
-import TipModal from './tip.modal.jsx'
-import LeavingDirtyTabModal from './leaving.dirty.tab.modal.jsx'
-import CreateCollectionModal from './create.collection.modal.jsx'
-import CreateFolderModal from './create.folder.modal.jsx'
-import DeleteCollectionModal from './deleting.collection.modal.jsx'
-import DeleteFolderModal from './deleting.folder.modal.jsx'
+import Tip from './tip.jsx'
+import LeavingDirtyTab from './leaving.dirty.tab.jsx'
+import CreateCollection from './create.collection.jsx'
+import EditCollection from './edit.collection.jsx'
+import CreateFolder from './create.folder.jsx'
+import DeleteCollection from './deleting.collection.jsx'
+import DeleteFolder from './deleting.folder.jsx'
 
 class Modal extends React.Component {
 
@@ -55,27 +56,32 @@ class Modal extends React.Component {
 
             case AppConstants.MODAL_LEAVING_DIRTY_TAB:
                 return (
-                    <LeavingDirtyTabModal modal={this.props.modal} />
+                    <LeavingDirtyTab modal={this.props.modal} />
                 )
 
             case AppConstants.MODAL_CREATE_COLLECTION:
                 return (
-                    <CreateCollectionModal modal={this.props.modal} />
+                    <CreateCollection modal={this.props.modal} />
+                )
+
+            case AppConstants.MODAL_EDIT_COLLECTION:
+                return (
+                    <EditCollection modal={this.props.modal} />
                 )
 
             case AppConstants.MODAL_CREATE_FOLDER:
                 return (
-                    <CreateFolderModal modal={this.props.modal} />
+                    <CreateFolder modal={this.props.modal} />
                 )
 
             case AppConstants.MODAL_DELETE_COLLECTION:
                 return (
-                    <DeleteCollectionModal modal={this.props.modal} />
+                    <DeleteCollection modal={this.props.modal} />
                 )
 
             case AppConstants.MODAL_DELETE_FOLDER:
                 return (
-                    <DeleteFolderModal modal={this.props.modal} />
+                    <DeleteFolder modal={this.props.modal} />
                 )
 
             default:

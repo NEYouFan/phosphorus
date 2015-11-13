@@ -2,7 +2,7 @@
 'use strict'
 import ModalBody from './modal.body.jsx'
 
-class TipModal extends ModalBody {
+class Tip extends ModalBody {
 
     getBody() {
         return (
@@ -18,4 +18,4 @@ class TipModal extends ModalBody {
 
 }
 
-export default TipModal
+export default Tip

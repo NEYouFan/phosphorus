@@ -1,7 +1,7 @@
 //author @huntbao
 'use strict'
 
-import './create.collection.modal.styl'
+import './create.collection.styl'
 import classNames from 'classnames'
 import ModalBody from './modal.body.jsx'
 import SideTabAction from '../../actions/sidtabaction'
@@ -9,11 +9,11 @@ import SideTabAction from '../../actions/sidtabaction'
 class CreateCollection extends ModalBody {
 
     constructor(props) {
-        super()
+        super(props)
         this.state = Object.assign({
-            name: '',
+            name: props.modal.data.name,
             nameLabel: 'Collection name',
-            description: '',
+            description: props.modal.data.description,
             descriptionLabel: 'Description',
             errorName: false
         }, props)
@@ -71,11 +71,11 @@ class CreateCollection extends ModalBody {
                 errorName: true
             })
         }
-        this.create()
+        this.doIt()
         this.resetState()
     }
 
-    create() {
+    doIt() {
         SideTabAction.createCollection({
             name: this.state.name,
             description: this.state.description

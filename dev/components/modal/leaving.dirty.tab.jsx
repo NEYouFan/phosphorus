@@ -5,7 +5,7 @@ import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 
-class LeavingUnsavedTabModal extends ModalBody {
+class LeavingUnsavedTab extends ModalBody {
 
     getBody() {
         return (
@@ -16,9 +16,7 @@ class LeavingUnsavedTabModal extends ModalBody {
         )
     }
 
-    onClickOk(evt) {
-        evt.preventDefault()
-        this.close()
+    doAction(evt) {
         let data = this.props.modal.data
         SideTabAction.changeActiveReqId(data.reqId)
         ReqTabAction.changeTab(data.tab)
@@ -27,4 +25,4 @@ class LeavingUnsavedTabModal extends ModalBody {
 
 }
 
-export default LeavingUnsavedTabModal
+export default LeavingUnsavedTab

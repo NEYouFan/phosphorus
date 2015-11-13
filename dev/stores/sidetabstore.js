@@ -54,8 +54,8 @@ let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 //let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = null
 let collectionsData = null
-let collectionActionMenus = ['Edit host', 'Add folder', 'Delete']
-let collectionFolderActionMenus = ['Edit host', 'Delete']
+let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Delete']
+let collectionFolderActionMenus = ['Edit host', 'Edit', 'Delete']
 
 let actions = {
 
@@ -160,6 +160,29 @@ let actions = {
             collections.push(item)
             StorageArea.set({'collections': collections}, () => {
                 collectionsData.push(item)
+                callback()
+            })
+        })
+    },
+
+    editCollection(options, callback) {
+        if (!options || !options.name) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            Object.assign(options.collection, {
+                name: options.name,
+                description: options.description
+            })
+            let savedCollection = _.find(collections, (c) => {
+                return c.id === options.collection.id
+            })
+            Object.assign(savedCollection, {
+                name: options.name,
+                description: options.description
+            })
+            StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
@@ -300,6 +323,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_CREATE_COLLECTION:
             actions.createCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_EDIT_COLLECTION:
+            actions.editCollection(action.options, () => {
                 SideTabStore.emitChange()
             })
             break
