@@ -14,6 +14,7 @@ let AppConstants = keyMirror({
     SIDE_EDIT_COLLECTION: null,
     SIDE_CREATE_FOLDER: null,
     SIDE_DELETE_COLLECTION: null,
+    SIDE_EDIT_FOLDER: null,
     SIDE_DELETE_FOLDER: null,
     // req tab action
     REQ_TAB_ADD: null,
@@ -90,6 +91,7 @@ let AppConstants = keyMirror({
     MODAL_CREATE_COLLECTION: null,
     MODAL_DELETE_COLLECTION: null,
     MODAL_CREATE_FOLDER: null,
+    MODAL_EDIT_FOLDER: null,
     MODAL_DELETE_FOLDER: null,
 })
 

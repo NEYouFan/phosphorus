@@ -78,6 +78,13 @@ class SideTabAction  {
         })
     }
 
+    static editFolder(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_EDIT_FOLDER,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

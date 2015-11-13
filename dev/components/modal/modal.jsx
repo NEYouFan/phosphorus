@@ -13,6 +13,7 @@ import CreateCollection from './create.collection.jsx'
 import EditCollection from './edit.collection.jsx'
 import CreateFolder from './create.folder.jsx'
 import DeleteCollection from './deleting.collection.jsx'
+import EditFolder from './edit.folder.jsx'
 import DeleteFolder from './deleting.folder.jsx'
 
 class Modal extends React.Component {
@@ -77,6 +78,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_DELETE_COLLECTION:
                 return (
                     <DeleteCollection modal={this.props.modal} />
+                )
+
+            case AppConstants.MODAL_EDIT_FOLDER:
+                return (
+                    <EditFolder modal={this.props.modal} />
                 )
 
             case AppConstants.MODAL_DELETE_FOLDER:

@@ -72,6 +72,13 @@ class ModalAction  {
         })
     }
 
+    static openEditFolderModal(folder) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_EDIT_FOLDER,
+            folder: folder
+        })
+    }
+
     static openDeleteFolderModal(folder) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_DELETE_FOLDER,

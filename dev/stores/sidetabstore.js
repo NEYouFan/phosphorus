@@ -235,6 +235,38 @@ let actions = {
         })
     },
 
+    editFolder(options, callback) {
+        if (!options || !options.name) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            let collection = _.find(collectionsData, (c) => {
+                return c.id === options.folder.collectionId
+            })
+            let folder = _.find(collection.folders, (f) => {
+                return f.id === options.folder.id
+            })
+            Object.assign(folder, {
+                name: options.name,
+                description: options.description
+            })
+            let savedCollection = _.find(savedCollections, (c) => {
+                return c.id === options.folder.collectionId
+            })
+            let savedFolder = _.find(savedCollection.folders, (f) => {
+                return f.id === options.folder.id
+            })
+            Object.assign(savedFolder, {
+                name: options.name,
+                description: options.description
+            })
+            StorageArea.set({'collections': savedCollections}, () => {
+                callback()
+            })
+        })
+    },
+
     deleteFolder(options, callback) {
         if (!options || !options.collectionId || !options.id) {
             return callback()
@@ -341,6 +373,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_DELETE_COLLECTION:
             actions.deleteCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_EDIT_FOLDER:
+            actions.editFolder(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

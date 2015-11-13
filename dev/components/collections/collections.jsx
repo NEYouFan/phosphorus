@@ -261,17 +261,19 @@ class Collections extends React.Component {
     onClickFolderMenuItem(menuItem, collection, folder, evt) {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
+        let data = Object.assign({
+            collectionId: collection.id
+        }, folder)
         switch (menuItem) {
 
             case 'Edit host':
-                return ModalAction.openEditFolderHostModal(Object.assign({
-                    collectionId: collection.id
-                }, folder))
+                return ModalAction.openEditFolderHostModal(data)
+
+            case 'Edit':
+                return ModalAction.openEditFolderModal(data)
 
             case 'Delete':
-                return ModalAction.openDeleteFolderModal(Object.assign({
-                    collectionId: collection.id
-                }, folder))
+                return ModalAction.openDeleteFolderModal(data)
 
             default:
                 break

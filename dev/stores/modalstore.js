@@ -147,6 +147,16 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_EDIT_FOLDER:
+            actions.openModal({
+                type: AppConstants.MODAL_EDIT_FOLDER,
+                title: `Edit folder`,
+                okText: 'Save',
+                data: action.folder
+            })
+            ModalStore.emitChange()
+            break
+
         case AppConstants.MODAL_DELETE_FOLDER:
             actions.openModal({
                 type: AppConstants.MODAL_DELETE_FOLDER,
