@@ -59,9 +59,16 @@ class ModalAction  {
         })
     }
 
-    static openCreateCollModal(data) {
+    static openCreateCollModal() {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_CREATE_COLLECTION
+        })
+    }
+
+    static openDeleteFolderModal(folder) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_DELETE_FOLDER,
+            folder: folder
         })
     }
 

@@ -181,13 +181,11 @@ let actions = {
             let collection = _.find(collectionsData, (c) => {
                 return c.id === options.collection.id
             })
-            collection.folders.push(item)// update ui
-
+            collection.folders.push(item)
             let savedCollection = _.find(savedCollections, (c) => {
                 return c.id === options.collection.id
             })
-            savedCollection.folders = collection.folders
-            // update storage
+            savedCollection.folders.push(item)
             StorageArea.set({'collections': savedCollections}, () => {
                 callback()
             })
@@ -208,6 +206,30 @@ let actions = {
                 return c.id === options.id
             })
             // update storage
+            StorageArea.set({'collections': savedCollections}, () => {
+                callback()
+            })
+        })
+    },
+
+    deleteFolder(options, callback) {
+        if (!options || !options.collectionId || !options.id) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            let collection = _.find(collectionsData, (c) => {
+                return c.id === options.collectionId
+            })
+            _.remove(collection.folders, (f) => {
+                return f.id === options.id
+            })
+            let savedCollection = _.find(savedCollections, (c) => {
+                return c.id === options.collectionId
+            })
+            _.remove(savedCollection.folders, (f) => {
+                return f.id === options.id
+            })
             StorageArea.set({'collections': savedCollections}, () => {
                 callback()
             })
@@ -290,6 +312,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_DELETE_COLLECTION:
             actions.deleteCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_DELETE_FOLDER:
+            actions.deleteFolder(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

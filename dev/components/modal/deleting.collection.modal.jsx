@@ -8,7 +8,7 @@ class DeletingCollection extends ModalBody {
     getBody() {
         return (
             <div className="mod-tip-modal">
-                <p>Are you sure you want to delete <em>{this.props.modal.data.name}</em></p>
+                <p>Are you sure you want to delete <em>{this.props.modal.data.name}</em>?</p>
             </div>
         )
     }

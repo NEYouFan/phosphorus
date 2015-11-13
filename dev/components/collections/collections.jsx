@@ -240,6 +240,7 @@ class Collections extends React.Component {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         switch (menuItem) {
+
             case 'Edit host':
                 return ModalAction.openEditCollHostModal(collection)
 
@@ -258,12 +259,20 @@ class Collections extends React.Component {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         switch (menuItem) {
+
             case 'Edit host':
                 return ModalAction.openEditFolderHostModal(Object.assign({
                     collectionId: collection.id
                 }, folder))
+
+            case 'Delete':
+                return ModalAction.openDeleteFolderModal(Object.assign({
+                    collectionId: collection.id
+                }, folder))
+
             default:
                 break
+
         }
 
     }

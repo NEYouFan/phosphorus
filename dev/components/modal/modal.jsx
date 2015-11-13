@@ -12,6 +12,7 @@ import LeavingDirtyTabModal from './leaving.dirty.tab.modal.jsx'
 import CreateCollectionModal from './create.collection.modal.jsx'
 import CreateFolderModal from './create.folder.modal.jsx'
 import DeleteCollectionModal from './deleting.collection.modal.jsx'
+import DeleteFolderModal from './deleting.folder.modal.jsx'
 
 class Modal extends React.Component {
 
@@ -70,6 +71,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_DELETE_COLLECTION:
                 return (
                     <DeleteCollectionModal modal={this.props.modal} />
+                )
+
+            case AppConstants.MODAL_DELETE_FOLDER:
+                return (
+                    <DeleteFolderModal modal={this.props.modal} />
                 )
 
             default:

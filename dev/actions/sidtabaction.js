@@ -64,6 +64,13 @@ class SideTabAction  {
         })
     }
 
+    static deleteFolder(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_DELETE_FOLDER,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

@@ -136,6 +136,17 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_DELETE_FOLDER:
+            actions.openModal({
+                type: AppConstants.MODAL_DELETE_FOLDER,
+                title: 'Are you sure?',
+                okText: 'Yes',
+                cancelText: 'No',
+                data: action.folder
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }
