@@ -29,6 +29,7 @@ class CreateCollection extends ModalBody {
                 <label>
                     <span>{this.state.nameLabel}</span>
                     <input
+                        value={this.state.name}
                         autoFocus="true"
                         type="text"
                         onChange={(e) => {this.onChangeName(e)}} />
@@ -36,6 +37,7 @@ class CreateCollection extends ModalBody {
                 <label>
                     <span>{this.state.descriptionLabel}</span>
                     <textarea
+                        value={this.state.description}
                         onChange={(e) => {this.onChangeDesc(e)}} />
                 </label>
             </div>
@@ -72,12 +74,21 @@ class CreateCollection extends ModalBody {
             })
         }
         this.doAction()
+        this.resetState()
     }
 
     doAction() {
         SideTabAction.createCollection({
             name: this.state.name,
             description: this.state.description
+        })
+    }
+
+    resetState() {
+        this.setState({
+            name: '',
+            description: '',
+            errorName: false
         })
     }
 
