@@ -4,7 +4,7 @@ import React from 'react'
 import classNames from 'classnames'
 import ModalAction from '../../actions/modalaction'
 
-class ModalBodyFactory extends React.Component {
+class ModalBody extends React.Component {
 
     render() {
         return (
@@ -39,11 +39,16 @@ class ModalBodyFactory extends React.Component {
     onClickOk(evt) {
         evt.preventDefault()
         this.close()
+        this.doAction()
     }
 
     close() {
         ModalAction.closeModal()
     }
+
+    doAction() {
+        // implements in subclass
+    }
 }
 
-export default ModalBodyFactory
+export default ModalBody

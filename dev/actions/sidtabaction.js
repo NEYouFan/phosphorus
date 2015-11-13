@@ -57,6 +57,13 @@ class SideTabAction  {
         })
     }
 
+    static deleteCollection(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_DELETE_COLLECTION,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

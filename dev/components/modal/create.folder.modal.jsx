@@ -14,7 +14,7 @@ class CreateFolder extends CreateCollection {
         super(props)
     }
 
-    doAction() {
+    create() {
         SideTabAction.createFolder({
             name: this.state.name,
             description: this.state.description,

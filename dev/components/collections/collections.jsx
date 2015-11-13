@@ -246,6 +246,9 @@ class Collections extends React.Component {
             case 'Add folder':
                 return ModalAction.openAddFolderModal(collection)
 
+            case 'Delete':
+                return ModalAction.openDeleteCollModal(collection)
+
             default:
                 break
         }

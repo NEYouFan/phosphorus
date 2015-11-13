@@ -54,8 +54,8 @@ let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 //let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = null
 let collectionsData = null
-let collectionActionMenus = ['Edit host', 'Add folder']
-let collectionFolderActionMenus = ['Edit host']
+let collectionActionMenus = ['Edit host', 'Add folder', 'Delete']
+let collectionFolderActionMenus = ['Edit host', 'Delete']
 
 let actions = {
 
@@ -181,12 +181,32 @@ let actions = {
             let collection = _.find(collectionsData, (c) => {
                 return c.id === options.collection.id
             })
-            collection.folders.push(item)//update ui
+            collection.folders.push(item)// update ui
 
             let savedCollection = _.find(savedCollections, (c) => {
                 return c.id === options.collection.id
             })
             savedCollection.folders = collection.folders
+            // update storage
+            StorageArea.set({'collections': savedCollections}, () => {
+                callback()
+            })
+        })
+    },
+
+    deleteCollection(options, callback) {
+        if (!options || !options.id) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            // update ui
+            _.remove(collectionsData, (c) => {
+                return c.id === options.id
+            })
+            _.remove(savedCollections, (c) => {
+                return c.id === options.id
+            })
             // update storage
             StorageArea.set({'collections': savedCollections}, () => {
                 callback()
@@ -264,6 +284,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_CREATE_FOLDER:
             actions.createFolder(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_DELETE_COLLECTION:
+            actions.deleteCollection(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

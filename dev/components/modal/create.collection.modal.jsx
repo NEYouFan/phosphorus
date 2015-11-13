@@ -58,26 +58,24 @@ class CreateCollection extends ModalBody {
     }
 
     onClickCancel(evt) {
-        evt.preventDefault()
-        this.close()
+        super.onClickCancel(evt)
         this.setState({
             errorName: false
         })
     }
 
-    onClickOk(evt) {
-        this.close()
+    doAction() {
         let name = this.state.name.trim()
         if (!name) {
             return this.setState({
                 errorName: true
             })
         }
-        this.doAction()
+        this.create()
         this.resetState()
     }
 
-    doAction() {
+    create() {
         SideTabAction.createCollection({
             name: this.state.name,
             description: this.state.description

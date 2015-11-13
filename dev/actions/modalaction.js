@@ -32,6 +32,13 @@ class ModalAction  {
         })
     }
 
+    static openDeleteCollModal(collection) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_DELETE_COLLECTION,
+            collection: collection
+        })
+    }
+
     static openEditFolderHostModal(folder) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_EDIT_FOLDER_HOST,
