@@ -25,6 +25,13 @@ class ModalAction  {
         })
     }
 
+    static openAddFolderModal(collection) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_CREATE_FOLDER,
+            collection: collection
+        })
+    }
+
     static openEditFolderHostModal(folder) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_EDIT_FOLDER_HOST,

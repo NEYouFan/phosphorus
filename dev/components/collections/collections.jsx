@@ -32,6 +32,11 @@ class Collections extends React.Component {
         let collectionNodes
         if (collections) {
             collectionNodes = collections.map((collection, index) => {
+                let collectionActionMenu = this.props.sideTab.actionMenus.collection
+                if (collection.isNEI) {
+                    // nei collection only can `edit host`
+                    collectionActionMenu = [collectionActionMenu[0]]
+                }
                 let collClasses = classNames({
                     'coll': true,
                     'coll-nei': collection.isNEI
@@ -85,6 +90,15 @@ class Collections extends React.Component {
                     )
                 })
                 let requestNum = collection.requests.length
+                if (!collection.folders.length && !requestNum) {
+                    foldersHeight = 40
+                    folderNodes =
+                        <div className="coll-folder">
+                            <div className="no-request-tip">
+                                Add requests to this collection and create folders to organize them.
+                            </div>
+                        </div>
+                }
                 return (
                     <div className={collClasses} key={index}>
                         <div className="coll-wrap"
@@ -123,7 +137,7 @@ class Collections extends React.Component {
                                 </div>
                             </div>
                             <DropDownMenu
-                                menus={this.props.sideTab.actionMenus.collection}
+                                menus={collectionActionMenu}
                                 onClickItem={(menuItem,e)=>{this.onClickCollectionMenuItem(menuItem,collection,e)}}
                                 />
                         </div>
@@ -160,6 +174,9 @@ class Collections extends React.Component {
         let isExpanded = nextSibling.classList.contains('expand')
         if (isExpanded) {
             nextSibling.style.height = nextSibling.dataset.height + 'px'
+            setTimeout(() => {
+                nextSibling.style.height = 'auto'
+            }, 500)
         } else {
             let nodes = nextSibling.parentNode.querySelectorAll('.coll-folder-wrap, .coll-reqs')
             _.forEach(nodes, (node) => {
@@ -184,7 +201,16 @@ class Collections extends React.Component {
         target.parentNode.parentNode.style.height = 'auto'
         nextSibling.classList.toggle('expand')
         let isExpanded = nextSibling.classList.contains('expand')
-        nextSibling.style.height = (isExpanded ? (nextSibling.dataset.height) : 0) + 'px'
+        nextSibling.style.height = nextSibling.dataset.height + 'px'
+        if (isExpanded) {
+            setTimeout(() => {
+                nextSibling.style.height = 'auto'
+            }, 500)
+        } else {
+            setTimeout(() => {
+                nextSibling.style.height = '0px'
+            }, 0)
+        }
         // hide action menu
         target.classList.remove('show-action-menu')
     }
@@ -216,6 +242,10 @@ class Collections extends React.Component {
         switch (menuItem) {
             case 'Edit host':
                 return ModalAction.openEditCollHostModal(collection)
+
+            case 'Add folder':
+                return ModalAction.openAddFolderModal(collection)
+
             default:
                 break
         }

@@ -116,6 +116,16 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_CREATE_FOLDER:
+            actions.openModal({
+                type: AppConstants.MODAL_CREATE_FOLDER,
+                title: `Add folder inside ${action.collection.name}`,
+                okText: 'Create',
+                data: action.collection
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }

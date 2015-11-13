@@ -27,6 +27,14 @@ const DEFAULT_COLLECTION = {
     folders: [],
     createTime: null
 }
+const DEFAULT_FOLDER = {
+    id: null,
+    name: null,
+    host: null,
+    description: null,
+    orders: [],
+    createTime: null
+}
 const DEFAULT_REQUEST = {
     collectionId: null,
     description: null,
@@ -46,7 +54,7 @@ let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 //let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = null
 let collectionsData = null
-let collectionActionMenus = ['Edit host']
+let collectionActionMenus = ['Edit host', 'Add folder']
 let collectionFolderActionMenus = ['Edit host']
 
 let actions = {
@@ -155,6 +163,35 @@ let actions = {
                 callback()
             })
         })
+    },
+
+    createFolder(options, callback) {
+        if (!options || !options.name) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            let item = Object.assign({}, DEFAULT_FOLDER, {
+                id: UUID.v1(),
+                name: options.name,
+                description: options.description,
+                orders: [],
+                createTime: Date.now()
+            })
+            let collection = _.find(collectionsData, (c) => {
+                return c.id === options.collection.id
+            })
+            collection.folders.push(item)//update ui
+
+            let savedCollection = _.find(savedCollections, (c) => {
+                return c.id === options.collection.id
+            })
+            savedCollection.folders = collection.folders
+            // update storage
+            StorageArea.set({'collections': savedCollections}, () => {
+                callback()
+            })
+        })
     }
 }
 
@@ -221,6 +258,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_CREATE_COLLECTION:
             actions.createCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_CREATE_FOLDER:
+            actions.createFolder(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

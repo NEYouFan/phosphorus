@@ -50,6 +50,13 @@ class SideTabAction  {
         })
     }
 
+    static createFolder(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_CREATE_FOLDER,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

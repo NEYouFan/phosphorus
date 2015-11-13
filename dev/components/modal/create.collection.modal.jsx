@@ -6,15 +6,17 @@ import classNames from 'classnames'
 import ModalBody from './modal.body.jsx'
 import SideTabAction from '../../actions/sidtabaction'
 
-class LeavingUnsavedTabModal extends ModalBody {
+class CreateCollection extends ModalBody {
 
     constructor(props) {
-        super(props)
-        this.state = {
+        super()
+        this.state = Object.assign({
             name: '',
+            nameLabel: 'Collection name',
             description: '',
+            descriptionLabel: 'Description',
             errorName: false
-        }
+        }, props)
     }
 
     getBody() {
@@ -25,14 +27,14 @@ class LeavingUnsavedTabModal extends ModalBody {
         return (
             <div className={classes}>
                 <label>
-                    <span>Name</span>
+                    <span>{this.state.nameLabel}</span>
                     <input
                         autoFocus="true"
                         type="text"
                         onChange={(e) => {this.onChangeName(e)}} />
                 </label>
                 <label>
-                    <span>Description</span>
+                    <span>{this.state.descriptionLabel}</span>
                     <textarea
                         onChange={(e) => {this.onChangeDesc(e)}} />
                 </label>
@@ -62,19 +64,23 @@ class LeavingUnsavedTabModal extends ModalBody {
     }
 
     onClickOk(evt) {
+        this.close()
         let name = this.state.name.trim()
         if (!name) {
             return this.setState({
                 errorName: true
             })
         }
+        this.doAction()
+    }
+
+    doAction() {
         SideTabAction.createCollection({
             name: this.state.name,
             description: this.state.description
         })
-        this.close()
     }
 
 }
 
-export default LeavingUnsavedTabModal
+export default CreateCollection

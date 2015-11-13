@@ -10,6 +10,7 @@ import EditFolderHost from './edit.folder.host.jsx'
 import TipModal from './tip.modal.jsx'
 import LeavingDirtyTabModal from './leaving.dirty.tab.modal.jsx'
 import CreateCollectionModal from './create.collection.modal.jsx'
+import CreateFolderModal from './create.folder.modal.jsx'
 
 class Modal extends React.Component {
 
@@ -58,6 +59,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_CREATE_COLLECTION:
                 return (
                     <CreateCollectionModal modal={this.props.modal} />
+                )
+
+            case AppConstants.MODAL_CREATE_FOLDER:
+                return (
+                    <CreateFolderModal modal={this.props.modal} />
                 )
 
             default:
