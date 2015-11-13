@@ -1,10 +1,10 @@
 //author @huntbao
 'use strict'
 
-import EditCollection from './edit.collection.jsx'
+import CreateCollection from './create.collection.jsx'
 import SideTabAction from '../../actions/sidtabaction'
 
-class EditFolder extends EditCollection {
+class EditFolder extends CreateCollection {
 
     doIt() {
         SideTabAction.editFolder({

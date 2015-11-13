@@ -42,52 +42,67 @@ class Modal extends React.Component {
         switch (this.props.modal.type) {
             case AppConstants.MODAL_EDIT_COLL_HOST:
                 return (
-                    <EditCollHost modal={this.props.modal} />
+                    <EditCollHost modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_EDIT_FOLDER_HOST:
                 return (
-                    <EditFolderHost modal={this.props.modal} />
+                    <EditFolderHost modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_SAVE_BLANK_URL_TIP:
                 return (
-                    <TipModal modal={this.props.modal} />
+                    <TipModal modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_LEAVING_DIRTY_TAB:
                 return (
-                    <LeavingDirtyTab modal={this.props.modal} />
+                    <LeavingDirtyTab modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_CREATE_COLLECTION:
                 return (
-                    <CreateCollection modal={this.props.modal} />
+                    <CreateCollection
+                        name=""
+                        description=""
+                        nameLabel="Collection name"
+                        modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_EDIT_COLLECTION:
                 return (
-                    <EditCollection modal={this.props.modal} />
+                    <EditCollection
+                        name={this.props.modal.data.name}
+                        description={this.props.modal.data.description}
+                        modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_CREATE_FOLDER:
                 return (
-                    <CreateFolder modal={this.props.modal} />
-                )
-
-            case AppConstants.MODAL_DELETE_COLLECTION:
-                return (
-                    <DeleteCollection modal={this.props.modal} />
+                    <CreateFolder
+                        name=""
+                        description=""
+                        nameLabel="Folder name"
+                        modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_EDIT_FOLDER:
                 return (
-                    <EditFolder modal={this.props.modal} />
+                    <EditFolder
+                        name={this.props.modal.data.name}
+                        description={this.props.modal.data.description}
+                        nameLabel="Folder name"
+                        modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_DELETE_COLLECTION:
+                return (
+                    <DeleteCollection modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_DELETE_FOLDER:
                 return (
-                    <DeleteFolder modal={this.props.modal} />
+                    <DeleteFolder modal={this.props.modal}/>
                 )
 
             default:

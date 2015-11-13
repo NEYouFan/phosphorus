@@ -11,9 +11,9 @@ class CreateCollection extends ModalBody {
     constructor(props) {
         super(props)
         this.state = Object.assign({
-            name: props.modal.data.name,
-            nameLabel: 'Collection name',
-            description: props.modal.data.description,
+            name: props.name,
+            nameLabel: props.nameLabel,
+            description: props.description,
             descriptionLabel: 'Description',
             errorName: false
         }, props)
