@@ -43,8 +43,8 @@ class SaveNewRequest extends CreateCollection {
                 return <option value={r.id} key={index}>{r.name}</option>
             })
             return (
-                <select onChange={(e)=>{this.onChangeColl(e)}} size={options.length}>
-                    <option>Select</option>
+                <select onChange={(e)=>{this.onChangeColl(e)}} size={options.length + 1}>
+                    <option value="">Select</option>
                     {options}
                 </select>
             )
@@ -82,16 +82,12 @@ class SaveNewRequest extends CreateCollection {
 
     onChangeColl(evt) {
         let values = evt.target.value.split('/')
-        if (values.length === 1) {
-            values = ['', '']
-        }
         this.setState({
             collectionId: values[0],
             folderId: values[1],
             errorCollName: false
         })
     }
-
 
     onChangeCollName(evt) {
         this.setState({

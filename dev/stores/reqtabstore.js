@@ -112,7 +112,6 @@ let actions = {
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
             requests[savedData.id] = savedData
-
             async.parallel([
                 (cb) => {
                     StorageArea.set({requests: requests}, () => {
@@ -122,12 +121,28 @@ let actions = {
                 },
                 // update request in collections
                 (cb) => {
-                    SideTabStore.updateActiveReqPath({
+                    SideTabStore.updateActiveReq({
                         path: savedData.url,
+                        method: savedData.method,
                         id: savedData.id
                     }, cb)
                 }
             ], (err) => {
+                callback()
+            })
+        })
+    },
+
+    deleteTabData(req, callback) {
+        if (!req || !req.id) {
+            return callback()
+        }
+        StorageArea.get('requests', (result) => {
+            let requests = result.requests || {}
+            _.remove(requests, (r) => {
+                return r.id === req.id
+            })
+            StorageArea.set({requests: requests}, () => {
                 callback()
             })
         })
@@ -165,6 +180,14 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
     setTabUrl(tabIndex, tabUrl) {
         let tab = tabs.items[tabIndex]
         tab.url = tabUrl
+    },
+
+    deleteTabData(req, callback) {
+        actions.deleteTabData(req, callback)
+    },
+
+    changeTab(tab) {
+        actions.changeTab(tab)
     },
 
     emitChange() {

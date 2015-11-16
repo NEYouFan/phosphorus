@@ -47,14 +47,14 @@ class Collections extends React.Component {
                     <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
                     <div className="coll-req-url" title={reqURL}>{displayName}</div>
                     <div className="coll-req-actions"
-                         onClick={(e)=>{this.toggleReqActionMenu(e, index)}}>
+                         onClick={(e)=>{this.toggleReqActionMenu(e)}}>
                         <div className="coll-req-actions-menus">
                             <em className="glyphicon glyphicon-option-horizontal"></em>
                         </div>
                     </div>
                     <DropDownMenu
                         menus={this.props.sideTab.actionMenus.request}
-                        onClickItem={(menuItem,e)=>{this.onClickReqMenuItem(menuItem,collection,e)}}
+                        onClickItem={(menuItem,e)=>{this.onClickReqMenuItem(menuItem,collection,req,e)}}
                         />
                 </div>
             )
@@ -92,7 +92,7 @@ class Collections extends React.Component {
                                 </div>
                                 <div className="coll-folder-name">{folder.name}</div>
                                 <div className="coll-folder-actions"
-                                     onClick={(e)=>{this.toggleFolderActionMenu(e, index)}}>
+                                     onClick={(e)=>{this.toggleFolderActionMenu(e)}}>
                                     <div className="coll-folder-actions-menus">
                                         <em className="glyphicon glyphicon-option-horizontal"></em>
                                     </div>
@@ -260,18 +260,18 @@ class Collections extends React.Component {
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
-    toggleFolderActionMenu(evt, index) {
+    toggleFolderActionMenu(evt) {
         evt.stopPropagation()
         let target = evt.currentTarget
         target.parentNode.classList.toggle('show-action-menu')
-        target.nextSibling.style.top = (106 + index * 40) + 'px'
+        target.nextSibling.style.top = (target.offsetTop + 30) + 'px'
     }
 
-    toggleReqActionMenu(evt, index) {
+    toggleReqActionMenu(evt) {
         evt.stopPropagation()
         let target = evt.currentTarget
         target.parentNode.classList.toggle('show-action-menu')
-        target.nextSibling.style.top = (98 + index * 40) + 'px'
+        target.nextSibling.style.top = (target.offsetTop + 26) + 'px'
     }
 
     onClickCollectionMenuItem(menuItem, collection, evt) {
@@ -320,22 +320,19 @@ class Collections extends React.Component {
 
     }
 
-    onClickReqMenuItem(menuItem, collection, evt) {
+    onClickReqMenuItem(menuItem, collection, req, evt) {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
         let data = Object.assign({
             collectionId: collection.id
-        }, folder)
+        }, req)
         switch (menuItem) {
 
-            case 'Edit host':
-                return ModalAction.openEditFolderHostModal(data)
-
             case 'Edit':
-                return ModalAction.openEditFolderModal(data)
+                return ModalAction.openEditReqModal(data)
 
             case 'Delete':
-                return ModalAction.openDeleteFolderModal(data)
+                return ModalAction.openDeleteReqModal(data)
 
             default:
                 break

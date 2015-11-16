@@ -4,16 +4,16 @@
 import EditCollection from './edit.collection.jsx'
 import SideTabAction from '../../actions/sidtabaction'
 
-class EditFolder extends EditCollection {
+class EditReq extends EditCollection {
 
     doIt() {
-        SideTabAction.editFolder({
+        SideTabAction.editRequest({
             name: this.state.name,
             description: this.state.description,
-            folder: this.props.modal.data
+            req: this.props.modal.data
         })
     }
 
 }
 
-export default EditFolder
+export default EditReq

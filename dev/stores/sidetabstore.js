@@ -3,6 +3,7 @@
 
 import Events from 'events'
 import _ from 'lodash'
+import async from 'async'
 import UUID from 'node-uuid'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
@@ -70,7 +71,7 @@ let actions = {
         if (collectionsData !== null) return
         //StorageArea.clear()
         //return
-        StorageArea.get(['hosts', 'collections'], (result) => {
+        StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
             console.log(result)
             let hosts = result.hosts || {}
             hosts.collections = hosts.collections || {}
@@ -203,7 +204,7 @@ let actions = {
         })
     },
 
-    __updateActiveReq(options, updateKey, callback){
+    updateActiveReq(options, callback){
         if (!options || !options.id) {
             return callback()
         }
@@ -216,7 +217,12 @@ let actions = {
                 })
             })
             // can update: path, url, name, description
-            storedReq[updateKey] = options[updateKey]
+            let updateFields = ['path', 'method']
+            updateFields.forEach((field) => {
+                if (options.hasOwnProperty(field)) {
+                    storedReq[field] = options[field]
+                }
+            })
             // update ui
             let req = null
             collectionsData.forEach((c) => {
@@ -224,15 +230,15 @@ let actions = {
                     return req.id === tabs.activeReqId
                 })
             })
-            req[updateKey] = req[updateKey]
+            updateFields.forEach((field) => {
+                if (options.hasOwnProperty(field)) {
+                    req[field] = options[field]
+                }
+            })
             StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
-    },
-
-    updateActiveReqPath(options, callback) {
-        this.__updateActiveReq(options, 'path', callback)
     },
 
     editCollection(options, callback) {
@@ -365,35 +371,112 @@ let actions = {
         if (!options || !options.collectionId && !options.id && !options.newCollName) {
             return callback()
         }
+        let addReq = (collectionId) => {
+            this.addReqToCollection({
+                method: options.tab.method,
+                name: options.name || options.tab.url,
+                description: options.description,
+                path: options.tab.url,
+                collectionId: collectionId,
+                folderId: options.folderId
+            }, (reqItem) => {
+                // change to new tab
+                options.tab.id = reqItem.id
+                options.tab.name = reqItem.name
+                options.tab.isDirty = false
+                ReqTabStore.changeTab(options.tab)
+                callback()
+            })
+        }
         if (options.newCollName) {
             // create a new collection
             this.createCollection({
                 name: options.newCollName,
                 description: ''
             }, (createdCollection) => {
-                this.addReqToCollection({
-                    method: options.tab.method,
-                    name: options.name || options.tab.url,
-                    description: options.description,
-                    path: options.tab.url,
-                    collectionId: createdCollection.id,
-                    folderId: null
-                }, () => {
-                    callback()
-                })
+                addReq(createdCollection.id)
             })
         } else {
-            this.addReqToCollection({
-                method: options.tab.method,
-                name: options.name || options.tab.url,
-                description: options.description,
-                path: options.tab.url,
-                collectionId: options.collectionId,
-                folderId: options.folderId
-            }, () => {
+            addReq(options.collectionId)
+        }
+    },
+
+    editRequest(options, callback) {
+        if (!options) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            let collection = _.find(collectionsData, (c) => {
+                return c.id === options.req.collectionId
+            })
+            let request = _.find(collection.requests, (r) => {
+                return r.id === options.req.id
+            })
+            Object.assign(request, {
+                name: options.name,
+                description: options.description
+            })
+            let savedCollection = _.find(savedCollections, (c) => {
+                return c.id === options.req.collectionId
+            })
+            let savedRequest = _.find(savedCollection.requests, (c) => {
+                return c.id === options.req.id
+            })
+            Object.assign(savedRequest, {
+                name: options.name,
+                description: options.description
+            })
+            StorageArea.set({'collections': savedCollections}, () => {
                 callback()
             })
+        })
+    },
+
+    deleteRequest(options, callback) {
+        if (!options || !options.id) {
+            return callback()
         }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            let collection = _.find(collectionsData, (c) => {
+                return c.id === options.collectionId
+            })
+            _.remove(collection.requests, (r) => {
+                return r.id === options.id
+            })
+            collection.folders.forEach((folder) => {
+                _.remove(folder.orders, (order) => {
+                    return order === options.id
+                })
+            })
+            let savedCollection = _.find(savedCollections, (c) => {
+                return c.id === options.collectionId
+            })
+            _.remove(savedCollection.requests, (c) => {
+                return c.id === options.id
+            })
+            savedCollection.folders.forEach((folder) => {
+                _.remove(folder.orders, (order) => {
+                    return order === options.id
+                })
+            })
+            async.parallel([
+                (cb) => {
+                    StorageArea.set({'collections': savedCollections}, () => {
+                        cb()
+                    })
+                },
+                // delete request in local store `requests`
+                (cb) => {
+                    ReqTabStore.deleteTabData({
+                        id: options.id
+                    }, cb)
+                }
+            ], (err) => {
+                callback()
+            })
+        })
     }
 }
 
@@ -420,8 +503,8 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
         })
     },
 
-    updateActiveReqPath(options, callback) {
-        actions.updateActiveReqPath(options, callback)
+    updateActiveReq(options, callback) {
+        actions.updateActiveReq(options, callback)
     },
 
     emitChange() {
@@ -507,6 +590,18 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_SAVE_NEW_REQUEST:
             actions.saveNewRequest(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_EDIT_REQUEST:
+            actions.editRequest(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_DELETE_REQUEST:
+            actions.deleteRequest(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

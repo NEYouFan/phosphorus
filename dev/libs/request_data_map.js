@@ -6,6 +6,7 @@ const REQUEST_DATA_MAP = {
     isNEI: 'is_nei',
     name: 'name',
     url: 'url',
+    method: 'method',
     paramKVs: {
         saveKey: 'url_params',
         requiredField: 'key',

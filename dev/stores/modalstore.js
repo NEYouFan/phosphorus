@@ -182,6 +182,27 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_EDIT_REQUEST:
+            actions.openModal({
+                type: AppConstants.MODAL_EDIT_REQUEST,
+                title: 'Edit request',
+                okText: 'Save',
+                data: action.req
+            })
+            ModalStore.emitChange()
+            break
+
+        case AppConstants.MODAL_DELETE_REQUEST:
+            actions.openModal({
+                type: AppConstants.MODAL_DELETE_REQUEST,
+                title: 'Are you sure?',
+                okText: 'Yes',
+                cancelText: 'No',
+                data: action.req
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }

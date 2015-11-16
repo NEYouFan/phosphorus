@@ -16,6 +16,8 @@ import DeleteCollection from './deleting.collection.jsx'
 import EditFolder from './edit.folder.jsx'
 import DeleteFolder from './deleting.folder.jsx'
 import SaveNewRequest from './save.new.request.jsx'
+import EditRequest from './edit.request.jsx'
+import DeletingRequest from './deleting.request.jsx'
 
 class Modal extends React.Component {
 
@@ -59,6 +61,20 @@ class Modal extends React.Component {
             case AppConstants.MODAL_SAVE_NEW_REQUEST:
                 return (
                     <SaveNewRequest modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_EDIT_REQUEST:
+                return (
+                    <EditRequest
+                        name={this.props.modal.data.name}
+                        description={this.props.modal.data.description}
+                        nameLabel="Request name"
+                        modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_DELETE_REQUEST:
+                return (
+                    <DeletingRequest modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_LEAVING_DIRTY_TAB:

@@ -92,6 +92,20 @@ class SideTabAction  {
         })
     }
 
+    static deleteRequest(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_DELETE_REQUEST,
+            options: options
+        })
+    }
+
+    static editRequest(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_EDIT_REQUEST,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

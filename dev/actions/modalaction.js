@@ -93,6 +93,20 @@ class ModalAction  {
         })
     }
 
+    static openEditReqModal(req) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_EDIT_REQUEST,
+            req: req
+        })
+    }
+
+    static openDeleteReqModal(req) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_DELETE_REQUEST,
+            req: req
+        })
+    }
+
 }
 
 export default ModalAction
