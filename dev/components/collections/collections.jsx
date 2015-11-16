@@ -30,6 +30,35 @@ class Collections extends React.Component {
         })
         let collections = this.props.sideTab.collections
         let collectionNodes
+        let getReqNode = (req, reqURL, collection, index) => {
+            let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
+            let classes = classNames({
+                'coll-req': true,
+                'active': this.props.sideTab.tabs.activeReqId === req.id
+            })
+            let displayName = req.name || reqURL
+            return (
+                <div
+                    key={index}
+                    onMouseLeave={(e)=>{this.onMouseLeaveReq(e)}}
+                    className={classes}
+                    onClick={(e)=>{this.onClickURL(reqURL,req.id,collection,e)}}
+                    >
+                    <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
+                    <div className="coll-req-url" title={reqURL}>{displayName}</div>
+                    <div className="coll-req-actions"
+                         onClick={(e)=>{this.toggleReqActionMenu(e, index)}}>
+                        <div className="coll-req-actions-menus">
+                            <em className="glyphicon glyphicon-option-horizontal"></em>
+                        </div>
+                    </div>
+                    <DropDownMenu
+                        menus={this.props.sideTab.actionMenus.request}
+                        onClickItem={(menuItem,e)=>{this.onClickReqMenuItem(menuItem,collection,e)}}
+                        />
+                </div>
+            )
+        }
         if (collections && collections.length) {
             collectionNodes = collections.map((collection, index) => {
                 let collectionActionMenu = this.props.sideTab.actionMenus.collection
@@ -48,20 +77,8 @@ class Collections extends React.Component {
                         let request = _.find(collection.requests, (req) => {
                             return req.id === reqId
                         })
-                        let methodClasses = 'coll-req-method method-' + request.method.toLowerCase()
-                        let classes = classNames({
-                            'coll-req': true,
-                            'active': this.props.sideTab.tabs.activeReqId === reqId
-                        })
                         let url = (folder.host || collection.host || '') + request.path
-                        let displayName = request.name || url
-                        return (
-                            <div className={classes} key={index}
-                                 onClick={(e)=>{this.onClickURL(url,reqId,collection,e)}}>
-                                <div className={methodClasses}>{this.getMethodUIName(request.method)}</div>
-                                <div className="coll-req-url" title={url}>{displayName}</div>
-                            </div>
-                        )
+                        return getReqNode(request, url, collection, index)
                     })
                     return (
                         <div className="coll-folder" key={index}>
@@ -74,7 +91,8 @@ class Collections extends React.Component {
                                     <span className="glyphicon glyphicon-folder-open"></span>
                                 </div>
                                 <div className="coll-folder-name">{folder.name}</div>
-                                <div className="coll-folder-actions" onClick={(e)=>{this.toggleFolderActionMenu(e, index)}}>
+                                <div className="coll-folder-actions"
+                                     onClick={(e)=>{this.toggleFolderActionMenu(e, index)}}>
                                     <div className="coll-folder-actions-menus">
                                         <em className="glyphicon glyphicon-option-horizontal"></em>
                                     </div>
@@ -95,20 +113,8 @@ class Collections extends React.Component {
                 if (notInFolderReqs.length) {
                     notInFolderReqNodes = notInFolderReqs.map((req, index) => {
                         foldersHeight += 30
-                        let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
-                        let classes = classNames({
-                            'coll-req': true,
-                            'active': this.props.sideTab.tabs.activeReqId === req.id
-                        })
                         let url = (collection.host || '') + req.path
-                        let displayName = req.name || url
-                        return (
-                            <div className={classes} key={index}
-                                 onClick={(e)=>{this.onClickURL(url,req.id,collection,e)}}>
-                                <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
-                                <div className="coll-req-url" title={url}>{displayName}</div>
-                            </div>
-                        )
+                        return getReqNode(req, url, collection, index)
                     })
                 }
                 let requestNum = collection.requests.length
@@ -261,6 +267,13 @@ class Collections extends React.Component {
         target.nextSibling.style.top = (106 + index * 40) + 'px'
     }
 
+    toggleReqActionMenu(evt, index) {
+        evt.stopPropagation()
+        let target = evt.currentTarget
+        target.parentNode.classList.toggle('show-action-menu')
+        target.nextSibling.style.top = (98 + index * 40) + 'px'
+    }
+
     onClickCollectionMenuItem(menuItem, collection, evt) {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
@@ -307,13 +320,43 @@ class Collections extends React.Component {
 
     }
 
+    onClickReqMenuItem(menuItem, collection, evt) {
+        evt.stopPropagation()
+        evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
+        let data = Object.assign({
+            collectionId: collection.id
+        }, folder)
+        switch (menuItem) {
+
+            case 'Edit host':
+                return ModalAction.openEditFolderHostModal(data)
+
+            case 'Edit':
+                return ModalAction.openEditFolderModal(data)
+
+            case 'Delete':
+                return ModalAction.openDeleteFolderModal(data)
+
+            default:
+                break
+
+        }
+
+    }
+
     onMouseLeaveFolder(evt) {
         evt.stopPropagation()
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
+    onMouseLeaveReq(evt) {
+        evt.stopPropagation()
+        evt.currentTarget.classList.remove('show-action-menu')
+    }
+
     onClickURL(url, reqId, collection, evt) {
-        if (evt.currentTarget.classList.contains('active')) return
+        let target = evt.currentTarget
+        if (target.classList.contains('active')) return
         let request = _.find(collection.requests, (req) => {
             return req.id === reqId
         })

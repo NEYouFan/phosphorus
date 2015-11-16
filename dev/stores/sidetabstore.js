@@ -56,7 +56,8 @@ let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 let historyData = null
 let collectionsData = null
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Delete']
-let collectionFolderActionMenus = ['Edit host', 'Edit', 'Delete']
+let folderActionMenus = ['Edit host', 'Edit', 'Delete']
+let reqActionMenus = ['Edit', 'Delete']
 
 let actions = {
 
@@ -406,7 +407,8 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
                 collections: collectionsData,
                 actionMenus: {
                     collection: collectionActionMenus,
-                    folder: collectionFolderActionMenus
+                    folder: folderActionMenus,
+                    request: reqActionMenus
                 }
             }
         }

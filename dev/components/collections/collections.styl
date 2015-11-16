@@ -24,6 +24,7 @@
     margin: 0 0 0 2px
   }
 }
+
 .mod-collections {
   overflow-y: auto;
   overflow-x: hidden;
@@ -105,7 +106,8 @@
     }
 
     &-actions,
-    &-folder-actions {
+    &-folder-actions,
+    &-req-actions {
 
       opacity 0
       transition all ease .3s;
@@ -119,6 +121,7 @@
         border: 1px solid #ccc
         border-radius 50%;
         text-align: center
+        cursor: pointer
         color: #4c4c4c
         transition all ease .3s;
 
@@ -261,6 +264,10 @@
 
       &:hover {
         background-color: #e8f2fe
+
+        .coll-req-actions {
+          opacity: 1
+        }
       }
 
       &.active {
@@ -271,6 +278,14 @@
 
         .coll-req-method {
           color: #fff
+        }
+
+        .coll-req-actions {
+          color: #fff
+          .coll-req-actions-menus {
+            border-color: #fff;
+            color: #fff;
+          }
         }
       }
 
@@ -287,6 +302,39 @@
         white-space: nowrap
         text-overflow ellipsis
         overflow: hidden
+      }
+
+      .mod-dropdown-menu {
+        position: absolute
+        right: 21px;
+        opacity: 0
+        transition opacity ease .2s
+        pointer-events none
+        font-weight: normal
+      }
+
+      &.show-action-menu {
+        .mod-dropdown-menu {
+          opacity: 1
+          pointer-events auto
+        }
+      }
+      .coll-req-actions {
+        .coll-req-actions-menus {
+          width: 20px;
+          height: 20px;
+          line-height: 20px
+          font-size: 12px;
+          margin: 4px 0 0;
+
+          .glyphicon-option-horizontal {
+            margin-top: 4px
+          }
+        }
+      }
+
+      .coll-req-url {
+        width: 214px
       }
     }
 
