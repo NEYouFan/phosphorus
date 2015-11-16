@@ -202,6 +202,38 @@ let actions = {
         })
     },
 
+    __updateActiveReq(options, updateKey, callback){
+        if (!options || !options.id) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            let storedReq = null
+            collections.forEach((c) => {
+                storedReq = _.find(c.requests, (req) => {
+                    return req.id === tabs.activeReqId
+                })
+            })
+            // can update: path, url, name, description
+            storedReq[updateKey] = options[updateKey]
+            // update ui
+            let req = null
+            collectionsData.forEach((c) => {
+                req = _.find(c.requests, (req) => {
+                    return req.id === tabs.activeReqId
+                })
+            })
+            req[updateKey] = req[updateKey]
+            StorageArea.set({'collections': collections}, () => {
+                callback()
+            })
+        })
+    },
+
+    updateActiveReqPath(options, callback) {
+        this.__updateActiveReq(options, 'path', callback)
+    },
+
     editCollection(options, callback) {
         if (!options || !options.name) {
             return callback()
@@ -384,6 +416,10 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
         return collectionsData.filter((c) => {
             return !c.isNEI
         })
+    },
+
+    updateActiveReqPath(options, callback) {
+        actions.updateActiveReqPath(options, callback)
     },
 
     emitChange() {

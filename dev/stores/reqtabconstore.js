@@ -214,7 +214,7 @@ let tabConActions = {
             console.log(savedRequest)
             this.__dealRequest(request, dataSource, savedRequest, newTabCon)
             tabCons.items[tabIndex] = newTabCon
-            //paramActions.updateTabUrl()
+            paramActions.updateTabUrl()
             paramActions.fillURLParams(savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey])
             // change editor mode by bodyType
             let rawType = _.find(tabCons.rawTypes, (rawType) => {
@@ -305,6 +305,7 @@ let tabConActions = {
                         }
                     }
                 })
+                builders.bodyRawDataOriginal = builders.bodyRawData
             }
         }
 

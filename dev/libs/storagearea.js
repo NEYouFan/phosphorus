@@ -42,6 +42,7 @@ class StorageArea {
  *          },
  *      },
  *
+ *      // this is request data, request's meta data is in the collections
  *      requests: {
  *          request_id: {
  *              // it's fields are declared in request_data_map.js

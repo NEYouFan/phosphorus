@@ -3,10 +3,12 @@
 
 import Events from 'events'
 import _ from 'lodash'
+import async from 'async'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import RequestDataMap from '../libs/request_data_map'
 import ReqTabConStore from './reqtabconstore'
+import SideTabStore from './sidetabstore'
 import StorageArea from '../libs/storagearea'
 
 const CHANGE_EVENT = 'change'
@@ -55,8 +57,7 @@ let actions = {
         let tab = tabs.items[tabs.activeIndex]
         // just for save check
         if (!tab.url) {
-            callback()
-            return
+            return callback()
         }
         let tabCon = ReqTabConStore.getCurrentCon().builders
         let savedData = {}
@@ -107,21 +108,29 @@ let actions = {
         }
         // save to local storage
         console.log(savedData)
-        if (savedData.id) {
-            // already have id, directly save it
-            StorageArea.get('requests', (result) => {
-                let requests = result.requests || {}
-                requests[savedData.id] = savedData
-                StorageArea.set({requests: requests}, () => {
-                    tab.isDirty = false
-                    callback()
-                })
+        // already have id, directly save it
+        StorageArea.get('requests', (result) => {
+            let requests = result.requests || {}
+            requests[savedData.id] = savedData
+
+            async.parallel([
+                (cb) => {
+                    StorageArea.set({requests: requests}, () => {
+                        tab.isDirty = false
+                        cb()
+                    })
+                },
+                // update request in collections
+                (cb) => {
+                    SideTabStore.updateActiveReqPath({
+                        path: savedData.url,
+                        id: savedData.id
+                    }, cb)
+                }
+            ], (err) => {
+                callback()
             })
-        } else {
-            // popup, select folder or create collect/folder to save it
-            //tab.isDirty = false
-            callback()
-        }
+        })
     }
 }
 
