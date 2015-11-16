@@ -53,7 +53,7 @@ class Collections extends React.Component {
                             'coll-req': true,
                             'active': this.props.sideTab.tabs.activeReqId === reqId
                         })
-                        let url = (folder.host || collection.host) + request.path
+                        let url = (folder.host || collection.host || '') + request.path
                         let displayName = request.name || url
                         return (
                             <div className={classes} key={index}
@@ -88,6 +88,29 @@ class Collections extends React.Component {
                         </div>
                     )
                 })
+                let notInFolderReqs = collection.requests.filter((req) => {
+                    return !req.folderId
+                })
+                let notInFolderReqNodes
+                if (notInFolderReqs.length) {
+                    notInFolderReqNodes = notInFolderReqs.map((req, index) => {
+                        foldersHeight += 30
+                        let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
+                        let classes = classNames({
+                            'coll-req': true,
+                            'active': this.props.sideTab.tabs.activeReqId === req.id
+                        })
+                        let url = (collection.host || '') + req.path
+                        let displayName = req.name || url
+                        return (
+                            <div className={classes} key={index}
+                                 onClick={(e)=>{this.onClickURL(url,req.id,collection,e)}}>
+                                <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
+                                <div className="coll-req-url" title={url}>{displayName}</div>
+                            </div>
+                        )
+                    })
+                }
                 let requestNum = collection.requests.length
                 if (!collection.folders.length && !requestNum) {
                     foldersHeight = 40
@@ -138,7 +161,10 @@ class Collections extends React.Component {
                                 onClickItem={(menuItem,e)=>{this.onClickCollectionMenuItem(menuItem,collection,e)}}
                                 />
                         </div>
-                        <div className="coll-folders" data-height={foldersHeight}>{folderNodes}</div>
+                        <div className="coll-folders" data-height={foldersHeight}>
+                            {folderNodes}
+                            {notInFolderReqNodes}
+                        </div>
                     </div>
                 )
             })

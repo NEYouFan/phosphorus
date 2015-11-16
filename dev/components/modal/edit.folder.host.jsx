@@ -15,6 +15,7 @@ class EditFolderHost extends EditCollHost {
     }
 
     doAction() {
+        this.close()
         SideTabAction.changeFolderHost(this.props.modal.data, this.state.host)
     }
 

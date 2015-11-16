@@ -38,7 +38,6 @@ class ModalBody extends React.Component {
 
     onClickOk(evt) {
         evt.preventDefault()
-        this.close()
         this.doAction()
     }
 
@@ -47,6 +46,7 @@ class ModalBody extends React.Component {
     }
 
     doAction() {
+        this.close()
         // implements in subclass
     }
 }

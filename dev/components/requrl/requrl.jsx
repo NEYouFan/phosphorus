@@ -99,6 +99,9 @@ class ReqURL extends React.Component {
         if(!this.props.tab.url.trim()) {
             return ModalAction.openSavingBlankURLTip()
         }
+        if(!this.props.tab.id) {
+            return ModalAction.openSavingNewURL(this.props.tab)
+        }
         ReqTabAction.saveTab()
     }
 

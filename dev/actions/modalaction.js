@@ -59,6 +59,13 @@ class ModalAction  {
         })
     }
 
+    static openSavingNewURL(tab) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_SAVE_NEW_REQUEST,
+            tab: tab
+        })
+    }
+
     static openLeavingDirtyTab(data) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_LEAVING_DIRTY_TAB,

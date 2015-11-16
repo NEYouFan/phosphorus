@@ -85,6 +85,13 @@ class SideTabAction  {
         })
     }
 
+    static saveRequest(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_SAVE_NEW_REQUEST,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

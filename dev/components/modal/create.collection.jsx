@@ -71,6 +71,7 @@ class CreateCollection extends ModalBody {
                 errorName: true
             })
         }
+        this.close()
         this.doIt()
         this.resetState()
     }

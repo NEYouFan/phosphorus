@@ -92,21 +92,14 @@ let actions = {
             savedData.res_checker_data = null
         } else {
             let refineData = (data) => {
-                let result = data.value.map((item) => {
-                    if (item.key) {
-                        return {
-                            key: item.key,
-                            checked: item.checked,
-                            value: refineData(item),
-                            'value_type': item.valueType
-                        }
+                return data.value.map((item) => {
+                    return {
+                        key: item.key,
+                        checked: item.checked,
+                        value: refineData(item),
+                        'value_type': item.valueType
                     }
                 })
-                // remove null elements
-                result = result.filter((item) => {
-                    return item
-                })
-                return result
             }
             savedData.res_checker_data.forEach((item) => {
                 item.value = refineData(item)
@@ -126,7 +119,7 @@ let actions = {
             })
         } else {
             // popup, select folder or create collect/folder to save it
-            tab.isDirty = false
+            //tab.isDirty = false
             callback()
         }
     }

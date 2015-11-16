@@ -13,6 +13,7 @@
     }
 
     input,
+    select,
     textarea {
       width: 400px
       border: 1px solid #ccc
@@ -31,10 +32,23 @@
       height: 80px
       resize: vertical
     }
+
+    select {
+      font-size: 12px
+      max-height: 200px
+      width: 414px
+    }
   }
 
   &.error-name {
     input {
+      box-shadow: 0 0 5px #ff5a19;
+      border-color #ff5a19
+    }
+  }
+
+  &.error-coll-name {
+    input.new-coll-name {
       box-shadow: 0 0 5px #ff5a19;
       border-color #ff5a19
     }

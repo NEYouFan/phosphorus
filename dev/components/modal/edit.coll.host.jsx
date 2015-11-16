@@ -47,6 +47,7 @@ class EditCollHost extends ModalBody {
     }
 
     doAction() {
+        this.close()
         SideTabAction.changeCollHost(this.props.modal.data, this.state.host)
     }
 

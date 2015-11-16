@@ -14,6 +14,7 @@ class DeletingCollection extends ModalBody {
     }
 
     doAction() {
+        this.close()
         SideTabAction.deleteCollection(this.props.modal.data)
     }
 

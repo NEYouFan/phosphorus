@@ -17,6 +17,7 @@ class LeavingUnsavedTab extends ModalBody {
     }
 
     doAction(evt) {
+        this.close()
         let data = this.props.modal.data
         SideTabAction.changeActiveReqId(data.reqId)
         ReqTabAction.changeTab(data.tab)

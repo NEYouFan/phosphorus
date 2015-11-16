@@ -5,6 +5,7 @@ import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import Events from 'events'
 import Util from '../libs/util'
+import SideTabStore from './sidetabstore'
 
 const CHANGE_EVENT = 'change'
 
@@ -91,6 +92,19 @@ AppDispatcher.register((action) => {
                 title: 'Tips',
                 data: {
                     tip: 'Please input your request url if you want to save this request.'
+                }
+            })
+            ModalStore.emitChange()
+            break
+
+        case AppConstants.MODAL_SAVE_NEW_REQUEST:
+            actions.openModal({
+                type: AppConstants.MODAL_SAVE_NEW_REQUEST,
+                title: 'Add request to a collection',
+                okText: 'Add to collection',
+                data: {
+                    collections: SideTabStore.getCollections(),
+                    tab: action.tab
                 }
             })
             ModalStore.emitChange()

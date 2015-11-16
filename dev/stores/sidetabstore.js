@@ -42,6 +42,7 @@ const DEFAULT_REQUEST = {
     id: null,
     method: null,
     name: null,
+    host: null,
     path: null
 }
 
@@ -160,7 +161,43 @@ let actions = {
             collections.push(item)
             StorageArea.set({'collections': collections}, () => {
                 collectionsData.push(item)
-                callback()
+                callback(item)
+            })
+        })
+    },
+
+    addReqToCollection(options, callback) {
+        if (!options || !options.name) {
+            return callback()
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            let storedCollection = _.find(collections, (c) => {
+                return c.id === options.collectionId
+            })
+            let reqItem = Object.assign({}, DEFAULT_REQUEST, {
+                id: UUID.v1(),
+                method: options.method,
+                name: options.name,
+                description: options.description,
+                path: options.path,
+                collectionId: options.collectionId,
+                folderId: options.folderId
+            })
+            if (options.folderId) {
+                let folder = _.find(storedCollection.folders, (f) => {
+                    return f.id === options.folderId
+                })
+                folder.orders.push(reqItem.id)
+            }
+            storedCollection.requests.push(reqItem)
+            // update ui
+            let collection = _.find(collectionsData, (c) => {
+                return c.id === options.collectionId
+            })
+            collection.requests.push(reqItem)
+            StorageArea.set({'collections': collections}, () => {
+                callback(reqItem)
             })
         })
     },
@@ -289,6 +326,41 @@ let actions = {
                 callback()
             })
         })
+    },
+
+    saveNewRequest(options, callback) {
+        if (!options || !options.collectionId && !options.id && !options.newCollName) {
+            return callback()
+        }
+        if (options.newCollName) {
+            // create a new collection
+            this.createCollection({
+                name: options.newCollName,
+                description: ''
+            }, (createdCollection) => {
+                this.addReqToCollection({
+                    method: options.tab.method,
+                    name: options.name || options.tab.url,
+                    description: options.description,
+                    path: options.tab.url,
+                    collectionId: createdCollection.id,
+                    folderId: null
+                }, () => {
+                    callback()
+                })
+            })
+        } else {
+            this.addReqToCollection({
+                method: options.tab.method,
+                name: options.name || options.tab.url,
+                description: options.description,
+                path: options.tab.url,
+                collectionId: options.collectionId,
+                folderId: options.folderId
+            }, () => {
+                callback()
+            })
+        }
     }
 }
 
@@ -306,6 +378,12 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
                 }
             }
         }
+    },
+
+    getCollections() {
+        return collectionsData.filter((c) => {
+            return !c.isNEI
+        })
     },
 
     emitChange() {
@@ -385,6 +463,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_DELETE_FOLDER:
             actions.deleteFolder(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_SAVE_NEW_REQUEST:
+            actions.saveNewRequest(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

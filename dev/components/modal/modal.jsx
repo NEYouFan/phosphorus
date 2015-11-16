@@ -15,6 +15,7 @@ import CreateFolder from './create.folder.jsx'
 import DeleteCollection from './deleting.collection.jsx'
 import EditFolder from './edit.folder.jsx'
 import DeleteFolder from './deleting.folder.jsx'
+import SaveNewRequest from './save.new.request.jsx'
 
 class Modal extends React.Component {
 
@@ -53,6 +54,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_SAVE_BLANK_URL_TIP:
                 return (
                     <Tip modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_SAVE_NEW_REQUEST:
+                return (
+                    <SaveNewRequest modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_LEAVING_DIRTY_TAB:
