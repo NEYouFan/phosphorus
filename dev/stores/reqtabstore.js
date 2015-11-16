@@ -53,7 +53,7 @@ let actions = {
         tab.isDirty = true
     },
 
-    saveTab(callback) {
+    saveTabToLocal(callback) {
         let tab = tabs.items[tabs.activeIndex]
         // just for save check
         if (!tab.url) {
@@ -112,23 +112,9 @@ let actions = {
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
             requests[savedData.id] = savedData
-            async.parallel([
-                (cb) => {
-                    StorageArea.set({requests: requests}, () => {
-                        tab.isDirty = false
-                        cb()
-                    })
-                },
-                // update request in collections
-                (cb) => {
-                    SideTabStore.updateActiveReq({
-                        path: savedData.url,
-                        method: savedData.method,
-                        id: savedData.id
-                    }, cb)
-                }
-            ], (err) => {
-                callback()
+            StorageArea.set({requests: requests}, () => {
+                tab.isDirty = false
+                callback(savedData)
             })
         })
     },
@@ -139,9 +125,7 @@ let actions = {
         }
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
-            _.remove(requests, (r) => {
-                return r.id === req.id
-            })
+            delete requests[req.id]
             StorageArea.set({requests: requests}, () => {
                 callback()
             })
@@ -190,6 +174,10 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
         actions.changeTab(tab)
     },
 
+    saveTabToLocal(callback) {
+        actions.saveTabToLocal(callback)
+    },
+
     emitChange() {
         this.emit(CHANGE_EVENT)
     },
@@ -232,7 +220,20 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_TAB_SAVE:
-            actions.saveTab(() => {
+            async.waterfall([
+                (cb) => {
+                    actions.saveTabToLocal((savedData) => {
+                        cb(null, savedData)
+                    })
+                },
+                (savedData, cb) => {
+                    SideTabStore.updateActiveReq({
+                        path: savedData.url,
+                        method: savedData.method,
+                        id: savedData.id
+                    }, cb)
+                }
+            ], (err) => {
                 ReqTabStore.emitChange()
             })
             break

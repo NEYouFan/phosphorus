@@ -385,7 +385,8 @@ let actions = {
                 options.tab.name = reqItem.name
                 options.tab.isDirty = false
                 ReqTabStore.changeTab(options.tab)
-                callback()
+                // add request to local store
+                ReqTabStore.saveTabToLocal(callback)
             })
         }
         if (options.newCollName) {
@@ -464,14 +465,16 @@ let actions = {
             async.parallel([
                 (cb) => {
                     StorageArea.set({'collections': savedCollections}, () => {
-                        cb()
+                        cb(null)
                     })
                 },
                 // delete request in local store `requests`
                 (cb) => {
                     ReqTabStore.deleteTabData({
                         id: options.id
-                    }, cb)
+                    }, () => {
+                        cb(null)
+                    })
                 }
             ], (err) => {
                 callback()

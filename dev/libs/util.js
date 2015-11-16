@@ -30,7 +30,7 @@ let Util = {
         d = f(d)
         mu = f(mu)
         s = f(s)
-        return y + '-' + m + '-' + d
+        return y + '-' + m + '-' + d + ' ' + h + ':' + mu
     },
 
     getUrlParams(url) {

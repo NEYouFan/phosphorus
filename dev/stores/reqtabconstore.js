@@ -386,7 +386,7 @@ let tabConActions = {
             let builders = tabCons.items[tabIndex].builders
             builders.reqStatus = REQ_SENDING
             tabConActions.switchBuilderTab(RESPONSE_STR)
-            // clear previous data
+            // clear previous fetched data
             builders.fetchResponse = null
             builders.fetchResponseRawData = null
             builders.fetchResponseData = null

@@ -57,10 +57,6 @@ class ReqBuilderURLParams extends React.Component {
         ReqURLParamsAction.removeURLParamsKV(rowIndex)
     }
 
-    editURLParamsKV() {
-        ReqURLParamsAction.editURLParamsKV()
-    }
-
     changeURLParamsKVKey(rowIndex, value) {
         ReqURLParamsAction.changeURLParamsKVKey(rowIndex, value)
         ReqTabAction.setDirtyTab()
