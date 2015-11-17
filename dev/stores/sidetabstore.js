@@ -113,7 +113,7 @@ let actions = {
                         })
                         // the active request is in the folder which has been changed host
                         // should change tab url's host
-                        activeTab.url = Util.replaceURLHost(activeTab.url, folder.host || host)
+                        activeTab.url = Util.replaceURLHost(activeTab.url, folder && folder.host || host)
                     }
                 }
                 callback()
