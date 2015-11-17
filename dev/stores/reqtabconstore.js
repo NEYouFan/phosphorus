@@ -227,7 +227,7 @@ let tabConActions = {
 
     __dealRequest(request, dataSource, savedRequest, newTabCon) {
         let builders = newTabCon.builders
-        let tabUrl = request.path
+        let tabUrl = request.url
         if (request.isNEI) {
             tabCons.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = true
@@ -299,7 +299,7 @@ let tabConActions = {
                         param.value = foundSavedPV.value
                     }
                 })
-                tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
+                tabUrl = Util.getURLByQueryParams(request.url, builders.paramKVs)
             }
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {

@@ -374,6 +374,7 @@ class Collections extends React.Component {
         let request = _.find(collection.requests, (req) => {
             return req.id === reqId
         })
+        request.url = url
         // check if tab is dirty
         let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
         if (activeReqTab.isDirty) {

@@ -77,6 +77,12 @@ let actions = {
             hosts.collections = hosts.collections || {}
             hosts.folders = hosts.folders || {}
             collectionsData = result.collections || []
+            collectionsData.forEach((c) => {
+                c.host = hosts.collections[c.id]
+                c.folders.forEach((f) => {
+                    f.host = hosts.folders[f.id]
+                })
+            })
             callback()
             //Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
             //    collectionsData.unshift(...collections)
