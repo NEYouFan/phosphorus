@@ -134,6 +134,17 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_IMPORT_COLLECTION:
+            actions.openModal({
+                type: AppConstants.MODAL_IMPORT_COLLECTION,
+                title: 'Import collection from NEI',
+                okText: 'Import',
+                cancelText: 'Cancel',
+                data: {}
+            })
+            ModalStore.emitChange()
+            break
+
         case AppConstants.MODAL_EDIT_COLLECTION:
             actions.openModal({
                 type: AppConstants.MODAL_EDIT_COLLECTION,

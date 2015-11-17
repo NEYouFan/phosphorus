@@ -5,17 +5,19 @@
   color: #ccc
   text-align: right
   border-bottom 1px solid #ccc
-  transition all ease .3s
 
   .icon-wrap {
     cursor: pointer
+    margin: 0 0 0 12px
+    transition all ease .3s
+
+    &:hover {
+      color: #666
+    }
   }
 
-  &:hover {
-    color: #666
-  }
-
-  .glyphicon-briefcase {
+  .glyphicon-briefcase,
+  .glyphicon-import {
     font-size: 20px
   }
 

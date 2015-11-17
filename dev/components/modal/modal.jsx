@@ -10,6 +10,7 @@ import EditFolderHost from './edit.folder.host.jsx'
 import Tip from './tip.jsx'
 import LeavingDirtyTab from './leaving.dirty.tab.jsx'
 import CreateCollection from './create.collection.jsx'
+import ImportCollection from './import.collection.jsx'
 import EditCollection from './edit.collection.jsx'
 import CreateFolder from './create.folder.jsx'
 import DeleteCollection from './deleting.collection.jsx'
@@ -95,6 +96,11 @@ class Modal extends React.Component {
                         description=""
                         nameLabel="Collection name"
                         modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_IMPORT_COLLECTION:
+                return (
+                    <ImportCollection modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_EDIT_COLLECTION:

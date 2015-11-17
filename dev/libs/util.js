@@ -22,9 +22,11 @@ let Util = {
         let h = date.getHours()
         let mu = date.getMinutes()
         let s = date.getSeconds()
+
         function f(ff) {
             return ff < 10 ? '0' + ff : ff
         }
+
         m = f(m)
         h = f(h)
         d = f(d)
@@ -238,6 +240,57 @@ let Util = {
             return res.json()
         }).then((json) => {
             getDetail(json.result)
+        })
+    },
+
+    fetchNEIProject(neiServerUrl, pId, callback) {
+        let projectUrl = neiServerUrl + '/api/projectView/getByProjectId?pid='
+        let fetchOptions = {
+            credentials: 'include',
+            method: 'POST'
+        }
+        let methodMap = {
+            0: 'POST',
+            1: 'GET',
+            2: 'PUT',
+            3: 'DELETE',
+            4: 'HEAD'
+        }
+        let res
+        let collection
+        let convertDataAndReturn = (project) => {
+            collection = {
+                id: pId,
+                isNEI: true,
+                host: '',
+                name: project.project.name,
+                attributes: project.attributes,
+                datatypes: project.datatypes,
+                folders: [],
+                requests: []
+            }
+            project.interfaces.forEach((inter) => {
+                let request = {
+                    id: inter.id,
+                    isNEI: true,
+                    path: inter.path,
+                    method: methodMap[inter.method],
+                    isRest: !!inter.isRest,
+                    name: inter.name,
+                    description: inter.description,
+                    inputs: inter.inputs,
+                    outputs: inter.outputs,
+                    folderId: null,
+                    collectionId: collection.id
+                }
+                collection.requests.push(request)
+            })
+            callback(collection, res)
+        }
+        fetch(projectUrl + pId, fetchOptions).then((response) => {
+            return response.json()
+        }).then((json) => {
+            convertDataAndReturn(json.result)
         })
     },
 

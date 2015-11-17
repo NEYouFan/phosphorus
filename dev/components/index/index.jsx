@@ -51,7 +51,7 @@ class Index extends React.Component {
         ReqTabConStore.addAceEditorUpdateListener(()=> {
             this.updateAceEditor()
         })
-        SideTabAction.fetchCollections()
+        SideTabAction.getCollections()
     }
 
     componentWillUnmount() {

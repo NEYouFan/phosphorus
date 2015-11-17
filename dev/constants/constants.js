@@ -6,11 +6,12 @@ import keyMirror from 'keymirror'
 let AppConstants = keyMirror({
     // side tab action
     SIDE_TAB_CHANGE_ACTIVE_NAME: null,
-    SIDE_TAB_FETCH_COLLECTIONS: null,
+    SIDE_TAB_GET_COLLECTIONS: null,
     SIDE_CHANGE_COLL_HOST: null,
     SIDE_CHANGE_FOLDER_HOST: null,
     SIDE_CHANGE_ACTIVE_REQ_ID: null,
     SIDE_CREATE_COLLECTION: null,
+    SIDE_IMPORT_COLLECTION: null,
     SIDE_EDIT_COLLECTION: null,
     SIDE_CREATE_FOLDER: null,
     SIDE_DELETE_COLLECTION: null,
@@ -94,6 +95,7 @@ let AppConstants = keyMirror({
     MODAL_SAVE_NEW_REQUEST: null,
     MODAL_LEAVING_DIRTY_TAB: null,
     MODAL_CREATE_COLLECTION: null,
+    MODAL_IMPORT_COLLECTION: null,
     MODAL_DELETE_COLLECTION: null,
     MODAL_CREATE_FOLDER: null,
     MODAL_EDIT_FOLDER: null,

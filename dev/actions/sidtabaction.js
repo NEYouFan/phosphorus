@@ -13,10 +13,10 @@ class SideTabAction  {
         })
     }
 
-    static fetchCollections() {
-        // fetch collections from nei
+    static getCollections() {
+        // get collections from local storage
         AppDispatcher.dispatch({
-            actionType: AppConstants.SIDE_TAB_FETCH_COLLECTIONS
+            actionType: AppConstants.SIDE_TAB_GET_COLLECTIONS
         })
     }
 
@@ -46,6 +46,13 @@ class SideTabAction  {
     static createCollection(options) {
         AppDispatcher.dispatch({
             actionType: AppConstants.SIDE_CREATE_COLLECTION,
+            options: options
+        })
+    }
+
+    static importCollection(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_IMPORT_COLLECTION,
             options: options
         })
     }

@@ -66,9 +66,9 @@ let actions = {
         tabs.activeTabName = activeTabName
     },
 
-    fetchCollections(callback) {
+    getCollections(callback) {
         // already fetched
-        if (collectionsData !== null) return
+        //if (collectionsData !== null) return
         //StorageArea.clear()
         //return
         StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
@@ -77,10 +77,11 @@ let actions = {
             hosts.collections = hosts.collections || {}
             hosts.folders = hosts.folders || {}
             collectionsData = result.collections || []
-            Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
-                collectionsData.unshift(...collections)
-                callback()
-            })
+            callback()
+            //Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
+            //    collectionsData.unshift(...collections)
+            //    callback()
+            //})
         })
     },
 
@@ -167,6 +168,25 @@ let actions = {
             dealData(collectionsData, item)
             StorageArea.set({'collections': collections}, () => {
                 callback(item)
+            })
+        })
+    },
+
+    importCollection(options, callback) {
+        if (!options || !options.id) {
+            return callback()
+        }
+        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection) => {
+            let dealData = (collections) => {
+                collections.unshift(collection)
+            }
+            StorageArea.get('collections', (result) => {
+                let collections = result.collections || []
+                dealData(collections)
+                dealData(collectionsData)
+                StorageArea.set({'collections': collections}, () => {
+                    callback()
+                })
             })
         })
     },
@@ -554,8 +574,8 @@ AppDispatcher.register((action) => {
             SideTabStore.emitChange()
             break
 
-        case AppConstants.SIDE_TAB_FETCH_COLLECTIONS:
-            actions.fetchCollections(() => {
+        case AppConstants.SIDE_TAB_GET_COLLECTIONS:
+            actions.getCollections(() => {
                 SideTabStore.emitChange()
             })
             break
@@ -579,6 +599,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_CREATE_COLLECTION:
             actions.createCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_IMPORT_COLLECTION:
+            actions.importCollection(action.options, () => {
                 SideTabStore.emitChange()
             })
             break

@@ -79,6 +79,12 @@ class ModalAction  {
         })
     }
 
+    static openImportCollModal() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_IMPORT_COLLECTION
+        })
+    }
+
     static openEditFolderModal(folder) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_EDIT_FOLDER,

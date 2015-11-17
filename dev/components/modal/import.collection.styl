@@ -1,0 +1,38 @@
+//author @huntbao
+.mod-import-collection {
+
+  margin: 20px 30px 0
+
+  label {
+    margin: 0 0 16px
+    display: block
+
+    span {
+      display: block
+      margin: 0 0 2px
+    }
+
+    input {
+      width: 400px
+      border: 1px solid #ccc
+      border-radius: 3px
+      transition all ease .3s
+      outline: none
+      padding 5px
+      margin: 4px 0 0
+
+      &:focus {
+        box-shadow: 0 0 5px #53a2f2;
+        border-color: #53a2f2;
+      }
+    }
+  }
+
+  &.error {
+    input {
+      box-shadow: 0 0 5px #ff5a19;
+      border-color #ff5a19
+    }
+  }
+
+}

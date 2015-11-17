@@ -195,9 +195,12 @@ class Collections extends React.Component {
         return (
             <div className={className}>
                 <div className="mod-collection-actions">
-                    <span className="icon-wrap" onClick={(e)=>{this.createCollection(e)}}>
+                    <span className="icon-wrap" onClick={(e)=>{this.createCollection(e)}} title="Add new collection">
                         <em className="glyphicon glyphicon-briefcase"></em>
                         <em className="glyphicon glyphicon-plus"></em>
+                    </span>
+                    <span className="icon-wrap" onClick={(e)=>{this.importCollection(e)}} title="Import collection from NEI">
+                        <em className="glyphicon glyphicon-import"></em>
                     </span>
                 </div>
                 <div className="mod-collections">{collectionNodes}</div>
@@ -408,6 +411,10 @@ class Collections extends React.Component {
 
     createCollection(e) {
         ModalAction.openCreateCollModal()
+    }
+
+    importCollection(e) {
+        ModalAction.openImportCollModal()
     }
 
 }
