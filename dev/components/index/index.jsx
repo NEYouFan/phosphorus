@@ -13,6 +13,7 @@ import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
 import ResAction from '../../actions/resaction'
 import ReqTabAction from '../../actions/reqtabaction'
+import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
 import History from '../history/history.jsx'
 import Collections from '../collections/collections.jsx'
@@ -83,7 +84,6 @@ class Index extends React.Component {
 
                 <div className="side">
                     <SideTab tabs={sideTabs}/>
-                    <History tabs={sideTabs} histories={sideTab.histories}/>
                     <Collections sideTab={sideTab} reqTabs={reqTabTabs} activeReqTabIndex={reqTab.activeIndex}/>
                 </div>
                 <div className="bd">

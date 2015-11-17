@@ -12,7 +12,9 @@ class History extends React.Component {
         })
         return (
             <div className={className}>
-                <div className="mod-history">history</div>
+                <div className="mod-history">
+                    Nothing in your history yet. Requests that you send through Phosphorus are automatically saved here.
+                </div>
             </div>
         )
     }

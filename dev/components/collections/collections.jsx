@@ -37,6 +37,23 @@ class Collections extends React.Component {
                 'active': this.props.sideTab.tabs.activeReqId === req.id
             })
             let displayName = req.name || reqURL
+            let reqActions
+            if (!req.isNEI) {
+                // nei collection only can `edit host`
+                reqActions = (
+                    <div className="coll-req-actions-wrap">
+                        <div className="coll-req-actions"
+                             onClick={(e)=>{this.toggleReqActionMenu(e)}}>
+                            <div className="coll-req-actions-menus">
+                                <em className="glyphicon glyphicon-option-horizontal"></em>
+                            </div>
+                        </div>
+                        <DropDownMenu
+                            menus={this.props.sideTab.actionMenus.request}
+                            onClickItem={(menuItem,e)=>{this.onClickReqMenuItem(menuItem,collection,req,e)}}/>
+                    </div>
+                )
+            }
             return (
                 <div
                     key={index}
@@ -46,25 +63,18 @@ class Collections extends React.Component {
                     >
                     <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
                     <div className="coll-req-url" title={reqURL}>{displayName}</div>
-                    <div className="coll-req-actions"
-                         onClick={(e)=>{this.toggleReqActionMenu(e)}}>
-                        <div className="coll-req-actions-menus">
-                            <em className="glyphicon glyphicon-option-horizontal"></em>
-                        </div>
-                    </div>
-                    <DropDownMenu
-                        menus={this.props.sideTab.actionMenus.request}
-                        onClickItem={(menuItem,e)=>{this.onClickReqMenuItem(menuItem,collection,req,e)}}
-                        />
+                    {reqActions}
                 </div>
             )
         }
         if (collections && collections.length) {
             collectionNodes = collections.map((collection, index) => {
                 let collectionActionMenu = this.props.sideTab.actionMenus.collection
+                let folderActionMenu = this.props.sideTab.actionMenus.folder
                 if (collection.isNEI) {
-                    // nei collection only can `edit host`
+                    // nei collection & folder only can `edit host`
                     collectionActionMenu = [collectionActionMenu[0]]
+                    folderActionMenu = [folderActionMenu[0]]
                 }
                 let collClasses = classNames({
                     'coll': true,
@@ -98,7 +108,7 @@ class Collections extends React.Component {
                                     </div>
                                 </div>
                                 <DropDownMenu
-                                    menus={this.props.sideTab.actionMenus.folder}
+                                    menus={folderActionMenu}
                                     onClickItem={(menuItem,e)=>{this.onClickFolderMenuItem(menuItem,collection,folder,e)}}
                                     />
                             </div>
@@ -270,7 +280,7 @@ class Collections extends React.Component {
     toggleReqActionMenu(evt) {
         evt.stopPropagation()
         let target = evt.currentTarget
-        target.parentNode.classList.toggle('show-action-menu')
+        target.parentNode.parentNode.classList.toggle('show-action-menu')
         target.nextSibling.style.top = (target.offsetTop + 26) + 'px'
     }
 

@@ -19,7 +19,6 @@ class SideTab extends React.Component {
         return (
             <div className="mod-tab">
                 <ol className="clr" onClick={(e)=>{this.clickHandler(e)}}>
-                    <li className={historyClass} data-name="History">History</li>
                     <li className={collectionsClass} data-name="Collections">Collections</li>
                 </ol>
             </div>

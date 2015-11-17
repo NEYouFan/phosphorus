@@ -71,6 +71,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_EDIT_COLL_HOST,
                 title: 'Edit host',
                 okText: 'Apply',
+                cancelText: 'Cancel',
                 data: action.collection
             })
             ModalStore.emitChange()
@@ -81,6 +82,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_EDIT_FOLDER_HOST,
                 title: 'Edit host',
                 okText: 'Apply',
+                cancelText: 'Cancel',
                 data: action.folder
             })
             ModalStore.emitChange()
@@ -102,6 +104,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_SAVE_NEW_REQUEST,
                 title: 'Add request to a collection',
                 okText: 'Add to collection',
+                cancelText: 'Cancel',
                 data: {
                     collections: SideTabStore.getCollections(),
                     tab: action.tab
@@ -125,6 +128,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_CREATE_COLLECTION,
                 title: 'Create a new collection',
                 okText: 'Create',
+                cancelText: 'Cancel',
                 data: {}
             })
             ModalStore.emitChange()
@@ -135,6 +139,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_EDIT_COLLECTION,
                 title: 'Edit collection',
                 okText: 'Save',
+                cancelText: 'Cancel',
                 data: action.collection
             })
             ModalStore.emitChange()
@@ -156,6 +161,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_CREATE_FOLDER,
                 title: `Add folder inside ${action.collection.name}`,
                 okText: 'Create',
+                cancelText: 'Cancel',
                 data: action.collection
             })
             ModalStore.emitChange()
@@ -166,6 +172,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_EDIT_FOLDER,
                 title: `Edit folder`,
                 okText: 'Save',
+                cancelText: 'Cancel',
                 data: action.folder
             })
             ModalStore.emitChange()
@@ -187,6 +194,7 @@ AppDispatcher.register((action) => {
                 type: AppConstants.MODAL_EDIT_REQUEST,
                 title: 'Edit request',
                 okText: 'Save',
+                cancelText: 'Cancel',
                 data: action.req
             })
             ModalStore.emitChange()
