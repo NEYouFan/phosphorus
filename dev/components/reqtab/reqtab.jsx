@@ -3,8 +3,9 @@
 import './reqtab.styl'
 import React from 'react'
 import classNames from 'classnames'
-import ReqTabActions from '../../actions/reqtabaction'
-import ReqTabConActions from '../../actions/reqtabconaction'
+import ReqTabAction from '../../actions/reqtabaction'
+import ReqTabConAction from '../../actions/reqtabconaction'
+import ModalAction from '../../actions/modalaction'
 import ReqTabStore from '../../stores/reqtabstore'
 
 class ReqTab extends React.Component {
@@ -57,20 +58,18 @@ class ReqTab extends React.Component {
     }
 
     add() {
-        ReqTabActions.addTab()
-        ReqTabConActions.addCon()
+        ReqTabAction.addTab()
+        ReqTabConAction.addCon()
         this.switchTab(this.props.tabs.length - 1)
     }
 
     remove(evt, tabIndex) {
-        let tab = evt.currentTarget.parentNode
-        this.removeTab(tab, tabIndex)
+        let tabDiv = evt.currentTarget.parentNode
+        this.removeTab(tabDiv, tabIndex)
     }
 
-    removeTab(tab, tabIndex) {
-        ReqTabConActions.removeCon(tabIndex)
-        ReqTabActions.removeTab(tabIndex)
-        let isActive = tab.classList.contains('active')
+    removeTab(tabDiv, tabIndex) {
+        let isActive = tabDiv.classList.contains('active')
         let currentActiveIndex = this.props.activeIndex
         let nextActiveIndex
         if (isActive) {
@@ -80,11 +79,25 @@ class ReqTab extends React.Component {
         } else {
             nextActiveIndex = currentActiveIndex - 1
         }
+        // check if dirty
+        if (this.props.tabs[tabIndex].isDirty) {
+            return ModalAction.openClosingDirtyTab({
+                tabIndex: tabIndex,
+                addNewTab: this.props.tabs.length === 1,
+                nextActiveIndex: nextActiveIndex
+            })
+        }
+        ReqTabConAction.removeCon(tabIndex)
+        ReqTabAction.removeTab(tabIndex)
+        if (this.props.tabs.length === 0) {
+            // there is no tab left, add a tab
+            return this.add()
+        }
         this.switchTab(nextActiveIndex)
     }
 
     switchTab(activeIndex) {
-        ReqTabActions.switchTab(activeIndex)
+        ReqTabAction.switchTab(activeIndex)
     }
 
 }

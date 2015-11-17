@@ -123,6 +123,16 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_CLOSING_DIRTY_TAB:
+            actions.openModal({
+                type: AppConstants.MODAL_CLOSING_DIRTY_TAB,
+                title: 'Please confirm',
+                okText: 'Close anyway!',
+                data: action.data
+            })
+            ModalStore.emitChange()
+            break
+
         case AppConstants.MODAL_CREATE_COLLECTION:
             actions.openModal({
                 type: AppConstants.MODAL_CREATE_COLLECTION,

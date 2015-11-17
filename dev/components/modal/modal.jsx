@@ -9,6 +9,7 @@ import EditCollHost from './edit.coll.host.jsx'
 import EditFolderHost from './edit.folder.host.jsx'
 import Tip from './tip.jsx'
 import LeavingDirtyTab from './leaving.dirty.tab.jsx'
+import CloseingDirtyTab from './closing.dirty.tab.jsx'
 import CreateCollection from './create.collection.jsx'
 import ImportCollection from './import.collection.jsx'
 import EditCollection from './edit.collection.jsx'
@@ -87,6 +88,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_LEAVING_DIRTY_TAB:
                 return (
                     <LeavingDirtyTab modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_CLOSING_DIRTY_TAB:
+                return (
+                    <CloseingDirtyTab modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_CREATE_COLLECTION:

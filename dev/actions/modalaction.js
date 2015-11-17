@@ -120,6 +120,13 @@ class ModalAction  {
         })
     }
 
+    static openClosingDirtyTab(data) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_CLOSING_DIRTY_TAB,
+            data: data
+        })
+    }
+
 }
 
 export default ModalAction

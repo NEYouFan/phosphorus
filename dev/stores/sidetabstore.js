@@ -559,6 +559,10 @@ let SideTabStore = Object.assign({}, Events.EventEmitter.prototype, {
         actions.updateActiveReq(options, callback)
     },
 
+    changeActiveReqId(reqId) {
+        actions.changeActiveReqId(reqId)
+    },
+
     emitChange() {
         this.emit(CHANGE_EVENT)
     },

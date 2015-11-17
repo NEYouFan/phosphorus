@@ -32,6 +32,9 @@ let tabs = {
 let actions = {
     changeIndex(activeIndex) {
         tabs.activeIndex = activeIndex
+        // change active request id
+        let activeTab = tabs.items[activeIndex]
+        SideTabStore.changeActiveReqId(activeTab.id)
     },
 
     addTab() {
