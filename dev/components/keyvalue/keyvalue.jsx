@@ -39,8 +39,15 @@ class KeyValue extends React.Component {
                 className: kv.valueError ? 'inp-error' : ''
             }
             let inputs = this.getInputs(kv, index, keyInputProps, valueInputProps)
+            let titleTip
+            if (kv.title) {
+                titleTip = (
+                    <div className="title-tip" title={kv.title}></div>
+                )
+            }
             return (
                 <div className={rowClasses} key={index}>
+                    {titleTip}
                     <div className={okSignClasses} onClick={()=>{this.toggle(index, kv)}}></div>
                     {inputs}
                     <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(index)}}></div>

@@ -9,6 +9,7 @@ import RequestDataMap from '../libs/request_data_map'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import ReqTabStore from './reqtabstore'
+import ReqTabAction from '../actions/reqtabaction'
 import Requester from '../components/requester/requester'
 
 const CHANGE_EVENT = 'change'
@@ -214,8 +215,6 @@ let tabConActions = {
             console.log(savedRequest)
             this.__dealRequest(request, dataSource, savedRequest, newTabCon)
             tabCons.items[tabIndex] = newTabCon
-            paramActions.updateTabUrl()
-            paramActions.fillURLParams(savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey])
             // change editor mode by bodyType
             let rawType = _.find(tabCons.rawTypes, (rawType) => {
                 return newTabCon.builders.bodyType.name === rawType.name
@@ -228,6 +227,7 @@ let tabConActions = {
 
     __dealRequest(request, dataSource, savedRequest, newTabCon) {
         let builders = newTabCon.builders
+        let tabUrl = request.path
         if (request.isNEI) {
             tabCons.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = true
@@ -266,12 +266,40 @@ let tabConActions = {
                             return kv.key === input.name
                         })
                         builders.bodyXFormKVs.unshift(Object.assign({}, xFormKVTpl, {
+                            title: input.description,
                             key: input.name,
                             value: foundSavedField && foundSavedField.value,
                             readonly: true
                         }))
                     })
                 }
+            } else {
+                // url param kvs
+                builders.paramKVs = request.inputs.map((urlParam, index) => {
+                    return Object.assign({}, DEFAULT_PARAMS_KV, {
+                        key: urlParam.name,
+                        title: urlParam.description,
+                        checked: true
+                    })
+                })
+                let savedURLParams = savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey]
+                // set saved url param value
+                _.each(builders.paramKVs, (kv) => {
+                    let foundSavedPV
+                    if (kv.isPV) {
+                        foundSavedPV = _.find(savedURLParams, (p) => {
+                            return p.is_pv && p.key === param.key
+                        })
+                    } else {
+                        foundSavedPV = _.find(savedURLParams, (p) => {
+                            return p.key === param.key
+                        })
+                    }
+                    if (foundSavedPV) {
+                        param.value = foundSavedPV.value
+                    }
+                })
+                tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
             }
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
@@ -308,6 +336,16 @@ let tabConActions = {
                 builders.bodyRawDataOriginal = builders.bodyRawData
             }
         }
+        let tab = {
+            id: request.id,
+            name: request.name || tabUrl,
+            url: tabUrl,
+            method: request.method,
+            isNEI: request.isNEI,
+            isDirty: false,
+            urlError: false
+        }
+        ReqTabAction.changeTab(tab)
 
     },
 
@@ -437,7 +475,7 @@ let tabConActions = {
 
 let paramActions = {
 
-    fillURLParams(savedURLParams) {
+    fillURLParams() {
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = Util.getUrlParams(tabUrl)
         params = params.map((param) => {
@@ -447,19 +485,8 @@ let paramActions = {
         tabCons.items[tabIndex].builders.paramKVs = params
         let hasPathVariable
         _.each(params, (param) => {
-            let foundSavedPV
             if (param.isPV) {
                 hasPathVariable = true
-                foundSavedPV = _.find(savedURLParams, (p) => {
-                    return p.is_pv && p.key === param.key
-                })
-            } else {
-                foundSavedPV = _.find(savedURLParams, (p) => {
-                    return p.key === param.key
-                })
-            }
-            if (foundSavedPV) {
-                param.value = foundSavedPV.value
             }
         })
         // if has path variable, active url params tab

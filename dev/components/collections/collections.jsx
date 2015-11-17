@@ -72,8 +72,9 @@ class Collections extends React.Component {
                 let collectionActionMenu = this.props.sideTab.actionMenus.collection
                 let folderActionMenu = this.props.sideTab.actionMenus.folder
                 if (collection.isNEI) {
-                    // nei collection & folder only can `edit host`
-                    collectionActionMenu = [collectionActionMenu[0]]
+                    // nei collection only can `edit host` and `delete`
+                    // nei folder only can `edit host`
+                    collectionActionMenu = [collectionActionMenu[0], collectionActionMenu[3]]
                     folderActionMenu = [folderActionMenu[0]]
                 }
                 let collClasses = classNames({
@@ -373,39 +374,16 @@ class Collections extends React.Component {
         let request = _.find(collection.requests, (req) => {
             return req.id === reqId
         })
-        // request is from NEI
-        if (request.isNEI) {
-            if (Util.isNoBodyMethod(request.method)) {
-                let queryParams = request.inputs.map((urlParam, index) => {
-                    return {
-                        key: urlParam.name,
-                        checked: true
-                    }
-                })
-                url = Util.getURLByQueryParams(url, queryParams)
-            }
-        }
-        let tab = {
-            id: request.id,
-            name: request.name || url,
-            url: url,
-            method: request.method,
-            isNEI: request.isNEI,
-            isDirty: false,
-            urlError: false
-        }
         // check if tab is dirty
         let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
         if (activeReqTab.isDirty) {
             return ModalAction.openLeavingDirtyTab({
                 reqId: reqId,
-                tab: tab,
                 request: request,
                 collection: collection
             })
         }
         SideTabAction.changeActiveReqId(reqId)
-        ReqTabAction.changeTab(tab)
         ReqTabConAction.updateConByRequest(request, collection)
     }
 

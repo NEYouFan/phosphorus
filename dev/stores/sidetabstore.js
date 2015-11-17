@@ -232,10 +232,11 @@ let actions = {
         }
         let dealData = (collections) => {
             let req = null
-            collections.forEach((c) => {
+            collections.find((c) => {
                 req = _.find(c.requests, (req) => {
                     return req.id === tabs.activeReqId
                 })
+                return req
             })
             // can update: path, url, name, description
             let updateFields = ['path', 'method']
