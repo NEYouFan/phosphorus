@@ -192,6 +192,19 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_MOVE_REQUEST:
+            actions.openModal({
+                type: AppConstants.MODAL_MOVE_REQUEST,
+                title: 'Move request',
+                data: {
+                    req: action.req,
+                    collections: SideTabStore.getCollections(),
+                    tab: action.tab
+                }
+            })
+            ModalStore.emitChange()
+            break
+
         case AppConstants.MODAL_DELETE_REQUEST:
             actions.openModal({
                 type: AppConstants.MODAL_DELETE_REQUEST,

@@ -19,6 +19,7 @@ let AppConstants = keyMirror({
     SIDE_SAVE_NEW_REQUEST: null,
     SIDE_DELETE_REQUEST: null,
     SIDE_EDIT_REQUEST: null,
+    SIDE_MOVE_REQUEST: null,
     // req tab action
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,
@@ -98,6 +99,7 @@ let AppConstants = keyMirror({
     MODAL_EDIT_FOLDER: null,
     MODAL_DELETE_FOLDER: null,
     MODAL_EDIT_REQUEST: null,
+    MODAL_MOVE_REQUEST: null,
     MODAL_DELETE_REQUEST: null
 })
 

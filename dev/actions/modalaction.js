@@ -100,6 +100,13 @@ class ModalAction  {
         })
     }
 
+    static openMoveReqModal(req) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_MOVE_REQUEST,
+            req: req
+        })
+    }
+
     static openDeleteReqModal(req) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_DELETE_REQUEST,

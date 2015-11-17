@@ -106,6 +106,13 @@ class SideTabAction  {
         })
     }
 
+    static moveRequest(options) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_MOVE_REQUEST,
+            options: options
+        })
+    }
+
 }
 
 export default SideTabAction

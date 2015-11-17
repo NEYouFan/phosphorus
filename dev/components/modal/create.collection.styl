@@ -21,6 +21,7 @@
       transition all ease .3s
       outline: none
       padding 5px
+      margin: 4px 0 0
 
       &:focus {
         box-shadow: 0 0 5px #53a2f2;
@@ -49,6 +50,13 @@
 
   &.error-coll-name {
     input.new-coll-name {
+      box-shadow: 0 0 5px #ff5a19;
+      border-color #ff5a19
+    }
+  }
+
+  &.move-req-error {
+    select {
       box-shadow: 0 0 5px #ff5a19;
       border-color #ff5a19
     }

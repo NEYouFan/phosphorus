@@ -331,6 +331,9 @@ class Collections extends React.Component {
             case 'Edit':
                 return ModalAction.openEditReqModal(data)
 
+            case 'Move':
+                return ModalAction.openMoveReqModal(data)
+
             case 'Delete':
                 return ModalAction.openDeleteReqModal(data)
 

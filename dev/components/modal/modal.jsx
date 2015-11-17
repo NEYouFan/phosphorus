@@ -18,6 +18,7 @@ import DeleteFolder from './deleting.folder.jsx'
 import SaveNewRequest from './save.new.request.jsx'
 import EditRequest from './edit.request.jsx'
 import DeletingRequest from './deleting.request.jsx'
+import MoveRequest from './moving.request.jsx'
 
 class Modal extends React.Component {
 
@@ -70,6 +71,11 @@ class Modal extends React.Component {
                         description={this.props.modal.data.description}
                         nameLabel="Request name"
                         modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_MOVE_REQUEST:
+                return (
+                    <MoveRequest modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_DELETE_REQUEST:

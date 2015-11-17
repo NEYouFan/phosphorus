@@ -58,7 +58,7 @@ let historyData = null
 let collectionsData = null
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Delete']
 let folderActionMenus = ['Edit host', 'Edit', 'Delete']
-let reqActionMenus = ['Edit', 'Delete']
+let reqActionMenus = ['Edit', 'Move', 'Delete']
 
 let actions = {
 
@@ -152,6 +152,9 @@ let actions = {
         if (!options || !options.name) {
             return callback()
         }
+        let dealData = (collections, newItem) => {
+            collections.push(newItem)
+        }
         StorageArea.get('collections', (result) => {
             let collections = result.collections || []
             let item = Object.assign({}, DEFAULT_COLLECTION, {
@@ -160,9 +163,9 @@ let actions = {
                 description: options.description,
                 createTime: Date.now()
             })
-            collections.push(item)
+            dealData(collections, item)
+            dealData(collectionsData, item)
             StorageArea.set({'collections': collections}, () => {
-                collectionsData.push(item)
                 callback(item)
             })
         })
@@ -172,11 +175,20 @@ let actions = {
         if (!options || !options.name) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let collections = result.collections || []
-            let storedCollection = _.find(collections, (c) => {
+        let dealData = (collections, reqItem) => {
+            let collection = _.find(collections, (c) => {
                 return c.id === options.collectionId
             })
+            if (options.folderId) {
+                let folder = _.find(collection.folders, (f) => {
+                    return f.id === options.folderId
+                })
+                folder.orders.push(reqItem.id)
+            }
+            collection.requests.push(reqItem)
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
             let reqItem = Object.assign({}, DEFAULT_REQUEST, {
                 id: UUID.v1(),
                 method: options.method,
@@ -186,24 +198,8 @@ let actions = {
                 collectionId: options.collectionId,
                 folderId: options.folderId
             })
-            if (options.folderId) {
-                let folder = _.find(storedCollection.folders, (f) => {
-                    return f.id === options.folderId
-                })
-                folder.orders.push(reqItem.id)
-            }
-            storedCollection.requests.push(reqItem)
-            // update ui
-            let collection = _.find(collectionsData, (c) => {
-                return c.id === options.collectionId
-            })
-            collection.requests.push(reqItem)
-            if (options.folderId) {
-                let folder = _.find(collection.folders, (f) => {
-                    return f.id === options.folderId
-                })
-                folder.orders.push(reqItem.id)
-            }
+            dealData(collectionsData)
+            dealData(collections)
             StorageArea.set({'collections': collections}, () => {
                 callback(reqItem)
             })
@@ -214,11 +210,10 @@ let actions = {
         if (!options || !options.id) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let collections = result.collections || []
-            let storedReq = null
+        let dealData = (collections) => {
+            let req = null
             collections.forEach((c) => {
-                storedReq = _.find(c.requests, (req) => {
+                req = _.find(c.requests, (req) => {
                     return req.id === tabs.activeReqId
                 })
             })
@@ -226,21 +221,14 @@ let actions = {
             let updateFields = ['path', 'method']
             updateFields.forEach((field) => {
                 if (options.hasOwnProperty(field)) {
-                    storedReq[field] = options[field]
-                }
-            })
-            // update ui
-            let req = null
-            collectionsData.forEach((c) => {
-                req = _.find(c.requests, (req) => {
-                    return req.id === tabs.activeReqId
-                })
-            })
-            updateFields.forEach((field) => {
-                if (options.hasOwnProperty(field)) {
                     req[field] = options[field]
                 }
             })
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            dealData(collections)
+            dealData(collectionsData)
             StorageArea.set({'collections': collections}, () => {
                 callback()
             })
@@ -274,8 +262,14 @@ let actions = {
         if (!options || !options.name) {
             return callback()
         }
+        let dealData = (collections, newFolder) => {
+            let collection = _.find(collections, (c) => {
+                return c.id === options.collection.id
+            })
+            collection.folders.push(newFolder)
+        }
         StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
+            let collections = result.collections || []
             let item = Object.assign({}, DEFAULT_FOLDER, {
                 id: UUID.v1(),
                 name: options.name,
@@ -283,15 +277,9 @@ let actions = {
                 orders: [],
                 createTime: Date.now()
             })
-            let collection = _.find(collectionsData, (c) => {
-                return c.id === options.collection.id
-            })
-            collection.folders.push(item)
-            let savedCollection = _.find(savedCollections, (c) => {
-                return c.id === options.collection.id
-            })
-            savedCollection.folders.push(item)
-            StorageArea.set({'collections': savedCollections}, () => {
+            dealData(collectionsData, item)
+            dealData(collections, item)
+            StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
@@ -321,9 +309,8 @@ let actions = {
         if (!options || !options.name) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
-            let collection = _.find(collectionsData, (c) => {
+        let dealData = (collections) => {
+            let collection = _.find(collections, (c) => {
                 return c.id === options.folder.collectionId
             })
             let folder = _.find(collection.folders, (f) => {
@@ -333,17 +320,12 @@ let actions = {
                 name: options.name,
                 description: options.description
             })
-            let savedCollection = _.find(savedCollections, (c) => {
-                return c.id === options.folder.collectionId
-            })
-            let savedFolder = _.find(savedCollection.folders, (f) => {
-                return f.id === options.folder.id
-            })
-            Object.assign(savedFolder, {
-                name: options.name,
-                description: options.description
-            })
-            StorageArea.set({'collections': savedCollections}, () => {
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            dealData(collectionsData)
+            dealData(collections)
+            StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
@@ -353,21 +335,19 @@ let actions = {
         if (!options || !options.collectionId || !options.id) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
-            let collection = _.find(collectionsData, (c) => {
+        let dealData = (collections) => {
+            let collection = _.find(collections, (c) => {
                 return c.id === options.collectionId
             })
             _.remove(collection.folders, (f) => {
                 return f.id === options.id
             })
-            let savedCollection = _.find(savedCollections, (c) => {
-                return c.id === options.collectionId
-            })
-            _.remove(savedCollection.folders, (f) => {
-                return f.id === options.id
-            })
-            StorageArea.set({'collections': savedCollections}, () => {
+        }
+        StorageArea.get('collections', (result) => {
+            let collections = result.collections || []
+            dealData(collectionsData)
+            dealData(collections)
+            StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
@@ -412,9 +392,8 @@ let actions = {
         if (!options) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
-            let collection = _.find(collectionsData, (c) => {
+        let dealData = (collections) => {
+            let collection = _.find(collections, (c) => {
                 return c.id === options.req.collectionId
             })
             let request = _.find(collection.requests, (r) => {
@@ -424,16 +403,60 @@ let actions = {
                 name: options.name,
                 description: options.description
             })
-            let savedCollection = _.find(savedCollections, (c) => {
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            dealData(collectionsData)
+            dealData(savedCollections)
+            StorageArea.set({'collections': savedCollections}, () => {
+                callback()
+            })
+        })
+    },
+
+    moveRequest(options, callback) {
+        if (!options) {
+            return callback()
+        }
+        let dealData = (collections) => {
+            // old collection
+            let oldCollection = _.find(collections, (c) => {
                 return c.id === options.req.collectionId
             })
-            let savedRequest = _.find(savedCollection.requests, (c) => {
-                return c.id === options.req.id
+            let request = _.find(oldCollection.requests, (r) => {
+                return r.id === options.req.id
             })
-            Object.assign(savedRequest, {
-                name: options.name,
-                description: options.description
+            _.remove(oldCollection.requests, (r) => {
+                return r.id === request.id
             })
+            if (options.req.folderId) {
+                let folder = _.find(oldCollection.folders, (f) => {
+                    return f.id === options.req.folderId
+                })
+                _.remove(folder.orders, (order) => {
+                    return order === request.id
+                })
+            }
+            Object.assign(request, {
+                collectionId: options.collectionId,
+                folderId: options.folderId
+            })
+            // new collection
+            let newCollectoin = _.find(collections, (c) => {
+                return c.id === options.collectionId
+            })
+            newCollectoin.requests.push(request)
+            if (options.folderId) {
+                let folder = _.find(newCollectoin.folders, (f) => {
+                    return f.id === options.folderId
+                })
+                folder.orders.push(request.id)
+            }
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            dealData(collectionsData)
+            dealData(savedCollections)
             StorageArea.set({'collections': savedCollections}, () => {
                 callback()
             })
@@ -444,9 +467,8 @@ let actions = {
         if (!options || !options.id) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
-            let collection = _.find(collectionsData, (c) => {
+        let dealData = (collections) => {
+            let collection = _.find(collections, (c) => {
                 return c.id === options.collectionId
             })
             _.remove(collection.requests, (r) => {
@@ -457,17 +479,11 @@ let actions = {
                     return order === options.id
                 })
             })
-            let savedCollection = _.find(savedCollections, (c) => {
-                return c.id === options.collectionId
-            })
-            _.remove(savedCollection.requests, (c) => {
-                return c.id === options.id
-            })
-            savedCollection.folders.forEach((folder) => {
-                _.remove(folder.orders, (order) => {
-                    return order === options.id
-                })
-            })
+        }
+        StorageArea.get('collections', (result) => {
+            let savedCollections = result.collections || []
+            dealData(collectionsData)
+            dealData(savedCollections)
             async.parallel([
                 (cb) => {
                     StorageArea.set({'collections': savedCollections}, () => {
@@ -605,6 +621,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_EDIT_REQUEST:
             actions.editRequest(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_MOVE_REQUEST:
+            actions.moveRequest(action.options, () => {
                 SideTabStore.emitChange()
             })
             break
