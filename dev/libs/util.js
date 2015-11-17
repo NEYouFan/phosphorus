@@ -429,6 +429,7 @@ let Util = {
             if (isSysType(output.type)) {
                 let tempItem = Object.assign({}, itemTemplate, {
                     key: output.name,
+                    title: output.description,
                     value: [],
                     valueType: typeMap[output.type]
                 })
@@ -444,6 +445,7 @@ let Util = {
                     }
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
+                        title: output.description,
                         value: [],
                         valueType: valueType
                     })
@@ -464,6 +466,7 @@ let Util = {
                     //enums
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
+                        title: output.description,
                         value: [],
                         valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
                     })
@@ -471,6 +474,7 @@ let Util = {
                 } else {
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
+                        title: output.description,
                         value: [],
                         valueType: output.isArray ? 'array' : 'object'
                     })

@@ -39,9 +39,16 @@ class KeyValueT extends KeyValue {
                     className: kv.keyError ? 'inp-error' : ''
                 }
                 let inputs = this.getInputs(kv, kv.index, keyInputProps)
+                let titleTip
+                if (kv.title) {
+                    titleTip = (
+                        <div className="res-title-tip" title={kv.title}></div>
+                    )
+                }
                 return (
                     <div className={rowClasses} key={index} onMouseOut={(e)=>{this.mouseOutRow(e)}} onMouseOver={(e)=>{this.mouseOverRow(e)}}>
                         <div className="kv-row-wrap">
+                            {titleTip}
                             <div className={okSignClasses} onClick={()=>{this.toggle(kv.index, kv)}}></div>
                             {inputs}
                             <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(kv.index)}}></div>
