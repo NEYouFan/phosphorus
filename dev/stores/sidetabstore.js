@@ -198,6 +198,12 @@ let actions = {
                 return c.id === options.collectionId
             })
             collection.requests.push(reqItem)
+            if (options.folderId) {
+                let folder = _.find(collection.folders, (f) => {
+                    return f.id === options.folderId
+                })
+                folder.orders.push(reqItem.id)
+            }
             StorageArea.set({'collections': collections}, () => {
                 callback(reqItem)
             })
