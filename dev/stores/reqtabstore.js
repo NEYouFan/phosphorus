@@ -133,6 +133,15 @@ let actions = {
                 callback()
             })
         })
+    },
+
+    updateTabName(tabId, name) {
+        let tab = _.find(tabs.items, (tab) => {
+            return tab.id === tabId
+        })
+        if (tab) {
+            tab.name = name
+        }
     }
 }
 
@@ -179,6 +188,10 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     saveTabToLocal(callback) {
         actions.saveTabToLocal(callback)
+    },
+
+    updateTabName(tabId, name) {
+        actions.updateTabName(tabId, name)
     },
 
     emitChange() {

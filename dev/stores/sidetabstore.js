@@ -435,6 +435,8 @@ let actions = {
             let savedCollections = result.collections || []
             dealData(collectionsData)
             dealData(savedCollections)
+            // update tab name
+            ReqTabStore.updateTabName(options.req.id, options.name)
             StorageArea.set({'collections': savedCollections}, () => {
                 callback()
             })
