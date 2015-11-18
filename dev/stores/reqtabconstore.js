@@ -63,6 +63,11 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'text',
     fileInput: null
 })
+const DEFAULT_BODY_RAW_JSON_KV = Object.assign({}, DEFAULT_KV, {
+    valueType: 'string',
+    values: [],
+    typeChangeable: true
+})
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'string',
@@ -106,6 +111,7 @@ const DEFAULT_CON_ITEM = {
             value: 'application/json'
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
+        bodyRawJSONKVs: [DEFAULT_BODY_RAW_JSON_KV],
         bodyXFormKVs: [DEFAULT_BODY_XFORM_KV],
         bodyBinaryFileInput: null,
         bodyRawData: null,
@@ -411,8 +417,11 @@ let tabConActions = {
         let activeTabName = tabCon.builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {
-            show: activeTabName === REQUEST_BODY_STR && bodyType.type === 'raw' && bodyType.value !== 'application/json' ||
-            activeTabName === RESPONSE_STR && tabCon.builders.reqStatus === REQ_SUCCEEDED,
+            show: activeTabName === REQUEST_BODY_STR
+                && bodyType.type === 'raw'
+                && bodyType.name !== 'JSON(application/json)'
+                || activeTabName === RESPONSE_STR
+                && tabCon.builders.reqStatus === REQ_SUCCEEDED,
             readOnly: activeTabName === RESPONSE_STR
         }
         if (editorConfig) {
@@ -762,6 +771,65 @@ let bodyActions = {
 
 }
 
+let bodyRawJSONActions = {
+
+    getBodyRawJSONRow(rowIndex) {
+        let bodyRawJSONKVs = tabCons.items[tabIndex].builders.bodyRawJSONKVs
+        let indexes = rowIndex.split('.')
+        let parentRow = bodyRawJSONKVs
+        let targetRow = bodyRawJSONKVs
+        for (let i = 0; i < indexes.length; i++) {
+            parentRow = targetRow
+            targetRow = (targetRow.values || targetRow)[indexes[i]]
+        }
+        return {
+            targetIndex: indexes[indexes.length - 1],
+            target: targetRow,
+            parent: parentRow.values || parentRow
+        }
+    },
+
+    toggleBodyRawJSONKV(rowIndex) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        if (row.target.readonly) return
+        let checked = !row.target.checked
+        row.target.checked = checked
+        let dealChild = (target) => {
+            _.each(target.values, (kv) => {
+                kv.checked = checked
+                dealChild(kv)
+            })
+        }
+        dealChild(row.target)
+    },
+
+    addBodyRawJSONKV(rowIndex) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        if (+row.targetIndex === row.parent.length - 1) {
+            row.parent.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
+        }
+    },
+
+    removeBodyRawJSONKV(rowIndex) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        row.parent.splice(row.targetIndex, 1)
+    },
+
+    changeBodyRawJSONKVKey(rowIndex, value) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        row.target.key = value
+    },
+
+    changeBodyRawJSONKVValueType(rowIndex, valueType) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        row.target.values = []
+        row.target.valueType = valueType
+        if (/^(object|array)$/.test(valueType)) {
+            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
+        }
+    }
+}
+
 let resCheckerActions = {
 
     getResCheckerRow(rowIndex) {
@@ -855,7 +923,7 @@ let resActions = {
 
 }
 
-let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions, resCheckerActions, resActions)
+let actions = Object.assign({}, tabConActions, paramActions, headerActions, bodyActions, bodyRawJSONActions, resCheckerActions, resActions)
 
 let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
 
@@ -1031,6 +1099,36 @@ AppDispatcher.register((action) => {
 
         case AppConstants.REQ_BODY_TOGGLE_TYPE_LIST:
             actions.toggleBodyTypeList()
+            ReqTabConStore.emitChange()
+            break
+        // body raw json kv action
+        case AppConstants.REQ_BODY_RAW_JSON_TOGGLE_KV:
+            actions.toggleBodyRawJSONKV(action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_RAW_JSON_ADD_KV:
+            actions.addBodyRawJSONKV(action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_RAW_JSON_REMOVE_KV:
+            actions.removeBodyRawJSONKV(action.rowIndex)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_KEY:
+            actions.changeBodyRawJSONKVKey(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_VALUE:
+            actions.changeBodyRawJSONKVValue(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_VALUE_TYPE:
+            actions.changeBodyRawJSONKVValueType(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // body form data kv action

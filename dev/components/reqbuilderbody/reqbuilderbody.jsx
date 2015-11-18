@@ -8,6 +8,7 @@ import ReqBodyAction from '../../actions/reqbodyaction'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import KeyValueX from '../keyvalue/keyvaluex.jsx'
+import KeyValueVT from '../keyvalue/keyvaluevt.jsx'
 import AceEditor from '../aceeditor/aceeditor.jsx'
 
 class ReqBuilderBody extends React.Component {
@@ -60,7 +61,7 @@ class ReqBuilderBody extends React.Component {
             hide: this.props.builders.activeTabName !== 'Request Body'
         })
 
-        let conNodes = this.getCon(bodyType.type)
+        let conNodes = this.getCon(bodyType)
         return (
             <div className={modClassName}>
                 <div className="mod-reqbuilder-body">
@@ -73,20 +74,39 @@ class ReqBuilderBody extends React.Component {
         )
     }
 
-    getCon(type) {
-        switch (type) {
+    getCon(bodyType) {
+        switch (bodyType.type) {
+            case 'raw':
+                if (bodyType.value === 'application/json') {
+                    return this.getRawJSONCon()
+                }
+                break
             case 'form-data':
                 return this.getFormDataCon()
-                break
+
             case 'x-www-form-urlencoded':
                 return this.getXFormCon()
-                break
+
             case 'binary':
                 return this.getBinaryCon()
-                break
+
             default:
                 break
         }
+    }
+
+    getRawJSONCon() {
+        return (
+            <KeyValueVT
+                kvs={this.props.builders.bodyRawJSONKVs}
+                toggleKV={(rowIndex,kv) => {this.toggleBodyRawJSONKV(rowIndex,kv)}}
+                addKV={(rowIndex) => {this.addBodyRawJSONKV(rowIndex)}}
+                removeKV={(rowIndex) => {this.removeBodyRawJSONKV(rowIndex)}}
+                changeKVKey={(rowIndex, value) => {this.changeBodyRawJSONKVKey(rowIndex, value)}}
+                changeKVValue={(rowIndex, value) => {this.changeBodyRawJSONKVValue(rowIndex, value)}}
+                changeKVValueType={(rowIndex, value) => {this.changeBodyRawJSONKVValueType(rowIndex, value)}}
+                />
+        )
     }
 
     getFormDataCon() {
@@ -141,6 +161,35 @@ class ReqBuilderBody extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
+    toggleBodyRawJSONKV(rowIndex) {
+        ReqBodyAction.toggleBodyRawJSONKV(rowIndex)
+        ReqTabAction.setDirtyTab()
+    }
+
+    addBodyRawJSONKV(rowIndex) {
+        ReqBodyAction.addBodyRawJSONKV(rowIndex)
+    }
+
+    removeBodyRawJSONKV(rowIndex) {
+        ReqBodyAction.removeBodyRawJSONKV(rowIndex)
+        ReqTabAction.setDirtyTab()
+    }
+
+    changeBodyRawJSONKVKey(rowIndex, value) {
+        ReqBodyAction.changeBodyRawJSONKVKey(rowIndex, value)
+        ReqTabAction.setDirtyTab()
+    }
+
+    changeBodyRawJSONKVValue(rowIndex, value) {
+        ReqBodyAction.changeBodyRawJSONKVValue(rowIndex, value)
+        ReqTabAction.setDirtyTab()
+    }
+
+    changeBodyRawJSONKVValueType(rowIndex, value) {
+        ReqBodyAction.changeBodyRawJSONKVValueType(rowIndex, value)
+        ReqTabAction.setDirtyTab()
+    }
+
     toggleBodyFormDataKV(rowIndex,kv) {
         ReqBodyAction.toggleBodyFormDataKV(rowIndex)
         ReqTabAction.setDirtyTab()
@@ -174,7 +223,7 @@ class ReqBuilderBody extends React.Component {
         ReqBodyAction.changeBodyFormDataKVFileValue(rowIndex, fileInput)
     }
 
-    toggleBodyXFormKV(rowIndex, kv) {
+    toggleBodyXFormKV(rowIndex) {
         ReqBodyAction.toggleBodyXFormKV(rowIndex)
         ReqTabAction.setDirtyTab()
     }

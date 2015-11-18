@@ -1,7 +1,6 @@
 //author @huntbao
 'use strict'
 
-import React from 'react'
 import classNames from 'classnames'
 import KeyValue from './keyvalue.jsx'
 

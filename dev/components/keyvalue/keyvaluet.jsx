@@ -1,7 +1,7 @@
 //author @huntbao
 'use strict'
 
-import React from 'react'
+import './keyvaluet.styl'
 import classNames from 'classnames'
 import KeyValue from './keyvalue.jsx'
 
@@ -38,7 +38,16 @@ class KeyValueT extends KeyValue {
                     list: kv.keyDataList,
                     className: kv.keyError ? 'inp-error' : ''
                 }
-                let inputs = this.getInputs(kv, kv.index, keyInputProps)
+                let valueInputProps = {
+                    placeholder: kv.valuePlaceholder,
+                    value: kv.value,
+                    onChange: (e) => {
+                        this.changeValue(e, index, kv)
+                    },
+                    list: kv.valueDataList,
+                    className: kv.valueError ? 'inp-error' : ''
+                }
+                let inputs = this.getInputs(kv, kv.index, keyInputProps, valueInputProps)
                 let titleTip
                 if (kv.title) {
                     titleTip = (
@@ -60,7 +69,8 @@ class KeyValueT extends KeyValue {
         }
         let nodes = getNodes(this.props.kvs)
         let kvClasses = classNames({
-            'mod-kv': true
+            'mod-kv': true,
+            'mod-kv-type': true
         })
         return (
             <div className={kvClasses}>
@@ -69,7 +79,7 @@ class KeyValueT extends KeyValue {
         )
     }
 
-    getInputs(kv, rowIndex, keyInputProps) {
+    getInputs(kv, rowIndex, keyInputProps, valueInputProps) {
         let valueType = kv.valueType
         let classes = classNames({
             'input-wrap': true

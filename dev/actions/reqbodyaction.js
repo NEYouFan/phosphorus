@@ -31,6 +31,51 @@ class ReqBodyAction  {
         })
     }
 
+    static toggleBodyRawJSONKV(rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_TOGGLE_KV,
+            rowIndex: rowIndex
+        })
+    }
+
+    static addBodyRawJSONKV(rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_ADD_KV,
+            rowIndex: rowIndex
+        })
+    }
+
+    static removeBodyRawJSONKV(rowIndex) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_REMOVE_KV,
+            rowIndex: rowIndex
+        })
+    }
+
+    static changeBodyRawJSONKVKey(rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_KEY,
+            rowIndex: rowIndex,
+            value: value
+        })
+    }
+
+    static changeBodyRawJSONKVValue(rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_VALUE,
+            rowIndex: rowIndex,
+            value: value
+        })
+    }
+
+    static changeBodyRawJSONKVValueType(rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_VALUE_TYPE,
+            rowIndex: rowIndex,
+            value: value
+        })
+    }
+
     static toggleBodyFormDataKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV,
@@ -49,10 +94,6 @@ class ReqBodyAction  {
             actionType: AppConstants.REQ_BODY_FORMDATA_REMOVE_KV,
             rowIndex: rowIndex
         })
-    }
-
-    static editBodyFormDataKV() {
-        //todo, bulk edit
     }
 
     static changeBodyFormDataKVKey(rowIndex, value) {
@@ -105,10 +146,6 @@ class ReqBodyAction  {
             actionType: AppConstants.REQ_BODY_XFORM_REMOVE_KV,
             rowIndex: rowIndex
         })
-    }
-
-    static editBodyXFormKV() {
-        //todo, bulk edit
     }
 
     static changeBodyXFormKVKey(rowIndex, value) {
