@@ -509,17 +509,17 @@ let actions = {
             dealData(savedCollections)
             async.parallel([
                 (cb) => {
-                    StorageArea.set({'collections': savedCollections}, () => {
-                        cb(null)
-                    })
+                    StorageArea.set({'collections': savedCollections}, cb)
                 },
                 // delete request in local store `requests`
                 (cb) => {
                     ReqTabStore.deleteTabData({
                         id: options.id
-                    }, () => {
-                        cb(null)
-                    })
+                    }, cb)
+                },
+                // close tab if the request is opened
+                (cb) => {
+                    ReqTabStore.removeTabById(options.id, cb)
                 }
             ], (err) => {
                 callback()

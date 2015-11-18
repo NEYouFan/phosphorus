@@ -641,6 +641,18 @@ let Util = {
         // if check success, checkData is return `undefined`
         let checkResult = checkData(resChecker, resData)
         return checkResult || true
+    },
+
+    getNextActiveIndex(isActive, tabIndex, currentActiveIndex) {
+        let nextActiveIndex
+        if (isActive) {
+            nextActiveIndex = Math.max(0, tabIndex - 1)
+        } else if (tabIndex > currentActiveIndex) {
+            nextActiveIndex = currentActiveIndex
+        } else {
+            nextActiveIndex = currentActiveIndex - 1
+        }
+        return nextActiveIndex
     }
 }
 

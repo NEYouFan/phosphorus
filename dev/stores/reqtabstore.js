@@ -4,6 +4,7 @@
 import Events from 'events'
 import _ from 'lodash'
 import async from 'async'
+import Util from '../libs/util'
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 import RequestDataMap from '../libs/request_data_map'
@@ -43,6 +44,23 @@ let actions = {
 
     removeTab(tabIndex) {
         tabs.items.splice(tabIndex, 1)
+    },
+
+    removeTabById(tabId, callback) {
+        let tabIndex
+        _.remove(tabs.items, (tab, index) => {
+            if (tab.id === tabId) {
+                tabIndex = index
+                return true
+            }
+        })
+        let isActive = tabs.activeIndex === tabIndex
+        if (tabs.items.length === 0) {
+            this.addTab()
+        }
+        let nextActiveIndex = Util.getNextActiveIndex(isActive, tabIndex, tabs.activeIndex)
+        this.changeIndex(nextActiveIndex)
+        callback()
     },
 
     changeTab(tab) {
@@ -208,6 +226,10 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     updateTabName(tabId, name) {
         actions.updateTabName(tabId, name)
+    },
+
+    removeTabById(tabId, callback) {
+        actions.removeTabById(tabId, callback)
     },
 
     emitChange() {

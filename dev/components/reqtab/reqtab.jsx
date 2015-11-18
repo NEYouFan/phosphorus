@@ -3,6 +3,7 @@
 import './reqtab.styl'
 import React from 'react'
 import classNames from 'classnames'
+import Util from '../../libs/util'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ModalAction from '../../actions/modalaction'
@@ -70,15 +71,7 @@ class ReqTab extends React.Component {
 
     removeTab(tabDiv, tabIndex) {
         let isActive = tabDiv.classList.contains('active')
-        let currentActiveIndex = this.props.activeIndex
-        let nextActiveIndex
-        if (isActive) {
-            nextActiveIndex = Math.max(0, tabIndex - 1)
-        } else if (tabIndex > currentActiveIndex) {
-            nextActiveIndex = currentActiveIndex
-        } else {
-            nextActiveIndex = currentActiveIndex - 1
-        }
+        let nextActiveIndex = Util.getNextActiveIndex(isActive, tabIndex, this.props.activeIndex)
         // check if dirty
         if (this.props.tabs[tabIndex].isDirty) {
             return ModalAction.openClosingDirtyTab({
