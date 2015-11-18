@@ -11,7 +11,7 @@ class KeyValueT extends KeyValue {
         let total = this.props.kvs.length
         let getSubNodes = (kv) => {
             if (/^(object|array)$/.test(kv.valueType)) {
-                return getNodes(kv.value, kv, kv.valueType)
+                return getNodes(kv.values, kv, kv.valueType)
             }
         }
         let getNodes = (kvs, parentKV, parentValueType) => {

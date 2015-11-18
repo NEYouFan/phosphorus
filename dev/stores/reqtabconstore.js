@@ -66,7 +66,7 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'string',
-    value: [],
+    values: [],
     typeChangeable: true
 })
 const DEFAULT_RES_SHOW_TYPE = {
@@ -334,6 +334,20 @@ let tabConActions = {
                     }
                 })
                 builders.bodyRawDataOriginal = builders.bodyRawData
+                // refine res checker kvs
+                let refineData = (data) => {
+                    return data.values.map((item) => {
+                        return Object.assign({}, DEFAULT_RES_CHECKER_KV, {
+                            key: item.key,
+                            checked: item.checked,
+                            values: refineData(item),
+                            valueType: item.value_type
+                        })
+                    })
+                }
+                builders.resCheckerKVs.forEach((item) => {
+                    item.values = refineData(item)
+                })
             }
         }
         let tab = {
@@ -733,12 +747,12 @@ let resCheckerActions = {
         let targetRow = resCheckerKVs
         for (let i = 0; i < indexes.length; i++) {
             parentRow = targetRow
-            targetRow = (targetRow.value || targetRow)[indexes[i]]
+            targetRow = (targetRow.values || targetRow)[indexes[i]]
         }
         return {
             targetIndex: indexes[indexes.length - 1],
             target: targetRow,
-            parent: parentRow.value || parentRow
+            parent: parentRow.values || parentRow
         }
     },
 
@@ -748,7 +762,7 @@ let resCheckerActions = {
         let checked = !row.target.checked
         row.target.checked = checked
         let dealChild = (target) => {
-            _.each(target.value, (kv) => {
+            _.each(target.values, (kv) => {
                 kv.checked = checked
                 dealChild(kv)
             })
@@ -775,10 +789,10 @@ let resCheckerActions = {
 
     changeResCheckerKVValueType(rowIndex, valueType) {
         let row = this.getResCheckerRow(rowIndex)
-        row.target.value = []
+        row.target.values = []
         row.target.valueType = valueType
         if (/^(object|array)$/.test(valueType)) {
-            row.target.value.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+            row.target.values.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
         }
     }
 }

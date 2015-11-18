@@ -430,7 +430,7 @@ let Util = {
                 let tempItem = Object.assign({}, itemTemplate, {
                     key: output.name,
                     title: output.description,
-                    value: [],
+                    values: [],
                     valueType: typeMap[output.type]
                 })
                 resultContainer.push(tempItem)
@@ -446,7 +446,7 @@ let Util = {
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
                         title: output.description,
-                        value: [],
+                        values: [],
                         valueType: valueType
                     })
                     resultContainer.push(tempItem)
@@ -467,7 +467,7 @@ let Util = {
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
                         title: output.description,
-                        value: [],
+                        values: [],
                         valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
                     })
                     resultContainer.push(tempItem)
@@ -475,12 +475,12 @@ let Util = {
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
                         title: output.description,
-                        value: [],
+                        values: [],
                         valueType: output.isArray ? 'array' : 'object'
                     })
                     resultContainer.push(tempItem)
                     attributes.forEach((attr) => {
-                        getItem(attr, tempItem.value)
+                        getItem(attr, tempItem.values)
                     })
                 }
             }

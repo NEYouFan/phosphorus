@@ -96,17 +96,17 @@ let actions = {
             savedData.res_checker_data = null
         } else {
             let refineData = (data) => {
-                return data.value.map((item) => {
+                return data.values.map((item) => {
                     return {
                         key: item.key,
                         checked: item.checked,
-                        value: refineData(item),
-                        'value_type': item.valueType
+                        values: refineData(item),
+                        value_type: item.valueType
                     }
                 })
             }
             savedData.res_checker_data.forEach((item) => {
-                item.value = refineData(item)
+                item.values = refineData(item)
             })
         }
         // save to local storage

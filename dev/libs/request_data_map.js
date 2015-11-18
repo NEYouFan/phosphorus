@@ -61,7 +61,7 @@ const REQUEST_DATA_MAP = {
         fields: {
             checked: 'checked',
             key: 'key',
-            value: 'value',
+            values: 'values',
             valueType: 'value_type'
         }
     }
