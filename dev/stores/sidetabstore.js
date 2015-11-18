@@ -218,8 +218,8 @@ let actions = {
                 collectionId: options.collectionId,
                 folderId: options.folderId
             })
-            dealData(collectionsData)
-            dealData(collections)
+            dealData(collectionsData, reqItem)
+            dealData(collections, reqItem)
             StorageArea.set({'collections': collections}, () => {
                 callback(reqItem)
             })

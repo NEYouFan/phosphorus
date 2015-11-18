@@ -17,7 +17,19 @@ class NEIReqBuilderBody extends ReqBuilderBody {
         // do nothing
     }
 
-    toggleBodyFormDataKV(rowIndex,kv) {
+    toggleBodyRawJSONKV(rowIndex, kv) {
+        // do nothing
+    }
+
+    addBodyRawJSONKV() {
+        // do nothing
+    }
+
+    removeBodyRawJSONKV(rowIndex) {
+        // do nothing
+    }
+
+    toggleBodyFormDataKV(rowIndex, kv) {
         // do nothing
     }
 

@@ -298,7 +298,7 @@ let Util = {
         return /^(get|copy|head|purge|unlock|view)$/.test(method.toLowerCase())
     },
 
-    convertNEIInputsToJSON(request, dataSource, savedData) {
+    convertNEIInputsToJSONStr(request, dataSource, savedData) {
         let result = {}
         let getPrimiteValue = (type, value) => {
             switch (type) {
@@ -401,6 +401,105 @@ let Util = {
         }
         getData(request.inputs, savedData)
         return JSON.stringify(result, null, '\t')
+    },
+
+    convertNEIInputsToJSON(request, dataSource, savedData, itemTemplate) {
+        let result = []
+        let error = false
+        let isSysType = (type) => {
+            return /^(10001|10002|10003)$/.test(type)
+        }
+        let typeMap = {
+            10001: 'string',
+            10002: 'number',
+            10003: 'boolean'
+        }
+        let getEnumType = (enumName) => {
+            if ((+enumName).toString() === enumName) {
+                return typeMap[10002]
+            }
+            if (/^(true|false)$/.test(enumName)) {
+                return typeMap[10003]
+            }
+            return typeMap[10001]
+        }
+        let traversedDataTypes = []
+        let traversedLayers = 0
+        let getItem = (input, resultContainer, data) => {
+            if (isSysType(input.type)) {
+                let savedItem = _.find(data, (d) => {
+                    return d.key === input.name
+                })
+                let tempItem = Object.assign({}, itemTemplate, {
+                    key: input.name,
+                    value: savedItem && savedItem.value,
+                    title: input.description,
+                    values: [],
+                    valueType: typeMap[input.type]
+                })
+                resultContainer.push(tempItem)
+            } else {
+                if (traversedDataTypes.indexOf(input.type) !== -1) {
+                    // circular reference
+                    let valueType
+                    if (input.type === traversedDataTypes[traversedDataTypes.length - 1]) {
+                        valueType = 'parent'
+                    } else {
+                        error = 'Circular Reference'
+                    }
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: input.name,
+                        title: input.description,
+                        values: [],
+                        valueType: valueType
+                    })
+                    resultContainer.push(tempItem)
+                    return
+                }
+                traversedDataTypes.push(input.type)
+                traversedLayers++
+                let dataType = _.find(dataSource.datatypes, (dt) => {
+                    return dt.id === input.type
+                })
+                let attributes = _.filter(dataSource.attributes, (attr) => {
+                    return attr.parentId === input.type
+                })
+                // dataSource has bug, attributes maybe duplicated
+                attributes = _.uniq(attributes, 'id')
+                if (dataType.format === 1) {
+                    //enums
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: input.name,
+                        title: input.description,
+                        values: [],
+                        valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
+                    })
+                    resultContainer.push(tempItem)
+                } else {
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: input.name,
+                        title: input.description,
+                        values: [],
+                        valueType: input.isArray ? 'array' : 'object'
+                    })
+                    resultContainer.push(tempItem)
+                    attributes.forEach((attr) => {
+                        getItem(attr, tempItem.values, data.values)
+                    })
+                }
+            }
+        }
+        let getData = (inputs, data) => {
+            inputs.forEach((input, index) => {
+                getItem(input, result, data)
+                for (let i = 0; i < traversedLayers; i++) {
+                    traversedDataTypes.pop()
+                }
+                traversedLayers = 0
+            })
+        }
+        getData(request.inputs, savedData)
+        return error || result
     },
 
     convertNEIOutputsToJSON(request, dataSource, itemTemplate) {

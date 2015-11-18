@@ -66,7 +66,8 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
 const DEFAULT_BODY_RAW_JSON_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'string',
     values: [],
-    typeChangeable: true
+    typeChangeable: true,
+    valueReadonly: false
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
@@ -262,16 +263,22 @@ let tabConActions = {
             savedRequest = savedRequest || {}
             // nei request special logic
             if (!Util.isNoBodyMethod(request.method)) {
+                request.isRest = true
                 if (request.isRest) {
                     // restful request
                     builders.bodyType = {
                         type: 'raw',
-                        name: 'JSON(application/json)'
+                        name: 'JSON(application/json)',
+                        value: 'application/json'
                     }
-                    // init request inputs, build json, saved data is `bodyRawData`
-                    let savedData = savedRequest[RequestDataMap.bodyRawData]
-                    builders.bodyRawData = Util.convertNEIInputsToJSON(request, dataSource, savedData)
-                    builders.bodyRawDataOriginal = builders.bodyRawData
+                    // init request inputs, build json kvs, saved data is `bodyRawJSONKVs`
+                    let savedData = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey] || []
+                    //builders.bodyRawData = Util.convertNEIInputsToJSON(request, dataSource, savedData)
+                    //builders.bodyRawDataOriginal = builders.bodyRawData
+                    builders.bodyRawJSONKVs = Util.convertNEIInputsToJSON(request, dataSource, savedData, Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                        readonly: true,
+                        typeChangeable: false
+                    }))
                 } else {
                     let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
                     if (savedHeaders && savedHeaders.length) {
@@ -362,18 +369,34 @@ let tabConActions = {
                 })
                 builders.bodyRawDataOriginal = builders.bodyRawData
                 // refine res checker kvs
-                let refineData = (data) => {
+                let refineResCheckerData = (data) => {
                     return data.values.map((item) => {
                         return Object.assign({}, DEFAULT_RES_CHECKER_KV, {
                             key: item.key,
                             checked: item.checked,
-                            values: refineData(item),
+                            values: refineResCheckerData(item),
                             valueType: item.value_type
                         })
                     })
                 }
                 builders.resCheckerKVs.forEach((item) => {
-                    item.values = refineData(item)
+                    item.values = refineResCheckerData(item)
+                })
+                // refine body raw json kvs
+                let refineBodyRawJSONData = (data) => {
+                    return data.values.map((item) => {
+                        return Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                            key: item.key,
+                            value: item.value,
+                            checked: item.checked,
+                            values: refineBodyRawJSONData(item),
+                            valueType: item.value_type,
+                            valueReadonly: item.value_readonly,
+                        })
+                    })
+                }
+                builders.bodyRawJSONKVs.forEach((item) => {
+                    item.values = refineBodyRawJSONData(item)
                 })
             }
         }
@@ -820,12 +843,19 @@ let bodyRawJSONActions = {
         row.target.key = value
     },
 
+    changeBodyRawJSONKVValue(rowIndex, value) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        row.target.value = value
+    },
+
     changeBodyRawJSONKVValueType(rowIndex, valueType) {
         let row = this.getBodyRawJSONRow(rowIndex)
         row.target.values = []
+        row.target.valueReadonly = false
         row.target.valueType = valueType
         if (/^(object|array)$/.test(valueType)) {
             row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
+            row.target.valueReadonly = true
         }
     }
 }

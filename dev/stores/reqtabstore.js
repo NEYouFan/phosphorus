@@ -93,22 +93,38 @@ let actions = {
         })
         // refine `res_checker_data`
         if (savedData['is_nei']) {
-            savedData.res_checker_data = null
+            delete savedData.res_checker_data
         } else {
-            let refineData = (data) => {
+            let refineResCheckerData = (data) => {
                 return data.values.map((item) => {
                     return {
                         key: item.key,
                         checked: item.checked,
-                        values: refineData(item),
+                        values: refineResCheckerData(item),
                         value_type: item.valueType
                     }
                 })
             }
-            savedData.res_checker_data.forEach((item) => {
-                item.values = refineData(item)
+            savedData['res_checker_data'].forEach((item) => {
+                item.values = refineResCheckerData(item)
             })
         }
+        // refine `body_raw_json`
+        let refineBodyRawJSONData = (data) => {
+            return data.values.map((item) => {
+                return {
+                    key: item.key,
+                    value: item.value,
+                    checked: item.checked,
+                    values: refineBodyRawJSONData(item),
+                    value_type: item.valueType,
+                    value_readonly: item.valueReadonly
+                }
+            })
+        }
+        savedData['body_raw_json'].forEach((item) => {
+            item.values = refineBodyRawJSONData(item)
+        })
         // save to local storage
         console.log(savedData)
         // already have id, directly save it

@@ -41,8 +41,9 @@ class KeyValueT extends KeyValue {
                 let valueInputProps = {
                     placeholder: kv.valuePlaceholder,
                     value: kv.value,
+                    readOnly: kv.valueReadonly,
                     onChange: (e) => {
-                        this.changeValue(e, index, kv)
+                        this.changeValue(e, kv.index, kv)
                     },
                     list: kv.valueDataList,
                     className: kv.valueError ? 'inp-error' : ''

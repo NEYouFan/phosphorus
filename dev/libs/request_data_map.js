@@ -32,7 +32,8 @@ const REQUEST_DATA_MAP = {
         requiredField: 'name',
         fields: {
             name: 'name',
-            type: 'type'
+            type: 'type',
+            value: 'value'
         }
     },
     bodyFormDataKVs: {
@@ -73,7 +74,8 @@ const REQUEST_DATA_MAP = {
             key: 'key',
             value: 'value',
             values: 'values',
-            valueType: 'value_type'
+            valueType: 'value_type',
+            valueReadonly: 'value_readonly'
         }
     }
 }

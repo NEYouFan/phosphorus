@@ -96,17 +96,27 @@ class ReqBuilderBody extends React.Component {
     }
 
     getRawJSONCon() {
-        return (
-            <KeyValueVT
-                kvs={this.props.builders.bodyRawJSONKVs}
-                toggleKV={(rowIndex,kv) => {this.toggleBodyRawJSONKV(rowIndex,kv)}}
-                addKV={(rowIndex) => {this.addBodyRawJSONKV(rowIndex)}}
-                removeKV={(rowIndex) => {this.removeBodyRawJSONKV(rowIndex)}}
-                changeKVKey={(rowIndex, value) => {this.changeBodyRawJSONKVKey(rowIndex, value)}}
-                changeKVValue={(rowIndex, value) => {this.changeBodyRawJSONKVValue(rowIndex, value)}}
-                changeKVValueType={(rowIndex, value) => {this.changeBodyRawJSONKVValueType(rowIndex, value)}}
-                />
-        )
+        let kvvt
+        if (this.props.builders.bodyRawJSONKVs.length === 0) {
+            kvvt = (
+                <div className="empty-tip">
+                    This request url has no input parameters.
+                </div>
+            )
+        } else {
+            kvvt = (
+                <KeyValueVT
+                    kvs={this.props.builders.bodyRawJSONKVs}
+                    toggleKV={(rowIndex,kv) => {this.toggleBodyRawJSONKV(rowIndex,kv)}}
+                    addKV={(rowIndex) => {this.addBodyRawJSONKV(rowIndex)}}
+                    removeKV={(rowIndex) => {this.removeBodyRawJSONKV(rowIndex)}}
+                    changeKVKey={(rowIndex, value) => {this.changeBodyRawJSONKVKey(rowIndex, value)}}
+                    changeKVValue={(rowIndex, value) => {this.changeBodyRawJSONKVValue(rowIndex, value)}}
+                    changeKVValueType={(rowIndex, value) => {this.changeBodyRawJSONKVValueType(rowIndex, value)}}
+                    />
+            )
+        }
+        return kvvt
     }
 
     getFormDataCon() {
@@ -190,7 +200,7 @@ class ReqBuilderBody extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
-    toggleBodyFormDataKV(rowIndex,kv) {
+    toggleBodyFormDataKV(rowIndex, kv) {
         ReqBodyAction.toggleBodyFormDataKV(rowIndex)
         ReqTabAction.setDirtyTab()
     }

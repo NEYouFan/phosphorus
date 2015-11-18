@@ -14,7 +14,7 @@ class ReqBuilderURLParams extends React.Component {
             hide: this.props.builders.activeTabName !== 'URL Params'
         })
         let modClass = 'mod-reqbuilder-urlparams ' + (this.props.modClass || '')
-        let urlParams = 'This url has no parameters.'
+        let urlParams = 'This request url has no parameters.'
         if (this.props.builders.paramKVs.length) {
             let kvProps = {
                 kvs: this.props.builders.paramKVs,
