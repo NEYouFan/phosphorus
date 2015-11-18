@@ -57,9 +57,9 @@ class KeyValueT extends KeyValue {
                 return (
                     <div className={rowClasses} key={index} onMouseOut={(e)=>{this.mouseOutRow(e)}} onMouseOver={(e)=>{this.mouseOverRow(e)}}>
                         <div className="kv-row-wrap">
-                            {titleTip}
                             <div className={okSignClasses} onClick={()=>{this.toggle(kv.index, kv)}}></div>
                             {inputs}
+                            {titleTip}
                             <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(kv.index)}}></div>
                         </div>
                         <div className="sub-kv-row">{getSubNodes(kv)}</div>

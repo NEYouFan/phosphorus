@@ -8,18 +8,22 @@
     }
 
     .input-wrap {
+      &:hover + {
+        .res-title-tip {
+          opacity 1
+        }
+      }
 
+      &.active + {
+        .res-title-tip {
+          opacity 1
+        }
+      }
     }
 
     &-wrap {
       display: flex
       position: relative
-
-      &:hover {
-        .res-title-tip {
-          opacity 1
-        }
-      }
     }
 
     .sub-kv-row {
@@ -29,12 +33,6 @@
 
       .kv-row-wrap {
         margin: 0 0 0 20px
-
-        &:hover {
-          .res-title-tip {
-            opacity 1
-          }
-        }
       }
 
       .sub-kv-row {

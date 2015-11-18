@@ -64,6 +64,17 @@ const REQUEST_DATA_MAP = {
             values: 'values',
             valueType: 'value_type'
         }
+    },
+    bodyRawJSONKVs: {
+        saveKey: 'body_raw_json',
+        requiredField: 'key',
+        fields: {
+            checked: 'checked',
+            key: 'key',
+            value: 'value',
+            values: 'values',
+            valueType: 'value_type'
+        }
     }
 }
 

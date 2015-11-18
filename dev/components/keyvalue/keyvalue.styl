@@ -15,6 +15,18 @@
 
       &.active {
         background-color: #e8f2fe;
+
+        &+ {
+          .title-tip {
+            opacity 1
+          }
+        }
+      }
+
+      &:hover + {
+        .title-tip {
+          opacity 1
+        }
       }
     }
 
@@ -102,11 +114,6 @@
 
     }
 
-    &:hover {
-      .title-tip {
-        opacity 1
-      }
-    }
   }
 
   .title-tip {

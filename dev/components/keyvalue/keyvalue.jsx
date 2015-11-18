@@ -47,9 +47,9 @@ class KeyValue extends React.Component {
             }
             return (
                 <div className={rowClasses} key={index}>
-                    {titleTip}
                     <div className={okSignClasses} onClick={()=>{this.toggle(index, kv)}}></div>
                     {inputs}
+                    {titleTip}
                     <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(index)}}></div>
                 </div>
             )

@@ -67,8 +67,6 @@ let actions = {
     },
 
     getCollections(callback) {
-        // already fetched
-        //if (collectionsData !== null) return
         //StorageArea.clear()
         //return
         StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
@@ -84,10 +82,6 @@ let actions = {
                 })
             })
             callback()
-            //Util.fetchNEICollections(NEI_SERVER_URL, hosts, (collections, res) => {
-            //    collectionsData.unshift(...collections)
-            //    callback()
-            //})
         })
     },
 
