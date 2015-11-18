@@ -336,7 +336,7 @@ class Collections extends React.Component {
 
     onClickReqMenuItem(menuItem, collection, req, evt) {
         evt.stopPropagation()
-        evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
+        evt.currentTarget.parentNode.parentNode.parentNode.classList.remove('show-action-menu')
         let data = Object.assign({
             collectionId: collection.id
         }, req)
