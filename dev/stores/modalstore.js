@@ -117,7 +117,7 @@ AppDispatcher.register((action) => {
             actions.openModal({
                 type: AppConstants.MODAL_LEAVING_DIRTY_TAB,
                 title: 'Please confirm',
-                okText: 'Leave anyway!',
+                okText: 'Leave',
                 data: action.data
             })
             ModalStore.emitChange()
@@ -127,7 +127,7 @@ AppDispatcher.register((action) => {
             actions.openModal({
                 type: AppConstants.MODAL_CLOSING_DIRTY_TAB,
                 title: 'Please confirm',
-                okText: 'Close anyway!',
+                okText: 'Close',
                 data: action.data
             })
             ModalStore.emitChange()

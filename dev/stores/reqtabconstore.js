@@ -123,8 +123,8 @@ const DEFAULT_CON_ITEM = {
     showReqMethodList: false,
     showResPrettyTypeList: false,
     aceEditorConfig: {
-        show: true,
-        mode: 'json',
+        show: false,
+        mode: 'text',
         readOnly: false
     }
 }
@@ -155,40 +155,61 @@ let tabCons = {
         {
             value: 'text',
             name: 'Text',
-            editorMode: 'text'
+            editorConfig: {
+                show: true,
+                mode: 'text'
+            }
         },
         {
             value: 'text/plain',
             name: 'Text(text/plain)',
-            editorMode: 'text'
+            editorConfig: {
+                show: true,
+                mode: 'text'
+            }
         },
         {
             value: 'application/json',
             name: 'JSON(application/json)',
-            editorMode: 'json'
+            editorConfig: {
+                show: false
+            }
         },
         {
             value: 'application/javascript',
             name: 'Javascript(application/javascript)',
-            editorMode: 'javascript'
+            editorConfig: {
+                show: true,
+                mode: 'javascript'
+            }
         },
         {
             value: 'application/xml',
             name: 'XML(application/xml)',
-            editorMode: 'xml'
+            editorConfig: {
+                show: true,
+                mode: 'xml'
+            }
         },
         {
             value: 'text/xml',
             name: 'XML(text/xml)',
-            editorMode: 'xml'
+            editorConfig: {
+                show: true,
+                mode: 'xml'
+            }
         },
         {
             value: 'text/html',
             name: 'XML(text/html)',
-            editorMode: 'html'
+            editorConfig: {
+                show: true,
+                mode: 'html'
+            }
         }
     ],
-    reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
+    //reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
+    reqMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     prettyTypes: ['JSON', 'XML', 'HTML', 'Text'],
     items: [_.cloneDeep(DEFAULT_CON_ITEM)],
     aceEditorId: 'brace-editor'
@@ -385,17 +406,17 @@ let tabConActions = {
         this.changeAceEditorConfig()
     },
 
-    changeAceEditorConfig(editorMode) {
+    changeAceEditorConfig(editorConfig) {
         let tabCon = tabCons.items[tabIndex]
         let activeTabName = tabCon.builders.activeTabName
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {
-            show: activeTabName === REQUEST_BODY_STR && bodyType.type === 'raw' ||
+            show: activeTabName === REQUEST_BODY_STR && bodyType.type === 'raw' && bodyType.value !== 'application/json' ||
             activeTabName === RESPONSE_STR && tabCon.builders.reqStatus === REQ_SUCCEEDED,
             readOnly: activeTabName === RESPONSE_STR
         }
-        if (editorMode) {
-            config.mode = editorMode
+        if (editorConfig) {
+            Object.assign(config, editorConfig)
         }
         Object.assign(tabCon.aceEditorConfig, config)
     },
@@ -633,7 +654,10 @@ let bodyActions = {
         let contentType = _.find(headers, (header) => {
             return header.key == CONTENT_TYPE_STR
         })
-        tabCons.items[tabIndex].builders.bodyType.name = bodyType.name
+        Object.assign(tabCons.items[tabIndex].builders.bodyType, {
+            name: bodyType.name,
+            value: bodyType.value
+        })
         if (!isTextType) {
             if (contentType) {
                 // update header `Content-type`
@@ -652,7 +676,7 @@ let bodyActions = {
                 return header.key === CONTENT_TYPE_STR
             })
         }
-        tabConActions.changeAceEditorConfig(bodyType.editorMode)
+        tabConActions.changeAceEditorConfig(bodyType.editorConfig)
     },
 
     toggleBodyTypeList() {
