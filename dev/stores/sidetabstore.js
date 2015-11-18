@@ -382,35 +382,41 @@ let actions = {
         if (!options || !options.collectionId || !options.id) {
             return callback()
         }
-        let dealData = (collections, hosts, requests) => {
+        let dealData = (collections) => {
             let collection = _.find(collections, (c) => {
                 return c.id === options.collectionId
             })
-            _.remove(collection.folders, (f) => {
+            let removedFolders = _.remove(collection.folders, (f) => {
                 return f.id === options.id
             })
             _.remove(collection.requests, (req) => {
                 return req.folderId === options.id
             })
-            if (requests) {
-                collection.folders.orders.forEach((order) => {
-                    delete requests[order]
-                })
-            }
+            return removedFolders[0]
         }
         StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
-            let collections = result.collections || []
-            let hosts = result.hosts || {}
-            let requests = result.requests || {}
+            let collections = result.collections
+            let hosts = result.hosts
+            let requests = result.requests
             dealData(collectionsData)
-            dealData(collections, hosts, requests)
-            // remove activated request tab
-            ReqTabStore.removeTabById(tabs.activeReqId)
-            StorageArea.set({
-                'collections': collections,
-                'hosts': hosts,
-                'requests': requests
-            }, () => {
+            let removedFolder = dealData(collections)
+            removedFolder.orders.forEach((order) => {
+                delete requests[order]
+            })
+            delete hosts.folders[removedFolder.id]
+            async.parallel([
+                (cb) => {
+                    StorageArea.set({
+                        collections: collections,
+                        hosts: hosts,
+                        requests: requests
+                    }, cb)
+                },
+                // remove activated request tab
+                (cb) => {
+                    ReqTabStore.removeTabById(tabs.activeReqId, cb)
+                }
+            ], (err) => {
                 callback()
             })
         })
@@ -434,6 +440,8 @@ let actions = {
                 options.tab.name = reqItem.name
                 options.tab.isDirty = false
                 ReqTabStore.changeTab(options.tab)
+                // highlight saved request
+                tabs.activeReqId = reqItem.id
                 // add request to local store
                 ReqTabStore.saveTabToLocal(callback)
             })
