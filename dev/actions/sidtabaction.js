@@ -57,6 +57,12 @@ class SideTabAction  {
         })
     }
 
+    static clearLocalStorage() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_CLEAR_LOCAL_STORAGE
+        })
+    }
+
     static editCollection(options) {
         AppDispatcher.dispatch({
             actionType: AppConstants.SIDE_EDIT_COLLECTION,

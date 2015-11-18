@@ -12,6 +12,7 @@ import LeavingDirtyTab from './leaving.dirty.tab.jsx'
 import CloseingDirtyTab from './closing.dirty.tab.jsx'
 import CreateCollection from './create.collection.jsx'
 import ImportCollection from './import.collection.jsx'
+import ClearLocalStorage from './clear.localstorage.jsx'
 import EditCollection from './edit.collection.jsx'
 import CreateFolder from './create.folder.jsx'
 import DeleteCollection from './deleting.collection.jsx'
@@ -107,6 +108,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_IMPORT_COLLECTION:
                 return (
                     <ImportCollection modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_CLEAR_LOCAL_STORAGE:
+                return (
+                    <ClearLocalStorage modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_EDIT_COLLECTION:

@@ -239,7 +239,6 @@ let tabConActions = {
         StorageArea.get('requests', (result) => {
             let requests = result.requests || {}
             let savedRequest = requests[request.id]
-            let builders = newTabCon.builders
             console.log(savedRequest)
             this.__dealRequest(request, dataSource, savedRequest, newTabCon)
             tabCons.items[tabIndex] = newTabCon
@@ -967,6 +966,14 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 aceEditorId: tabCons.aceEditorId
             }
         }
+    },
+
+    removeCon(tabIndex) {
+        actions.removeCon(tabIndex)
+    },
+
+    addCon() {
+        actions.addCon()
     },
 
     getCurrentCon() {

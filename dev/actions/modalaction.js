@@ -85,6 +85,12 @@ class ModalAction  {
         })
     }
 
+    static openClearLocalStorageModal() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_CLEAR_LOCAL_STORAGE
+        })
+    }
+
     static openEditFolderModal(folder) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_EDIT_FOLDER,

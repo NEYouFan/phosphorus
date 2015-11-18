@@ -50,20 +50,27 @@ let actions = {
         if (!tabId) {
             return callback()
         }
-        let tabIndex
+        let tabIndex = null
         _.remove(tabs.items, (tab, index) => {
             if (tab.id === tabId) {
                 tabIndex = index
                 return true
             }
         })
+        if (tabIndex === null) {
+            // tab is not opened
+            return callback()
+        }
+        // remove tab content
+        ReqTabConStore.removeCon(tabIndex)
         let isActive = tabs.activeIndex === tabIndex
         if (tabs.items.length === 0) {
             this.addTab()
+            ReqTabConStore.addCon()
         }
         let nextActiveIndex = Util.getNextActiveIndex(isActive, tabIndex, tabs.activeIndex)
         this.changeIndex(nextActiveIndex)
-        callback()
+        callback(tabIndex)
     },
 
     changeTab(tab) {
@@ -159,19 +166,6 @@ let actions = {
         })
     },
 
-    deleteTabData(req, callback) {
-        if (!req || !req.id) {
-            return callback()
-        }
-        StorageArea.get('requests', (result) => {
-            let requests = result.requests || {}
-            delete requests[req.id]
-            StorageArea.set({requests: requests}, () => {
-                callback()
-            })
-        })
-    },
-
     updateTabName(tabId, name) {
         let tab = _.find(tabs.items, (tab) => {
             return tab.id === tabId
@@ -213,10 +207,6 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
     setTabUrl(tabIndex, tabUrl) {
         let tab = tabs.items[tabIndex]
         tab.url = tabUrl
-    },
-
-    deleteTabData(req, callback) {
-        actions.deleteTabData(req, callback)
     },
 
     changeTab(tab) {

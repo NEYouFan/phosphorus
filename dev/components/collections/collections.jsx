@@ -196,6 +196,9 @@ class Collections extends React.Component {
         return (
             <div className={className}>
                 <div className="mod-collection-actions">
+                    <span className="icon-wrap" onClick={(e)=>{this.clearLocalStorage(e)}} title="Clear all local storage data">
+                        <em className="glyphicon glyphicon-trash"></em>
+                    </span>
                     <span className="icon-wrap" onClick={(e)=>{this.createCollection(e)}} title="Add new collection">
                         <em className="glyphicon glyphicon-briefcase"></em>
                         <em className="glyphicon glyphicon-plus"></em>
@@ -388,12 +391,16 @@ class Collections extends React.Component {
         ReqTabConAction.updateConByRequest(request, collection)
     }
 
-    createCollection(e) {
+    createCollection(evt) {
         ModalAction.openCreateCollModal()
     }
 
-    importCollection(e) {
+    importCollection(evt) {
         ModalAction.openImportCollModal()
+    }
+
+    clearLocalStorage(evt) {
+        ModalAction.openClearLocalStorageModal()
     }
 
 }

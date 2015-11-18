@@ -11,6 +11,7 @@ import Util from '../libs/util'
 import StorageArea from '../libs/storagearea'
 import Requester from '../components/requester/requester'
 import ReqTabStore from './reqtabstore'
+import ReqTabConStore from './reqtabconstore'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_HISTORY = {
@@ -54,8 +55,8 @@ let tabs = {
 
 let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 //let NEI_SERVER_URL = 'http://127.0.0.1'
-let historyData = null
-let collectionsData = null
+let historyData = []
+let collectionsData = []
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Delete']
 let folderActionMenus = ['Edit host', 'Edit', 'Delete']
 let reqActionMenus = ['Edit', 'Move', 'Delete']
@@ -67,8 +68,6 @@ let actions = {
     },
 
     getCollections(callback) {
-        //StorageArea.clear()
-        //return
         StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
             console.log(result)
             let hosts = result.hosts || {}
@@ -90,6 +89,11 @@ let actions = {
                 requests: requests
             })
         })
+    },
+
+    clearLocalStorage(callback) {
+        collectionsData = []
+        StorageArea.clear(callback)
     },
 
     changeCollHost(collection, host, callback) {
@@ -334,7 +338,7 @@ let actions = {
                 delete hosts.folders[folder.id]
             })
             delete hosts.collections[options.id]
-            async.parallel([
+            async.waterfall([
                 (cb) => {
                     StorageArea.set({
                         collections: collections,
@@ -342,9 +346,13 @@ let actions = {
                         requests: requests
                     }, cb)
                 },
-                // remove activated request tab
+                // remove all tabs if opened
                 (cb) => {
-                    ReqTabStore.removeTabById(tabs.activeReqId, cb)
+                    async.eachSeries(removedCollections[0].requests, (req, cbb) => {
+                        ReqTabStore.removeTabById(req.id, cbb)
+                    }, (err) => {
+                        cb()
+                    })
                 }
             ], (err) => {
                 callback()
@@ -404,7 +412,7 @@ let actions = {
                 delete requests[order]
             })
             delete hosts.folders[removedFolder.id]
-            async.parallel([
+            async.waterfall([
                 (cb) => {
                     StorageArea.set({
                         collections: collections,
@@ -412,9 +420,13 @@ let actions = {
                         requests: requests
                     }, cb)
                 },
-                // remove activated request tab
+                // remove all tabs if opened
                 (cb) => {
-                    ReqTabStore.removeTabById(tabs.activeReqId, cb)
+                    async.eachSeries(removedFolder.orders, (order, cbb) => {
+                        ReqTabStore.removeTabById(order, cbb)
+                    }, (err) => {
+                        cb()
+                    })
                 }
             ], (err) => {
                 callback()
@@ -476,12 +488,12 @@ let actions = {
             })
         }
         StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
+            let collections = result.collections || []
             dealData(collectionsData)
-            dealData(savedCollections)
+            dealData(collections)
             // update tab name
             ReqTabStore.updateTabName(options.req.id, options.name)
-            StorageArea.set({'collections': savedCollections}, () => {
+            StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
@@ -527,10 +539,10 @@ let actions = {
             }
         }
         StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
+            let collections = result.collections || []
             dealData(collectionsData)
-            dealData(savedCollections)
-            StorageArea.set({'collections': savedCollections}, () => {
+            dealData(collections)
+            StorageArea.set({'collections': collections}, () => {
                 callback()
             })
         })
@@ -544,7 +556,7 @@ let actions = {
             let collection = _.find(collections, (c) => {
                 return c.id === options.collectionId
             })
-            _.remove(collection.requests, (r) => {
+            let removedRequests = _.remove(collection.requests, (r) => {
                 return r.id === options.id
             })
             collection.folders.forEach((folder) => {
@@ -552,24 +564,24 @@ let actions = {
                     return order === options.id
                 })
             })
+            return removedRequests[0]
         }
-        StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
+        StorageArea.get(['collections', 'requests'], (result) => {
+            let collections = result.collections
+            let requests = result.requests
             dealData(collectionsData)
-            dealData(savedCollections)
-            async.parallel([
+            let removedRequest = dealData(collections)
+            delete requests[removedRequest.id]
+            async.waterfall([
                 (cb) => {
-                    StorageArea.set({'collections': savedCollections}, cb)
-                },
-                // delete request in local store `requests`
-                (cb) => {
-                    ReqTabStore.deleteTabData({
-                        id: options.id
+                    StorageArea.set({
+                        collections: collections,
+                        requests: requests
                     }, cb)
                 },
-                // close tab if the request is opened
+                // remove tab if the request is opened
                 (cb) => {
-                    ReqTabStore.removeTabById(options.id, cb)
+                    ReqTabStore.removeTabById(removedRequest.id, cb)
                 }
             ], (err) => {
                 callback()
@@ -662,6 +674,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_IMPORT_COLLECTION:
             actions.importCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_CLEAR_LOCAL_STORAGE:
+            actions.clearLocalStorage(() => {
                 SideTabStore.emitChange()
             })
             break

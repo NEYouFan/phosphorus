@@ -155,6 +155,17 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_CLEAR_LOCAL_STORAGE:
+            actions.openModal({
+                type: AppConstants.MODAL_CLEAR_LOCAL_STORAGE,
+                title: 'Are you sure?',
+                okText: 'Yes',
+                cancelText: 'No',
+                data: {}
+            })
+            ModalStore.emitChange()
+            break
+
         case AppConstants.MODAL_EDIT_COLLECTION:
             actions.openModal({
                 type: AppConstants.MODAL_EDIT_COLLECTION,
