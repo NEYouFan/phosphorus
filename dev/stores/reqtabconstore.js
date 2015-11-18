@@ -81,6 +81,24 @@ const DEFAULT_RES_SHOW_TYPE = {
 }
 const DEFAULT_CON_ITEM = {
     builders: {
+        bodyTypes: [
+            {
+                type: 'raw',
+                disabled: false
+            },
+            {
+                type: 'x-www-form-urlencoded',
+                disabled: false
+            },
+            {
+                type: 'form-data',
+                disabled: false
+            },
+            {
+                type: 'binary',
+                disabled: false
+            }
+        ],
         items: [
             {
                 name: URL_PARAMS_STR,
@@ -140,24 +158,6 @@ const DEFAULT_CON_ITEM = {
 let tabIndex = 0
 
 let tabCons = {
-    bodyTypes: [
-        {
-            type: 'raw',
-            disabled: false
-        },
-        {
-            type: 'x-www-form-urlencoded',
-            disabled: false
-        },
-        {
-            type: 'form-data',
-            disabled: false
-        },
-        {
-            type: 'binary',
-            disabled: false
-        }
-    ],
     rawTypes: [
         {
             value: 'text',
@@ -257,7 +257,7 @@ let tabConActions = {
         let builders = newTabCon.builders
         let tabUrl = request.url
         if (request.isNEI) {
-            tabCons.bodyTypes.forEach((bodyType) => {
+            builders.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = true
             })
             savedRequest = savedRequest || {}
@@ -341,7 +341,7 @@ let tabConActions = {
                 typeChangeable: false
             }))
         } else {
-            tabCons.bodyTypes.forEach((bodyType) => {
+            builders.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = false
             })
             if (savedRequest) {
@@ -962,7 +962,6 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
             reqTabCon: {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
-                bodyTypes: tabCons.bodyTypes,
                 rawTypes: tabCons.rawTypes,
                 prettyTypes: tabCons.prettyTypes,
                 aceEditorId: tabCons.aceEditorId

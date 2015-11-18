@@ -46,7 +46,7 @@ class ReqTabCon extends React.Component {
             }
             let reqBuilderBodyProps = {
                 tabIndex: index,
-                bodyTypes: tabCons.bodyTypes,
+                bodyTypes: builders.bodyTypes,
                 rawTypes: tabCons.rawTypes,
                 builders: builders,
                 showRawTypeList: tabCons.reqCons[index].showBodyRawTypeList

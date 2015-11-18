@@ -116,7 +116,7 @@ AppDispatcher.register((action) => {
         case AppConstants.MODAL_LEAVING_DIRTY_TAB:
             actions.openModal({
                 type: AppConstants.MODAL_LEAVING_DIRTY_TAB,
-                title: 'Please confirm',
+                title: 'Are you sure?',
                 okText: 'Leave',
                 data: action.data
             })
@@ -126,7 +126,7 @@ AppDispatcher.register((action) => {
         case AppConstants.MODAL_CLOSING_DIRTY_TAB:
             actions.openModal({
                 type: AppConstants.MODAL_CLOSING_DIRTY_TAB,
-                title: 'Please confirm',
+                title: 'Are you sure?',
                 okText: 'Close',
                 data: action.data
             })

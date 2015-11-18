@@ -8,6 +8,23 @@
       margin: 0 60px 0 0
       display: flex
 
+      &.disabled {
+        cursor: default
+        color: #ccc
+
+        label {
+          cursor: default
+        }
+      }
+
+      &.checked {
+        color: #333
+
+        .reqbuilder-body-rawtype {
+          color: #333
+        }
+      }
+
       .reqbuilder-body-rawtype {
         font-size: 12px
         position: relative
@@ -41,11 +58,6 @@
     label {
       display: flex
       cursor: pointer
-
-      &.disabled {
-        cursor: default
-        color: #ccc
-      }
 
       input {
         cursor: pointer
