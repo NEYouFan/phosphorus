@@ -50,7 +50,11 @@ const DEFAULT_REQUEST = {
 
 let tabs = {
     activeTabName: 'Collections',
-    activeReqId: null
+    activeReqId: null,
+    loadingTip: {
+        show: false,
+        text: 'loading...'
+    }
 }
 
 let NEI_SERVER_URL = 'http://nei.hz.netease.com'
@@ -68,6 +72,8 @@ let actions = {
     },
 
     getCollections(callback) {
+        //StorageArea.clear()
+        //return
         StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
             console.log(result)
             let hosts = result.hosts || {}
@@ -187,7 +193,20 @@ let actions = {
         if (!options || !options.id) {
             return callback()
         }
-        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection) => {
+        tabs.loadingTip = {
+            show: true,
+            text: 'loading...'
+        }
+        callback() // callback to show loading
+        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
+            if (!response.ok) {
+                tabs.loadingTip.text = 'loading failed'
+                setTimeout(() => {
+                    tabs.loadingTip.show = false
+                    callback()
+                }, 5000)
+                return callback()
+            }
             let dealData = (collections) => {
                 collections.unshift(collection)
             }
@@ -196,6 +215,7 @@ let actions = {
                 dealData(collections)
                 dealData(collectionsData)
                 StorageArea.set({'collections': collections}, () => {
+                    tabs.showLoadingTip = false
                     callback()
                 })
             })

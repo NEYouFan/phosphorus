@@ -288,9 +288,12 @@ let Util = {
             callback(collection, res)
         }
         fetch(projectUrl + pId, fetchOptions).then((response) => {
+            res = response
             return response.json()
         }).then((json) => {
             convertDataAndReturn(json.result)
+        }).catch((err) => {
+            callback(err, res)
         })
     },
 

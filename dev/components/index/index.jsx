@@ -4,6 +4,7 @@
 import './index.styl'
 import React from 'react'
 import Util from '../../libs/util'
+import classNames from 'classnames'
 import SideTabAction from '../../actions/sidtabaction'
 import SideTabStore from '../../stores/sidetabstore'
 import ReqTabStore from '../../stores/reqtabstore'
@@ -78,10 +79,15 @@ class Index extends React.Component {
         let reqTab = this.state.reqTab
         let reqTabTabs = reqTab.tabs
         let reqTabCon = this.state.reqTabCon
+        let classes = classNames({
+            'main-wrap': true,
+            'show-loading': sideTabs.loadingTip.show
+        })
         return (
-            <div className="main-wrap" onClick={()=>{this.hideDropdownMenu()}}>
+            <div className={classes} onClick={()=>{this.hideDropdownMenu()}}>
                 <h1>Phosphorus</h1>
 
+                <div className="loading-tip">{sideTabs.loadingTip.text}</div>
                 <div className="side">
                     <SideTab tabs={sideTabs}/>
                     <Collections sideTab={sideTab} reqTabs={reqTabTabs} activeReqTabIndex={reqTab.activeIndex}/>

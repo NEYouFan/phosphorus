@@ -155,18 +155,16 @@ input.inp-error::-webkit-input-placeholder {
       transform: rotate(360deg);
       -webkit-transform: rotate(360deg)
     }
-  }
-
-  @keyframes sk-bounce {
-    0%, 100% {
-      transform: scale(0.0);
-      -webkit-transform: scale(0.0);
+  } @keyframes sk-bounce {
+      0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+      }
+      50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+      }
     }
-    50% {
-      transform: scale(1.0);
-      -webkit-transform: scale(1.0);
-    }
-  }
 }
 
 .main,
@@ -210,4 +208,28 @@ input.inp-error::-webkit-input-placeholder {
 .copy-textarea {
   position absolute
   left: -9999px
+}
+
+.loading-tip {
+  position: absolute
+  top: -100px
+  left: 50%
+  width 100px
+  margin: 0 0 0 -50px
+  background-color #1acaaf
+  z-index: 999
+  padding: 8px 20px
+  text-align: center
+  box-shadow: 0 1px 4px 0 rgba(26, 102, 175, 0.37);
+  border-radius 0 0 3px 3px
+  cursor: default
+  transition all ease .5s;
+}
+
+.main-wrap {
+  &.show-loading {
+    .loading-tip {
+      top: 0
+    }
+  }
 }
