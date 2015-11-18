@@ -22,7 +22,7 @@ class ResChecker extends React.Component {
         if (this.props.builders.resCheckerKVs === 'Circular Reference') {
             mainCon =
                 <div className="error-tip">
-                    Your outputs definition has Circular Reference, please check it.
+                    Outputs parameters exists Circular Reference, please check it.
                 </div>
         } else {
             mainCon =

@@ -444,9 +444,8 @@ let Util = {
                     let valueType
                     if (input.type === traversedDataTypes[traversedDataTypes.length - 1]) {
                         valueType = 'parent'
-                    } else {
-                        error = 'Circular Reference'
                     }
+                    error = 'Circular Reference'
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: input.name,
                         title: input.description,

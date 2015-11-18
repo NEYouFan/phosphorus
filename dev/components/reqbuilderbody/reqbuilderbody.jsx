@@ -100,10 +100,17 @@ class ReqBuilderBody extends React.Component {
         let kvvt
         if (this.props.builders.bodyRawJSONKVs.length === 0) {
             kvvt = (
-                <div className="empty-tip">
-                    This request url has no input parameters.
+                <div className="tip-con error-tip">
+                    <em className="glyphicon glyphicon-exclamation-sign"></em>
+                    <span>This request url has no input parameters.</span>
                 </div>
             )
+        } else if (this.props.builders.bodyRawJSONKVs === 'Circular Reference') {
+            kvvt =
+                <div className="tip-con error-tip">
+                    <em className="glyphicon glyphicon-exclamation-sign"></em>
+                    <span>Input parameters exists Circular Reference, please check it.</span>
+                </div>
         } else {
             kvvt = (
                 <KeyValueVT
