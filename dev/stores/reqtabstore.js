@@ -47,6 +47,9 @@ let actions = {
     },
 
     removeTabById(tabId, callback) {
+        if (!tabId) {
+            return callback()
+        }
         let tabIndex
         _.remove(tabs.items, (tab, index) => {
             if (tab.id === tabId) {

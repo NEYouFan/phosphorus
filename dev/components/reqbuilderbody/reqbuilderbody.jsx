@@ -100,7 +100,7 @@ class ReqBuilderBody extends React.Component {
         let kvvt
         if (this.props.builders.bodyRawJSONKVs.length === 0) {
             kvvt = (
-                <div className="tip-con error-tip">
+                <div className="tip-con">
                     <em className="glyphicon glyphicon-exclamation-sign"></em>
                     <span>This request url has no input parameters.</span>
                 </div>

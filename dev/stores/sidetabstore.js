@@ -74,6 +74,8 @@ let actions = {
             let hosts = result.hosts || {}
             hosts.collections = hosts.collections || {}
             hosts.folders = hosts.folders || {}
+            let collections = result.collections || []
+            let requests = result.requests || {}
             collectionsData = result.collections || []
             collectionsData.forEach((c) => {
                 c.host = hosts.collections[c.id]
@@ -82,6 +84,11 @@ let actions = {
                 })
             })
             callback()
+            StorageArea.set({
+                hosts: hosts,
+                collections: collections,
+                requests: requests
+            })
         })
     },
 
@@ -310,17 +317,36 @@ let actions = {
         if (!options || !options.id) {
             return callback()
         }
-        StorageArea.get('collections', (result) => {
-            let savedCollections = result.collections || []
-            // update ui
+        StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
+            let collections = result.collections
+            let hosts = result.hosts
+            let requests = result.requests
             _.remove(collectionsData, (c) => {
                 return c.id === options.id
             })
-            _.remove(savedCollections, (c) => {
+            let removedCollections = _.remove(collections, (c) => {
                 return c.id === options.id
             })
-            // update storage
-            StorageArea.set({'collections': savedCollections}, () => {
+            removedCollections[0].requests.forEach((req) => {
+                delete requests[req.id]
+            })
+            removedCollections[0].folders.forEach((folder) => {
+                delete hosts.folders[folder.id]
+            })
+            delete hosts.collections[options.id]
+            async.parallel([
+                (cb) => {
+                    StorageArea.set({
+                        collections: collections,
+                        hosts: hosts,
+                        requests: requests
+                    }, cb)
+                },
+                // remove activated request tab
+                (cb) => {
+                    ReqTabStore.removeTabById(tabs.activeReqId, cb)
+                }
+            ], (err) => {
                 callback()
             })
         })
@@ -356,19 +382,35 @@ let actions = {
         if (!options || !options.collectionId || !options.id) {
             return callback()
         }
-        let dealData = (collections) => {
+        let dealData = (collections, hosts, requests) => {
             let collection = _.find(collections, (c) => {
                 return c.id === options.collectionId
             })
             _.remove(collection.folders, (f) => {
                 return f.id === options.id
             })
+            _.remove(collection.requests, (req) => {
+                return req.folderId === options.id
+            })
+            if (requests) {
+                collection.folders.orders.forEach((order) => {
+                    delete requests[order]
+                })
+            }
         }
-        StorageArea.get('collections', (result) => {
+        StorageArea.get(['hosts', 'collections', 'requests'], (result) => {
             let collections = result.collections || []
+            let hosts = result.hosts || {}
+            let requests = result.requests || {}
             dealData(collectionsData)
-            dealData(collections)
-            StorageArea.set({'collections': collections}, () => {
+            dealData(collections, hosts, requests)
+            // remove activated request tab
+            ReqTabStore.removeTabById(tabs.activeReqId)
+            StorageArea.set({
+                'collections': collections,
+                'hosts': hosts,
+                'requests': requests
+            }, () => {
                 callback()
             })
         })
