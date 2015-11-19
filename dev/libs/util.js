@@ -736,11 +736,19 @@ let Util = {
                     item.valueType = 'array'
                     item.childValueType = 'object'
                     item.valueReadonly = true
-                    setData(value[0], item.values)
+                    let v = value[0]
+                    if (!v || !Object.keys(v).length) {
+                        v = {'':''}
+                    }
+                    setData(v, item.values)
                 } else if (type === 'object') {
                     item.valueType = 'object'
                     item.valueReadonly = true
-                    setData(value, item.values)
+                    let v = value
+                    if (!Object.keys(v).length) {
+                        v = {'':''}
+                    }
+                    setData(v, item.values)
                 } else {
                     item.valueType = type
                     item.value = value
