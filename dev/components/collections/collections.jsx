@@ -73,10 +73,12 @@ class Collections extends React.Component {
                 let collectionActionMenu = this.props.sideTab.actionMenus.collection
                 let folderActionMenu = this.props.sideTab.actionMenus.folder
                 if (collection.isNEI) {
-                    // nei collection only can `edit host` and `delete`
-                    // nei folder only can `edit host`
-                    collectionActionMenu = [collectionActionMenu[0], collectionActionMenu[3]]
+                    collectionActionMenu = collectionActionMenu.concat()
+                    collectionActionMenu.splice(1, 2)
                     folderActionMenu = [folderActionMenu[0]]
+                } else {
+                    collectionActionMenu = collectionActionMenu.concat()
+                    collectionActionMenu.splice(3, 1)
                 }
                 let collClasses = classNames({
                     'coll': true,
@@ -165,11 +167,6 @@ class Collections extends React.Component {
                                 </div>
                             </div>
                             <div className="coll-actions">
-                                <div className="coll-actions-expand-detail"
-                                     onClick={(e)=>{this.toggleCollActionDetail(e)}}>
-                                    <em className="glyphicon glyphicon-arrow-right"></em>
-                                    <em className="glyphicon glyphicon-arrow-left"></em>
-                                </div>
                                 <div className="coll-actions-menus" onClick={(e)=>{this.toggleCollActionMenu(e)}}>
                                     <em className="glyphicon glyphicon-option-horizontal"></em>
                                 </div>
@@ -262,12 +259,6 @@ class Collections extends React.Component {
         target.classList.remove('show-action-menu')
     }
 
-    toggleCollActionDetail(evt) {
-        evt.stopPropagation()
-        // hide action menu
-        evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
-    }
-
     toggleCollActionMenu(evt) {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.toggle('show-action-menu')
@@ -305,6 +296,12 @@ class Collections extends React.Component {
 
             case 'Edit':
                 return ModalAction.openEditCollModal(collection)
+
+            case 'Synchronize':
+                return ModalAction.openSyncCollModal(collection)
+
+            case 'Run all':
+                return ModalAction.openRunCollModal(collection)
 
             case 'Delete':
                 return ModalAction.openDeleteCollModal(collection)

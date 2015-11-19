@@ -177,6 +177,28 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_SYNC_COLLECTION:
+            actions.openModal({
+                type: AppConstants.MODAL_SYNC_COLLECTION,
+                title: 'Are you sure?',
+                okText: 'Yes',
+                cancelText: 'No',
+                data: action.collection
+            })
+            ModalStore.emitChange()
+            break
+
+        case AppConstants.MODAL_RUN_COLLECTION:
+            actions.openModal({
+                type: AppConstants.MODAL_RUN_COLLECTION,
+                title: 'Are you sure?',
+                okText: 'Yes',
+                cancelText: 'No',
+                data: action.collection
+            })
+            ModalStore.emitChange()
+            break
+
         case AppConstants.MODAL_DELETE_COLLECTION:
             actions.openModal({
                 type: AppConstants.MODAL_DELETE_COLLECTION,

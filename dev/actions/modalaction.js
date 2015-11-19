@@ -39,6 +39,20 @@ class ModalAction  {
         })
     }
 
+    static openSyncCollModal(collection) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_SYNC_COLLECTION,
+            collection: collection
+        })
+    }
+
+    static openRunCollModal(collection) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_SYNC_COLLECTION,
+            collection: collection
+        })
+    }
+
     static openDeleteCollModal(collection) {
         AppDispatcher.dispatch({
             actionType: AppConstants.MODAL_DELETE_COLLECTION,

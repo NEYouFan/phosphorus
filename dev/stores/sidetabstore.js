@@ -61,7 +61,7 @@ let tabs = {
 let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = []
 let collectionsData = []
-let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Delete']
+let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Synchronize', 'Run all', 'Delete']
 let folderActionMenus = ['Edit host', 'Edit', 'Delete']
 let reqActionMenus = ['Edit', 'Move', 'Delete']
 
@@ -220,6 +220,43 @@ let actions = {
             }
             let dealData = (collections) => {
                 collections.unshift(collection)
+            }
+            StorageArea.get('collections', (result) => {
+                let collections = result.collections || []
+                dealData(collections)
+                dealData(collectionsData)
+                StorageArea.set({'collections': collections}, () => {
+                    tabs.loadingTip.show = false
+                    callback()
+                })
+            })
+        })
+    },
+
+    syncCollection(options, callback) {
+        if (!options || !options.id || !options.isNEI) {
+            return callback()
+        }
+        tabs.loadingTip = {
+            show: true,
+            text: 'Synchronizing...'
+        }
+        callback() // callback to show tip
+        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
+            if (!response.ok) {
+                tabs.loadingTip.text = 'Synchronization failed'
+                setTimeout(() => {
+                    tabs.loadingTip.show = false
+                    callback()
+                }, 5000)
+                return callback()
+            }
+            let dealData = (collections) => {
+                collections.forEach((c, index, collections) => {
+                    if (c.id === options.id) {
+                        collections[index] = collection
+                    }
+                })
             }
             StorageArea.get('collections', (result) => {
                 let collections = result.collections || []
@@ -717,6 +754,12 @@ AppDispatcher.register((action) => {
 
         case AppConstants.SIDE_EDIT_COLLECTION:
             actions.editCollection(action.options, () => {
+                SideTabStore.emitChange()
+            })
+            break
+
+        case AppConstants.SIDE_SYNC_COLLECTION:
+            actions.syncCollection(action.options, () => {
                 SideTabStore.emitChange()
             })
             break
