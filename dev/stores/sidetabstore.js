@@ -215,7 +215,7 @@ let actions = {
                 dealData(collections)
                 dealData(collectionsData)
                 StorageArea.set({'collections': collections}, () => {
-                    tabs.showLoadingTip = false
+                    tabs.loadingTip.show = false
                     callback()
                 })
             })
