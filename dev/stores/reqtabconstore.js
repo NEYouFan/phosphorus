@@ -254,7 +254,7 @@ let tabConActions = {
 
     __dealRequest(request, dataSource, savedRequest, newTabCon) {
         let builders = newTabCon.builders
-        let tabUrl = request.url
+        let tabUrl = request.path
         if (request.isNEI) {
             builders.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = true
@@ -332,7 +332,7 @@ let tabConActions = {
                         param.value = foundSavedPV.value
                     }
                 })
-                tabUrl = Util.getURLByQueryParams(request.url, builders.paramKVs)
+                tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
             }
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
@@ -403,6 +403,7 @@ let tabConActions = {
             id: request.id,
             name: request.name || tabUrl,
             url: tabUrl,
+            host: request.host,
             method: request.method,
             isNEI: request.isNEI,
             isDirty: false,
@@ -458,7 +459,7 @@ let tabConActions = {
         let canSend = true
         let tabState = ReqTabStore.getAll()
         let tab = tabState.reqTab.tabs[tabIndex]
-        let tabUrl = tab.url
+        let tabUrl = tab.host +     tab.url
         // check url
         if (!tabUrl) {
             // url can't be blank

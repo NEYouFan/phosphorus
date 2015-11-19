@@ -30,12 +30,13 @@ class Collections extends React.Component {
         })
         let collections = this.props.sideTab.collections
         let collectionNodes
-        let getReqNode = (req, reqURL, collection, index) => {
+        let getReqNode = (req, collection, index) => {
             let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
             let classes = classNames({
                 'coll-req': true,
                 'active': this.props.sideTab.tabs.activeReqId === req.id
             })
+            let reqURL = req.host + req.path
             let displayName = req.name || reqURL
             let reqActions
             if (!req.isNEI) {
@@ -59,7 +60,7 @@ class Collections extends React.Component {
                     key={index}
                     onMouseLeave={(e)=>{this.onMouseLeaveReq(e)}}
                     className={classes}
-                    onClick={(e)=>{this.onClickURL(reqURL,req.id,collection,e)}}
+                    onClick={(e)=>{this.onClickURL(req.id,collection,e)}}
                     >
                     <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
                     <div className="coll-req-url" title={reqURL}>{displayName}</div>
@@ -88,8 +89,8 @@ class Collections extends React.Component {
                         let request = _.find(collection.requests, (req) => {
                             return req.id === reqId
                         })
-                        let url = (folder.host || collection.host || '') + request.path
-                        return getReqNode(request, url, collection, index)
+                        request.host = folder.host || collection.host || ''
+                        return getReqNode(request, collection, index)
                     })
                     return (
                         <div className="coll-folder" key={index}>
@@ -124,8 +125,8 @@ class Collections extends React.Component {
                 if (notInFolderReqs.length) {
                     notInFolderReqNodes = notInFolderReqs.map((req, index) => {
                         foldersHeight += 30
-                        let url = (collection.host || '') + req.path
-                        return getReqNode(req, url, collection, index)
+                        req.host = collection.host || ''
+                        return getReqNode(req, collection, index)
                     })
                 }
                 let requestNum = collection.requests.length
@@ -371,13 +372,12 @@ class Collections extends React.Component {
         evt.currentTarget.classList.remove('show-action-menu')
     }
 
-    onClickURL(url, reqId, collection, evt) {
+    onClickURL(reqId, collection, evt) {
         let target = evt.currentTarget
         if (target.classList.contains('active')) return
         let request = _.find(collection.requests, (req) => {
             return req.id === reqId
         })
-        request.url = url
         // check if tab is dirty
         let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
         if (activeReqTab.isDirty) {
