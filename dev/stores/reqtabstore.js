@@ -23,7 +23,9 @@ const DEFAULT_ITEMS = {
     name: '',
     urlError: false, // when click `save` button, if url is blank, then show error style
     isNEI: false, // nei tab, has some special logic, e.g.: it's url, method, url params and input params cannot be changed
-    isDirty: false // it's user-input-data is saved or not
+    isDirty: false, // it's user-input-data is saved or not
+    folderId: null,
+    collectionId: null
 }
 
 let tabs = {
@@ -55,6 +57,7 @@ let actions = {
         _.remove(tabs.items, (tab, index) => {
             if (tab.id === tabId) {
                 tabIndex = index
+                ReqTabConStore.removeCon(tabIndex)
                 return true
             }
         })
@@ -62,8 +65,6 @@ let actions = {
             // tab is not opened
             return callback()
         }
-        // remove tab content
-        ReqTabConStore.removeCon(tabIndex)
         let isActive = tabs.activeIndex === tabIndex
         if (tabs.items.length === 0) {
             this.addTab()
@@ -72,6 +73,32 @@ let actions = {
         let nextActiveIndex = Util.getNextActiveIndex(isActive, tabIndex, tabs.activeIndex)
         this.changeIndex(nextActiveIndex)
         callback(tabIndex)
+    },
+
+    removeCollectionTabs(collectionId, callback) {
+        let isActive
+        let hit
+        _.remove(tabs.items, (tab, index) => {
+            if(tab.collectionId === collectionId) {
+                hit = true
+                if (!isActive) {
+                    isActive = tabs.activeIndex === index
+                }
+                // remove tab content
+                ReqTabConStore.removeCon(index)
+                return true
+            }
+        })
+        if (!hit) {
+            return callback()
+        }
+        if (tabs.items.length === 0) {
+            this.addTab()
+            ReqTabConStore.addCon()
+        }
+        let nextActiveIndex = Util.getNextActiveIndex(isActive, 0, tabs.activeIndex)
+        this.changeIndex(nextActiveIndex)
+        callback()
     },
 
     changeTab(tab) {
@@ -224,6 +251,10 @@ let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     removeTabById(tabId, callback) {
         actions.removeTabById(tabId, callback)
+    },
+
+    removeCollectionTabs(collectionId, callback) {
+        actions.removeCollectionTabs(collectionId, callback)
     },
 
     emitChange() {

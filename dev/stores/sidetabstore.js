@@ -244,7 +244,7 @@ let actions = {
         callback() // callback to show tip
         Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
             if (!response.ok) {
-                tabs.loadingTip.text = 'Synchronization failed'
+                tabs.loadingTip.text = 'Sync failed'
                 setTimeout(() => {
                     tabs.loadingTip.show = false
                     callback()
@@ -263,8 +263,14 @@ let actions = {
                 dealData(collections)
                 dealData(collectionsData)
                 StorageArea.set({'collections': collections}, () => {
-                    tabs.loadingTip.show = false
-                    callback()
+                    tabs.loadingTip.text = 'Sync succeed'
+                    setTimeout(() => {
+                        tabs.loadingTip.show = false
+                        callback()
+                    }, 3000)
+                    // after sync, there is many things to think about,
+                    // here, just remove all opened tabs of this collection
+                    ReqTabStore.removeCollectionTabs(options.id, callback)
                 })
             })
         })

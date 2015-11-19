@@ -10,7 +10,7 @@ class SyncCollection extends ModalBody {
             <div className="mod-tip-modal">
                 <p>NEI project id is: <em>{this.props.modal.data.id}</em></p>
                 <p>Are you sure you want to synchronize with NEI?</p>
-                <p>Notice: all of the collection's data you saved will not be removed.</p>
+                <p className="s-tip">Notice: all of the collection's data you saved will not be removed.</p>
             </div>
         )
     }

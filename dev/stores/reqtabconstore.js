@@ -413,7 +413,9 @@ let tabConActions = {
             method: request.method,
             isNEI: request.isNEI,
             isDirty: false,
-            urlError: false
+            urlError: false,
+            folderId: request.id,
+            collectionId: request.collectionId
         }
         ReqTabAction.changeTab(tab)
 
