@@ -8,77 +8,31 @@ let resChecker = [
         values: []
     },
     {
-        key: 'family',
+        key: 'tree',
         checked: true,
-        valueType: 'object',
-        values: [
-            {
-                key: 'name',
-                valueType: 'string',
-                checked: true
-            },
-            {
-                key: 'tools',
-                valueType: 'array',
-                checked: true,
-                values:[
-                    {
-                        key: 'id',
-                        valueType: 'number',
-                        checked: true
-                    },
-                    {
-                        key: 'sex',
-                        valueType: 'string',
-                        checked: true
-                    },
-                    {
-                        key: 'tests',
-                        valueType: 'object',
-                        checked: true,
-                        values: [
-                            {
-                                key: 'id',
-                                valueType: 'number',
-                                checked: true
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                key: 'fromChina',
-                valueType: 'boolean',
-                checked: true
-            }
-        ]
+        valueType: 'array',
+        childValueType: 'parent',
+        values: []
     }
 ]
 
 let resData = {
-    id: 111,
-    family: {
-        name: 'hi',
-        tools: [
-            {
-                name: 111,
-                id: 333,
-                sex: 'female',
-                tests: {
-                    id: 111
+    id: 44,
+    tree: [
+        {
+            id: 2222,
+            tree: [
+                {
+                    id: 3333,
+                    tree: []
                 }
-            },
-            {
-                name: 111,
-                id: 333,
-                sex: 'female',
-                tests: {
-                    id: 111
-                }
-            }
-        ],
-        fromChina: 111
-    }
+            ]
+        },
+        {
+            id: 111,
+            tree: []
+        }
+    ]
 }
 
 let checkResponseResult = () => {
@@ -103,17 +57,40 @@ let checkResponseResult = () => {
                 let resultKeyType = Array.isArray(data[key]) ? 'array' : typeof data[key]
                 if (resultKeyType === rc.valueType) {
                     if (resultKeyType === 'array') {
-                        keyPaths.push(key)
-                        for (let j = 0, m = data[key].length; j < m; j++) {
-                            let tempResult = checkData(rc.values, data[key][j])
-                            if (tempResult) {
-                                return tempResult
+                        if (rc.childValueType === 'object') {
+                            keyPaths.push(key)
+                            for (let j = 0, m = data[key].length; j < m; j++) {
+                                let tempResult = checkData(rc.values, data[key][j])
+                                if (tempResult) {
+                                    return tempResult
+                                }
+                            }
+                            keyPaths.pop()
+                        } else if (rc.childValueType === 'parent') {
+                            // every element should be same as parent, this is mainly for checking `tree-like` data
+                            keyPaths.push(key)
+                            for (let j = 0, m = data[key].length; j < m; j++) {
+                                let tempResult = checkData(checker, data[key][j])
+                                if (tempResult) {
+                                    return tempResult
+                                }
+                            }
+                            keyPaths.pop()
+                        } else {
+                            // child value type is `string` or `number` or `boolean`
+                            for (let j = 0, m = data[key].length; j < m; j++) {
+                                let type = typeof data[key][j]
+                                if (type !== rc.childValueType) {
+                                    return {
+                                        status: 'failed',
+                                        info: `Field "${getKeyPath(key)}" is "array", every element should be "${rc.childValueType}", but it has "${type}" element`
+                                    }
+                                }
                             }
                         }
-                        keyPaths.pop()
                     } else if (resultKeyType === 'object') {
                         keyPaths.push(key)
-                        let tempResult = checkData(rc.values, data[key])
+                        let tempResult = checkData(rc.valu, data[key])
                         keyPaths.pop()
                         if (tempResult) {
                             return tempResult

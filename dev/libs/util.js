@@ -621,17 +621,40 @@ let Util = {
                     let resultKeyType = Array.isArray(data[key]) ? 'array' : typeof data[key]
                     if (resultKeyType === rc.valueType) {
                         if (resultKeyType === 'array') {
-                            keyPaths.push(key)
-                            for (let j = 0, m = data[key].length; j < m; j++) {
-                                let tempResult = checkData(rc.values, data[key][j])
-                                if (tempResult) {
-                                    return tempResult
+                            if (rc.childValueType === 'object') {
+                                keyPaths.push(key)
+                                for (let j = 0, m = data[key].length; j < m; j++) {
+                                    let tempResult = checkData(rc.values, data[key][j])
+                                    if (tempResult) {
+                                        return tempResult
+                                    }
+                                }
+                                keyPaths.pop()
+                            } else if (rc.childValueType === 'parent') {
+                                // every element should be same as parent, this is mainly for checking `tree-like` data
+                                keyPaths.push(key)
+                                for (let j = 0, m = data[key].length; j < m; j++) {
+                                    let tempResult = checkData(checker, data[key][j])
+                                    if (tempResult) {
+                                        return tempResult
+                                    }
+                                }
+                                keyPaths.pop()
+                            } else {
+                                // child value type is `string` or `number` or `boolean`
+                                for (let j = 0, m = data[key].length; j < m; j++) {
+                                    let type = typeof data[key][j]
+                                    if (type !== rc.childValueType) {
+                                        return {
+                                            status: 'failed',
+                                            info: `Field "${getKeyPath(key)}" is "array", every element should be "${rc.childValueType}", but it has "${type}" element`
+                                        }
+                                    }
                                 }
                             }
-                            keyPaths.pop()
                         } else if (resultKeyType === 'object') {
                             keyPaths.push(key)
-                            let tempResult = checkData(rc.values, data[key])
+                            let tempResult = checkData(rc.valu, data[key])
                             keyPaths.pop()
                             if (tempResult) {
                                 return tempResult
