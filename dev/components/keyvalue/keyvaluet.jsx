@@ -54,6 +54,10 @@ class KeyValueT extends KeyValue {
                     titleTip = (
                         <div className="res-title-tip" title={kv.title}></div>
                     )
+                } else if (kv.index === '0' && !kv.readonly) {
+                    titleTip = (
+                        <div className="title-tip" title="You can paste JSON here"></div>
+                    )
                 }
                 return (
                     <div className={rowClasses} key={index} onMouseOut={(e)=>{this.mouseOutRow(e)}} onMouseOver={(e)=>{this.mouseOverRow(e)}}>

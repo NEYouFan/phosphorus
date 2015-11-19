@@ -449,10 +449,10 @@ let tabConActions = {
         let bodyType = tabCons.items[tabIndex].builders.bodyType
         let config = {
             show: activeTabName === REQUEST_BODY_STR
-                && bodyType.type === 'raw'
-                && bodyType.name !== 'JSON(application/json)'
-                || activeTabName === RESPONSE_STR
-                && tabCon.builders.reqStatus === REQ_SUCCEEDED,
+            && bodyType.type === 'raw'
+            && bodyType.name !== 'JSON(application/json)'
+            || activeTabName === RESPONSE_STR
+            && tabCon.builders.reqStatus === REQ_SUCCEEDED,
             readOnly: activeTabName === RESPONSE_STR
         }
         if (editorConfig) {
@@ -467,7 +467,7 @@ let tabConActions = {
         let canSend = true
         let tabState = ReqTabStore.getAll()
         let tab = tabState.reqTab.tabs[tabIndex]
-        let tabUrl = tab.host +     tab.url
+        let tabUrl = tab.host + tab.url
         // check url
         if (!tabUrl) {
             // url can't be blank
@@ -587,7 +587,13 @@ let paramActions = {
     },
 
     changeURLParamsKVKey (rowIndex, value) {
-        this.changeURLParams(rowIndex, value, 'key')
+        let json = Util.getJSONByValue(value)
+        if (typeof json === 'object') {
+            Util.addKVsByJSONFlat(json, DEFAULT_PARAMS_KV, tabCons.items[tabIndex].builders.paramKVs)
+            this.updateTabUrl()
+        } else {
+            this.changeURLParams(rowIndex, value, 'key')
+        }
     },
 
     changeURLParamsKVValue (rowIndex, value) {
@@ -625,7 +631,13 @@ let headerActions = {
     },
 
     changeHeaderKVKey(rowIndex, value) {
-        this.changeHeader(rowIndex, value, 'key')
+        let json = Util.getJSONByValue(value)
+        if (typeof json === 'object') {
+            Util.addKVsByJSONFlat(json, DEFAULT_HEADERS_KV, tabCons.items[tabIndex].builders.headerKVs)
+            this.__dealValueDataList()
+        } else {
+            this.changeHeader(rowIndex, value, 'key')
+        }
     },
 
     changeHeaderKVValue(rowIndex, value) {
@@ -635,26 +647,33 @@ let headerActions = {
     changeHeader(rowIndex, value, type) {
         let header = tabCons.items[tabIndex].builders.headerKVs[rowIndex]
         header[type] = value
-        if (type === 'key' && header['keyDataList']) {
-            if (value === CONTENT_TYPE_STR) {
-                header.valueDataList = REQ_MIDIATYPES_DATA_LIST
-            } else {
-                header.valueDataList = BLANK_STR
+        this.__dealValueDataList()
+    },
+
+    __dealValueDataList() {
+        let headers = tabCons.items[tabIndex].builders.headerKVs
+        headers.forEach((header) => {
+            if (header['keyDataList']) {
+                if (header.key === CONTENT_TYPE_STR) {
+                    header.valueDataList = REQ_MIDIATYPES_DATA_LIST
+                } else {
+                    header.valueDataList = BLANK_STR
+                }
             }
-        }
-        // change to body's raw type and update it's value
-        if (header.key === CONTENT_TYPE_STR) {
-            let rawType = _.find(tabCons.rawTypes, (rawType) => {
-                return rawType.value === header.value
-            })
-            let bodyType = tabCons.items[tabIndex].builders.bodyType
-            if (header.value === XFORM_CONTENT_TYPE_VALUE) {
-                bodyType.name = XFORM_CONTENT_TYPE
-            } else {
-                bodyType.name = 'raw'
-                bodyType.value = rawType ? rawType.name : ''
+            // change to body's raw type and update it's value
+            if (header.key === CONTENT_TYPE_STR) {
+                let rawType = _.find(tabCons.rawTypes, (rawType) => {
+                    return rawType.value === header.value
+                })
+                let bodyType = tabCons.items[tabIndex].builders.bodyType
+                if (header.value === XFORM_CONTENT_TYPE_VALUE) {
+                    bodyType.name = XFORM_CONTENT_TYPE
+                } else {
+                    bodyType.name = 'raw'
+                    bodyType.value = rawType ? rawType.name : ''
+                }
             }
-        }
+        })
     }
 }
 
@@ -739,7 +758,12 @@ let bodyActions = {
     },
 
     changeBodyFormDataKVKey(rowIndex, value) {
-        this.changeBodyFormData(rowIndex, value, 'key')
+        let json = Util.getJSONByValue(value)
+        if (typeof json === 'object') {
+            Util.addKVsByJSONFlat(json, DEFAULT_BODY_FORMDATA_KV, tabCons.items[tabIndex].builders.bodyFormDataKVs)
+        } else {
+            this.changeBodyFormData(rowIndex, value, 'key')
+        }
     },
 
     changeBodyFormDataKVValue(rowIndex, value) {
@@ -775,7 +799,12 @@ let bodyActions = {
     },
 
     changeBodyXFormKVKey(rowIndex, value) {
-        this.changeBodyXForm(rowIndex, value, 'key')
+        let json = Util.getJSONByValue(value)
+        if (typeof json === 'object') {
+            Util.addKVsByJSONFlat(json, DEFAULT_BODY_XFORM_KV, tabCons.items[tabIndex].builders.bodyXFormKVs)
+        } else {
+            this.changeBodyXForm(rowIndex, value, 'key')
+        }
     },
 
     changeBodyXFormKVValue(rowIndex, value) {
@@ -848,7 +877,12 @@ let bodyRawJSONActions = {
 
     changeBodyRawJSONKVKey(rowIndex, value) {
         let row = this.getBodyRawJSONRow(rowIndex)
-        row.target.key = value
+        let json = Util.getJSONByValue(value)
+        if (typeof json === 'object') {
+            Util.addKVsByJSONRecurse(json, DEFAULT_BODY_RAW_JSON_KV, row.parent)
+        } else {
+            row.target.key = value
+        }
     },
 
     changeBodyRawJSONKVValue(rowIndex, value) {
@@ -929,7 +963,12 @@ let resCheckerActions = {
 
     changeResCheckerKVKey(rowIndex, value) {
         let row = this.getResCheckerRow(rowIndex)
-        row.target.key = value
+        let json = Util.getJSONByValue(value)
+        if (typeof json === 'object') {
+            Util.addKVsByJSONRecurse(json, DEFAULT_RES_CHECKER_KV, row.parent)
+        } else {
+            row.target.key = value
+        }
     },
 
     changeResCheckerKVValueType(rowIndex, valueType) {

@@ -709,6 +709,66 @@ let Util = {
             nextActiveIndex = currentActiveIndex - 1
         }
         return nextActiveIndex
+    },
+
+    getJSONByValue(value) {
+        let json
+        try {
+            json = JSON.parse(value)
+        } catch (err) {
+            try {
+                json = eval('(' + value + ')')
+            } catch (err) {
+            }
+        }
+        return json || value
+    },
+
+    addKVsByJSONRecurse(json, itemTemplate, container) {
+        let setData = (json, con) => {
+            _.forEachRight(json, (value, key) => {
+                let item = Object.assign({}, itemTemplate, {
+                    key: key
+                })
+                let type = typeof value
+                item.values = []
+                if (Array.isArray(value)) {
+                    item.valueType = 'array'
+                    item.childValueType = 'object'
+                    item.valueReadonly = true
+                    setData(value[0], item.values)
+                } else if (type === 'object') {
+                    item.valueType = 'object'
+                    item.valueReadonly = true
+                    setData(value, item.values)
+                } else {
+                    item.valueType = type
+                    item.value = value
+                }
+                con.unshift(item)
+            })
+        }
+        setData(json, container)
+    },
+
+    addKVsByJSONFlat(json, itemTemplate, container) {
+        let setData = (json) => {
+            _.forEachRight(json, (value, key) => {
+                let item = Object.assign({}, itemTemplate, {
+                    key: key
+                })
+                let type = typeof value
+                if (Array.isArray(value)) {
+                    setData(value[0])
+                } else if (type === 'object') {
+                    setData(value)
+                } else {
+                    item.value = value
+                }
+                container.unshift(item)
+            })
+        }
+        setData(json)
     }
 }
 
