@@ -280,7 +280,8 @@ let tabConActions = {
                     //builders.bodyRawDataOriginal = builders.bodyRawData
                     builders.bodyRawJSONKVs = Util.convertNEIInputsToJSON(request, dataSource, savedData, Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
                         readonly: true,
-                        typeChangeable: false
+                        typeChangeable: false,
+                        childTypeChangeable: false
                     }))
                 } else {
                     let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
@@ -341,7 +342,8 @@ let tabConActions = {
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
                 readonly: true,
-                typeChangeable: false
+                typeChangeable: false,
+                childTypeChangeable: false
             }))
         } else {
             builders.bodyTypes.forEach((bodyType) => {

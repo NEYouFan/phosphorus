@@ -538,9 +538,9 @@ let Util = {
             } else {
                 if (traversedDataTypes.indexOf(output.type) !== -1) {
                     // circular reference
-                    let valueType
+                    let childValueType
                     if (output.type === traversedDataTypes[traversedDataTypes.length - 1]) {
-                        valueType = 'parent'
+                        childValueType = 'parent'
                     } else {
                         error = 'Circular Reference'
                     }
@@ -548,7 +548,8 @@ let Util = {
                         key: output.name,
                         title: output.description,
                         values: [],
-                        valueType: valueType
+                        valueType: 'array',
+                        childValueType: childValueType
                     })
                     resultContainer.push(tempItem)
                     return
@@ -571,6 +572,25 @@ let Util = {
                         values: [],
                         valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
                     })
+                    resultContainer.push(tempItem)
+                } else if (dataType.format === 2) {
+                    // array
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: output.name,
+                        title: output.description,
+                        values: [],
+                        valueType: 'array',
+                        childValueType: typeMap[dataType.subtype] || 'object'
+                    })
+                    if (tempItem.childValueType === 'object') {
+                        let childAttributes = _.filter(dataSource.attributes, (attr) => {
+                            return attr.parentId === dataType.subtype
+                        })
+                        childAttributes = _.uniq(childAttributes, 'id')
+                        childAttributes.forEach((attr) => {
+                            getItem(attr, tempItem.values)
+                        })
+                    }
                     resultContainer.push(tempItem)
                 } else {
                     let tempItem = Object.assign({}, itemTemplate, {
