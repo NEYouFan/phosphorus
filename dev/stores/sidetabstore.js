@@ -123,21 +123,21 @@ let actions = {
             hosts.collections = hosts.collections || {}
             hosts.collections[collection.id] = host
             StorageArea.set({'hosts': hosts}, () => {
-                let activeTab = ReqTabStore.getActiveTab()
-                if (activeTab.url) {
-                    let activeRequest
-                    activeRequest = _.find(foundCollection.requests, (req) => {
-                        return req.id === activeTab.id
-                    })
-                    if (activeRequest) {
-                        let folder = _.find(foundCollection.folders, (folder) => {
-                            return activeRequest.folderId === folder.id
-                        })
-                        // the active request is in the folder which has been changed host
-                        // should change tab url's host
-                        activeTab.url = Util.replaceURLHost(activeTab.url, folder && folder.host || host)
-                    }
-                }
+                //let activeTab = ReqTabStore.getActiveTab()
+                //if (activeTab.url) {
+                //    let activeRequest
+                //    activeRequest = _.find(foundCollection.requests, (req) => {
+                //        return req.id === activeTab.id
+                //    })
+                //    if (activeRequest) {
+                //        let folder = _.find(foundCollection.folders, (folder) => {
+                //            return activeRequest.folderId === folder.id
+                //        })
+                //        // the active request is in the folder which has been changed host
+                //        // should change tab url's host
+                //        activeTab.url = Util.replaceURLHost(activeTab.url, folder && folder.host || host)
+                //    }
+                //}
                 callback()
             })
         })
@@ -156,18 +156,18 @@ let actions = {
             hosts.folders = hosts.folders || {}
             hosts.folders[folder.id] = host
             StorageArea.set({'hosts': hosts}, () => {
-                let activeTab = ReqTabStore.getActiveTab()
-                if (activeTab.url) {
-                    let activeRequest
-                    activeRequest = _.find(foundCollection.requests, (req) => {
-                        return req.id === activeTab.id
-                    })
-                    if (activeRequest) {
-                        // the active request is in the folder which has been changed host
-                        // should change tab url's host
-                        activeTab.url = Util.replaceURLHost(activeTab.url, host || foundCollection.host)
-                    }
-                }
+                //let activeTab = ReqTabStore.getActiveTab()
+                //if (activeTab.url) {
+                //    let activeRequest
+                //    activeRequest = _.find(foundCollection.requests, (req) => {
+                //        return req.id === activeTab.id
+                //    })
+                //    if (activeRequest) {
+                //        // the active request is in the folder which has been changed host
+                //        // should change tab url's host
+                //        activeTab.url = Util.replaceURLHost(activeTab.url, host || foundCollection.host)
+                //    }
+                //}
                 callback()
             })
         })
@@ -210,7 +210,7 @@ let actions = {
         }
         callback() // callback to show loading
         Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
-            if (!response.ok) {
+            if (!response || !response.ok) {
                 tabs.loadingTip.text = 'loading failed'
                 setTimeout(() => {
                     tabs.loadingTip.show = false

@@ -3,6 +3,7 @@
 
 import Events from 'events'
 import _ from 'lodash'
+import URL from 'url'
 import Util from '../libs/util'
 import StorageArea from '../libs/storagearea'
 import RequestDataMap from '../libs/request_data_map'
@@ -409,7 +410,6 @@ let tabConActions = {
             id: request.id,
             name: request.name || tabUrl,
             url: tabUrl,
-            host: request.host,
             method: request.method,
             isNEI: request.isNEI,
             isDirty: false,
@@ -461,13 +461,21 @@ let tabConActions = {
         Object.assign(tabCon.aceEditorConfig, config)
     },
 
-    checkReqSend() {
+    __getTabUrl(tab, hosts) {
+        let result = URL.parse(tab.url)
+        if (result.host) {
+            return tab.url
+        }
+        return (hosts.folders[tab.folderId] || hosts.collections[tab.collectionId] || '') + tab.url
+    },
+
+    checkReqSend(hosts) {
         // check if can send request now
         // check two things: url and path variable
         let canSend = true
         let tabState = ReqTabStore.getAll()
         let tab = tabState.reqTab.tabs[tabIndex]
-        let tabUrl = tab.host + tab.url
+        let tabUrl = this.__getTabUrl(tab, hosts)
         // check url
         if (!tabUrl) {
             // url can't be blank
@@ -481,7 +489,7 @@ let tabConActions = {
         }
         // check all path variable has it's value
         let params = tabCons.items[tabIndex].builders.paramKVs
-        params.forEach((param, index) => {
+        params.forEach((param) => {
             if (param.isPV) {
                 if (!param.value) {
                     param.valueError = true
@@ -509,8 +517,8 @@ let tabConActions = {
         return canSend
     },
 
-    sendReq() {
-        let canSend = this.checkReqSend()
+    sendReq(hosts) {
+        let canSend = this.checkReqSend(hosts)
         if (!canSend) return
         Requester.fetch((res, data) => {
             console.log(res)
@@ -1121,8 +1129,10 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_CONTENT_SEND:
-            actions.sendReq()
-            ReqTabConStore.emitChange()
+            StorageArea.get('hosts', (result) => {
+                actions.sendReq(result.hosts)
+                ReqTabConStore.emitChange()
+            })
             break
         // req content action <---
 

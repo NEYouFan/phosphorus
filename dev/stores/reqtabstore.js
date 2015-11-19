@@ -18,7 +18,6 @@ const DEFAULT_ITEMS = {
     id: '', // it's id
     url: '',
     rurl: '',// rurl is the request url, it's path variables are replaced(done in tabConActions.checkReqSend(), see@reqtabconstore.js )
-    host: '', // url host, exclude path
     method: 'POST',
     name: '',
     urlError: false, // when click `save` button, if url is blank, then show error style

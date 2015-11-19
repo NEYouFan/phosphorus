@@ -36,7 +36,7 @@ class Collections extends React.Component {
                 'coll-req': true,
                 'active': this.props.sideTab.tabs.activeReqId === req.id
             })
-            let reqURL = req.host + req.path
+            let reqURL = req.path
             let displayName = req.name || reqURL
             let reqActions
             if (!req.isNEI) {
@@ -91,7 +91,6 @@ class Collections extends React.Component {
                         let request = _.find(collection.requests, (req) => {
                             return req.id === reqId
                         })
-                        request.host = folder.host || collection.host || ''
                         return getReqNode(request, collection, index)
                     })
                     return (
@@ -127,7 +126,6 @@ class Collections extends React.Component {
                 if (notInFolderReqs.length) {
                     notInFolderReqNodes = notInFolderReqs.map((req, index) => {
                         foldersHeight += 30
-                        req.host = collection.host || ''
                         return getReqNode(req, collection, index)
                     })
                 }
