@@ -98,8 +98,19 @@ let actions = {
     },
 
     clearLocalStorage(callback) {
-        collectionsData = []
-        StorageArea.clear(callback)
+        StorageArea.clear(() => {
+            // clear all opend tabs
+            async.eachSeries(collectionsData, (c, cb) => {
+                async.eachSeries(c.requests, (req, cbb) => {
+                    ReqTabStore.removeTabById(req.id, cbb)
+                }, (err) => {
+                    cb()
+                })
+            }, (err) => {
+                collectionsData = []
+                callback()
+            })
+        })
     },
 
     changeCollHost(collection, host, callback) {
