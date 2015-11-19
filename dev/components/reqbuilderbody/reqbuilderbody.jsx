@@ -121,6 +121,7 @@ class ReqBuilderBody extends React.Component {
                     changeKVKey={(rowIndex, value) => {this.changeBodyRawJSONKVKey(rowIndex, value)}}
                     changeKVValue={(rowIndex, value) => {this.changeBodyRawJSONKVValue(rowIndex, value)}}
                     changeKVValueType={(rowIndex, value) => {this.changeBodyRawJSONKVValueType(rowIndex, value)}}
+                    changeKVChildValueType={(rowIndex, value) => {this.changeBodyRawJSONKVChildValueType(rowIndex, value)}}
                     />
             )
         }
@@ -205,6 +206,11 @@ class ReqBuilderBody extends React.Component {
 
     changeBodyRawJSONKVValueType(rowIndex, value) {
         ReqBodyAction.changeBodyRawJSONKVValueType(rowIndex, value)
+        ReqTabAction.setDirtyTab()
+    }
+
+    changeBodyRawJSONKVChildValueType(rowIndex, value) {
+        ReqBodyAction.changeBodyRawJSONKVChildValueType(rowIndex, value)
         ReqTabAction.setDirtyTab()
     }
 

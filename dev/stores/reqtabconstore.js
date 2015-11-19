@@ -65,15 +65,19 @@ const DEFAULT_BODY_FORMDATA_KV = Object.assign({}, DEFAULT_KV, {
 })
 const DEFAULT_BODY_RAW_JSON_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'string',
+    childValueType: 'string',
     values: [],
     typeChangeable: true,
-    valueReadonly: false
+    valueReadonly: false,
+    childTypeChangeable: true
 })
 const DEFAULT_BODY_XFORM_KV = Object.assign({}, DEFAULT_KV)
 const DEFAULT_RES_CHECKER_KV = Object.assign({}, DEFAULT_KV, {
     valueType: 'string',
+    childValueType: 'string',
     values: [],
-    typeChangeable: true
+    typeChangeable: true,
+    childTypeChangeable: true
 })
 const DEFAULT_RES_SHOW_TYPE = {
     type: 'Pretty',
@@ -853,7 +857,22 @@ let bodyRawJSONActions = {
         row.target.values = []
         row.target.valueReadonly = false
         row.target.valueType = valueType
-        if (/^(object|array)$/.test(valueType)) {
+        row.target.childValueType = ''
+        if (/^object$/.test(valueType)) {
+            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
+            row.target.valueReadonly = true
+        } else if (/^array$/.test(valueType)) {
+            row.target.valueReadonly = true
+            row.target.childValueType = 'string'
+        }
+    },
+
+    changeBodyRawJSONKVChildValueType(rowIndex, valueType) {
+        let row = this.getBodyRawJSONRow(rowIndex)
+        row.target.values = []
+        row.target.valueReadonly = false
+        row.target.childValueType = valueType
+        if (/^object$/.test(valueType)) {
             row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
             row.target.valueReadonly = true
         }
@@ -913,7 +932,19 @@ let resCheckerActions = {
         let row = this.getResCheckerRow(rowIndex)
         row.target.values = []
         row.target.valueType = valueType
-        if (/^(object|array)$/.test(valueType)) {
+        row.target.childValueType = ''
+        if (/^object$/.test(valueType)) {
+            row.target.values.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+        } else if (/^array$/.test(valueType)) {
+            row.target.childValueType = 'string'
+        }
+    },
+
+    changeResCheckerKVChildValueType(rowIndex, valueType) {
+        let row = this.getResCheckerRow(rowIndex)
+        row.target.values = []
+        row.target.childValueType = valueType
+        if (/^object$/.test(valueType)) {
             row.target.values.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
         }
     }
@@ -1168,6 +1199,11 @@ AppDispatcher.register((action) => {
             actions.changeBodyRawJSONKVValueType(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
+
+        case AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_CHILD_VALUE_TYPE:
+            actions.changeBodyRawJSONKVChildValueType(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
         // body form data kv action
         case AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV:
             actions.toggleBodyFormDataKV(action.rowIndex)
@@ -1280,6 +1316,11 @@ AppDispatcher.register((action) => {
 
         case AppConstants.RES_CHECKER_CHANGE_KV_VALUE_TYPE:
             actions.changeResCheckerKVValueType(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_CHANGE_KV_CHILD_VALUE_TYPE:
+            actions.changeResCheckerKVChildValueType(action.rowIndex, action.value)
             ReqTabConStore.emitChange()
             break
         // response checker action <---

@@ -43,6 +43,14 @@ class ReqResCheckerAction {
         })
     }
 
+    static changeResCheckerKVChildValueType(rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.RES_CHECKER_CHANGE_KV_CHILD_VALUE_TYPE,
+            rowIndex: rowIndex,
+            value: value
+        })
+    }
+
 }
 
 export default ReqResCheckerAction

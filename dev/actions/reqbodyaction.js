@@ -76,6 +76,14 @@ class ReqBodyAction  {
         })
     }
 
+    static changeBodyRawJSONKVChildValueType(rowIndex, value) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_CHANGE_KV_CHILD_VALUE_TYPE,
+            rowIndex: rowIndex,
+            value: value
+        })
+    }
+
     static toggleBodyFormDataKV(rowIndex) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_FORMDATA_TOGGLE_KV,

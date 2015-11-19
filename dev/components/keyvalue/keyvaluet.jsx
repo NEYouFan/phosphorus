@@ -3,6 +3,7 @@
 
 import './keyvaluet.styl'
 import classNames from 'classnames'
+import _ from 'lodash'
 import KeyValue from './keyvalue.jsx'
 
 class KeyValueT extends KeyValue {
@@ -11,18 +12,17 @@ class KeyValueT extends KeyValue {
         let total = this.props.kvs.length
         let getSubNodes = (kv) => {
             if (/^(object|array)$/.test(kv.valueType)) {
-                return getNodes(kv.values, kv, kv.valueType)
+                return getNodes(kv.values, kv, kv.valueType, kv.childValueType)
             }
         }
-        let getNodes = (kvs, parentKV, parentValueType) => {
+        let getNodes = (kvs, parentKV, parentValueType, parentChildValueType) => {
             return kvs.map((kv, index) => {
                 kv.index = parentKV ? (parentKV.index + '.' + index) : index.toString()
                 let rowClasses = classNames({
                     'kv-row': true,
                     'removable': !kv.readonly,
                     'onlyone': total === 1,
-                    'kv-row-array': parentValueType === 'array',
-                    'kv-row-object': parentValueType === 'object'
+                    'kv-row-object': parentValueType === 'object' || parentChildValueType === 'object'
                 })
                 let okSignClasses = classNames({
                     'glyphicon glyphicon-ok-sign': true,
@@ -85,20 +85,34 @@ class KeyValueT extends KeyValue {
         let classes = classNames({
             'input-wrap': true
         })
-        let inputValueOptions = ['String', 'Number', 'Boolean', 'Array', 'Object']
-        let layers = rowIndex.split('.').length
-        if (layers > 1) {
-            inputValueOptions.push('Parent')
+        let valueTypes = ['String', 'Number', 'Boolean', 'Array', 'Object']
+        let getOptionNodes = (types) => {
+            return types.map((io, index) => {
+                return <option value={io.toLowerCase()} key={index}>{io}</option>
+            })
         }
-        let optionNodes = inputValueOptions.map((io, index) => {
-            return <option value={io.toLowerCase()} key={index}>{io}</option>
-        })
+        let getChildNodes = () => {
+            if (kv.valueType === 'array') {
+                let childValueTypes = valueTypes.concat()
+                childValueTypes.push('Parent')
+                // child type has no `Array`
+                _.remove(childValueTypes, (type) => {
+                    return type === 'Array'
+                })
+                return (
+                    <select value={kv.childValueType} onChange={(e) => {this.changeKVChildValueType(rowIndex,e)}} disabled={!kv.childTypeChangeable}>
+                        {getOptionNodes(childValueTypes)}
+                    </select>
+                )
+            }
+        }
         return (
             <div className={classes} onFocus={(e)=>{this.focus(rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <select value={valueType} onChange={(e) => {this.changeKVValueType(rowIndex,e)}} disabled={!kv.typeChangeable}>
-                    {optionNodes}
+                    {getOptionNodes(valueTypes)}
                 </select>
+                {getChildNodes()}
             </div>
         )
     }
@@ -110,6 +124,10 @@ class KeyValueT extends KeyValue {
 
     changeKVValueType(rowIndex, evt) {
         this.props.changeKVValueType(rowIndex, evt.target.value)
+    }
+
+    changeKVChildValueType(rowIndex, evt) {
+        this.props.changeKVChildValueType(rowIndex, evt.target.value)
     }
 
     mouseOverRow(e) {

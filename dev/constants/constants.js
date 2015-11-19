@@ -65,6 +65,7 @@ let AppConstants = keyMirror({
     REQ_BODY_RAW_JSON_CHANGE_KV_KEY: null,
     REQ_BODY_RAW_JSON_CHANGE_KV_VALUE: null,
     REQ_BODY_RAW_JSON_CHANGE_KV_VALUE_TYPE: null,
+    REQ_BODY_RAW_JSON_CHANGE_KV_CHILD_VALUE_TYPE: null,
     // body form data kv action
     REQ_BODY_FORMDATA_TOGGLE_KV: null,
     REQ_BODY_FORMDATA_ADD_KV: null,
@@ -93,6 +94,7 @@ let AppConstants = keyMirror({
     RES_CHECKER_REMOVE_KV: null,
     RES_CHECKER_CHANGE_KV_KEY: null,
     RES_CHECKER_CHANGE_KV_VALUE_TYPE: null,
+    RES_CHECKER_CHANGE_KV_CHILD_VALUE_TYPE: null,
     // modal actions
     MODAL_CLOSE: null,
     MODAL_OPEN: null,

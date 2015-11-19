@@ -34,6 +34,7 @@ class ResChecker extends React.Component {
                     changeKVKey={(rowIndex, value) => {this.changeResCheckerKVKey(rowIndex, value)}}
                     changeKVValue={(rowIndex, value) => {this.changeResCheckerKVValue(rowIndex, value)}}
                     changeKVValueType={(rowIndex, value) => {this.changeResCheckerKVValueType(rowIndex, value)}}
+                    changeKVChildValueType={(rowIndex, value) => {this.changeResCheckerKVChildValueType(rowIndex, value)}}
                     />
         }
         return (
@@ -76,6 +77,10 @@ class ResChecker extends React.Component {
 
     changeResCheckerKVValueType(rowIndex, value) {
         ResCheckerAction.changeResCheckerKVValueType(rowIndex, value)
+    }
+
+    changeResCheckerKVChildValueType(rowIndex, value) {
+        ResCheckerAction.changeResCheckerKVChildValueType(rowIndex, value)
     }
 
 }

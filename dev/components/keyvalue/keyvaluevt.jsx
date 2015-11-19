@@ -11,17 +11,34 @@ class KeyValueVT extends KeyValueT {
         let classes = classNames({
             'input-wrap': true
         })
-        let inputValueOptions = ['String', 'Number', 'Boolean', 'Array', 'Object']
-        let optionNodes = inputValueOptions.map((io, index) => {
-            return <option value={io.toLowerCase()} key={index}>{io}</option>
-        })
+        let valueTypes = ['String', 'Number', 'Boolean', 'Array', 'Object']
+        let getOptionNodes = (types) => {
+            return types.map((io, index) => {
+                return <option value={io.toLowerCase()} key={index}>{io}</option>
+            })
+        }
+        let getChildNodes = () => {
+            if (kv.valueType === 'array') {
+                let childValueTypes = valueTypes.concat()
+                // child type has no `Array`
+                _.remove(childValueTypes, (type) => {
+                    return type === 'Array'
+                })
+                return (
+                    <select value={kv.childValueType} onChange={(e) => {this.changeKVChildValueType(rowIndex,e)}} disabled={!kv.childTypeChangeable}>
+                        {getOptionNodes(childValueTypes)}
+                    </select>
+                )
+            }
+        }
         return (
             <div className={classes} onFocus={(e)=>{this.focus(rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <input {...valueInputProps} />
                 <select value={valueType} onChange={(e) => {this.changeKVValueType(rowIndex,e)}} disabled={!kv.typeChangeable}>
-                    {optionNodes}
+                    {getOptionNodes(valueTypes)}
                 </select>
+                {getChildNodes()}
             </div>
         )
     }

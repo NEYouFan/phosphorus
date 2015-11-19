@@ -606,22 +606,33 @@ let Util = {
         if (typeof resData !== 'object' || Array.isArray(resData)) {
             return false
         }
+        let keyPaths = []
+        let getKeyPath = (key) => {
+            return keyPaths.length ? (keyPaths.join(' -> ') + ' -> ' + key) : key
+        }
         let checkData = (checker, data) => {
             for (let i = 0, l = checker.length; i < l; i++) {
                 let rc = checker[i]
                 let key = rc.key
+                if (!key || !rc.checked) {
+                    continue
+                }
                 if (data.hasOwnProperty(key)) {
                     let resultKeyType = Array.isArray(data[key]) ? 'array' : typeof data[key]
                     if (resultKeyType === rc.valueType) {
                         if (resultKeyType === 'array') {
+                            keyPaths.push(key)
                             for (let j = 0, m = data[key].length; j < m; j++) {
-                                let tempResult = checkData(rc.value, data[key][j])
+                                let tempResult = checkData(rc.values, data[key][j])
                                 if (tempResult) {
                                     return tempResult
                                 }
                             }
+                            keyPaths.pop()
                         } else if (resultKeyType === 'object') {
-                            let tempResult = checkData(rc.value, data[key])
+                            keyPaths.push(key)
+                            let tempResult = checkData(rc.values, data[key])
+                            keyPaths.pop()
                             if (tempResult) {
                                 return tempResult
                             }
@@ -629,13 +640,13 @@ let Util = {
                     } else {
                         return {
                             status: 'failed',
-                            info: `Field "${key}"'s type should be "${rc.valueType}", but it is "${resultKeyType}"`
+                            info: `Field "${getKeyPath(key)}" should be "${rc.valueType}", but it is "${resultKeyType}"`
                         }
                     }
                 } else {
                     return {
                         status: 'failed',
-                        info: `No such field: ${key}`
+                        info: `No such field: ${getKeyPath(key)}`
                     }
                 }
             }

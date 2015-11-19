@@ -27,6 +27,9 @@ class NEIResChecker extends ResChecker {
     changeResCheckerKVValueType(rowIndex, value) {
         // do nothing
     }
+    changeResCheckerKVChildValueType(rowIndex, value) {
+        // do nothing
+    }
 
 }
 
