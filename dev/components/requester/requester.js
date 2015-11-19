@@ -126,6 +126,10 @@ let Requester = {
         }
         getData(bodyRawJSONKVs, json)
         return JSON.stringify(json)
+    },
+
+    runCollection(collection, stores, callback) {
+        console.log('start running')
     }
 }
 

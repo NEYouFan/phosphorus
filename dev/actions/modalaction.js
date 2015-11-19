@@ -48,7 +48,7 @@ class ModalAction  {
 
     static openRunCollModal(collection) {
         AppDispatcher.dispatch({
-            actionType: AppConstants.MODAL_SYNC_COLLECTION,
+            actionType: AppConstants.MODAL_RUN_COLLECTION,
             collection: collection
         })
     }

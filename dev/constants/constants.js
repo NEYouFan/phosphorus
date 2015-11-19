@@ -15,6 +15,7 @@ let AppConstants = keyMirror({
     SIDE_CLEAR_LOCAL_STORAGE: null,
     SIDE_EDIT_COLLECTION: null,
     SIDE_SYNC_COLLECTION: null,
+    SIDE_RUN_COLLECTION: null,
     SIDE_CREATE_FOLDER: null,
     SIDE_DELETE_COLLECTION: null,
     SIDE_EDIT_FOLDER: null,

@@ -14,6 +14,7 @@ import CreateCollection from './create.collection.jsx'
 import ImportCollection from './import.collection.jsx'
 import EditCollection from './edit.collection.jsx'
 import SyncCollection from './sync.collection.jsx'
+import RunCollection from './run.collection.jsx'
 import DeleteCollection from './deleting.collection.jsx'
 import ClearLocalStorage from './clear.localstorage.jsx'
 import CreateFolder from './create.folder.jsx'
@@ -127,6 +128,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_SYNC_COLLECTION:
                 return (
                     <SyncCollection modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_RUN_COLLECTION:
+                return (
+                    <RunCollection modal={this.props.modal}/>
                 )
 
             case AppConstants.MODAL_CREATE_FOLDER:
