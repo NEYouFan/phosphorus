@@ -12,6 +12,7 @@ import StorageArea from '../libs/storagearea'
 import Requester from '../components/requester/requester'
 import ReqTabStore from './reqtabstore'
 import ReqTabConStore from './reqtabconstore'
+import ModalStore from './modalstore'
 
 const CHANGE_EVENT = 'change'
 const DEFAULT_HISTORY = {
@@ -82,9 +83,15 @@ let actions = {
             let collections = result.collections || []
             let requests = result.requests || {}
             collectionsData = result.collections || []
+            // for corrupt data
+            _.remove(collectionsData, (c) => {
+                if (!c || typeof(c) === 'object' && !Object.keys(c).length) {
+                    return true
+                }
+            })
             collectionsData.forEach((c) => {
                 c.host = hosts.collections[c.id]
-                c.folders.forEach((f) => {
+                c.folders && c.folders.forEach((f) => {
                     f.host = hosts.folders[f.id]
                 })
             })
@@ -177,13 +184,22 @@ let actions = {
         if (!options || !options.id) {
             return callback()
         }
+        // check if collection is already been imported
+        let foundCollection = _.find(collectionsData, (c) => {
+            return c.id === options.id
+        })
+        if (foundCollection) {
+            // pop up tips
+            ModalStore.openModal(AppConstants.MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP)
+            return callback()
+        }
         tabs.loadingTip = {
             show: true,
             text: 'loading...'
         }
         callback() // callback to show loading
         Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
-            if (!response || !response.ok) {
+            if (!response || !response.ok || response.code !== 200) {
                 tabs.loadingTip.text = 'loading failed'
                 setTimeout(() => {
                     tabs.loadingTip.show = false

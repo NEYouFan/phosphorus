@@ -60,6 +60,7 @@ class Modal extends React.Component {
                 )
 
             case AppConstants.MODAL_SAVE_BLANK_URL_TIP:
+            case AppConstants.MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP:
                 return (
                     <Tip modal={this.props.modal}/>
                 )

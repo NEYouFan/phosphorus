@@ -39,6 +39,23 @@ let ModalStore = Object.assign({}, Events.EventEmitter.prototype, {
         }
     },
 
+    openModal(type) {
+        switch (type) {
+            case AppConstants.MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP:
+                actions.openModal({
+                    type: AppConstants.MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP,
+                    title: 'Tips',
+                    data: {
+                        tip: 'Collection has already been imported. If you want to update this collection, you can click the setting button and choose "synchronize" function.'
+                    }
+                })
+                break
+
+            default:
+                break
+        }
+    },
+
     emitChange() {
         this.emit(CHANGE_EVENT)
     },

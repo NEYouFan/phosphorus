@@ -118,7 +118,8 @@ let AppConstants = keyMirror({
     MODAL_DELETE_FOLDER: null,
     MODAL_EDIT_REQUEST: null,
     MODAL_MOVE_REQUEST: null,
-    MODAL_DELETE_REQUEST: null
+    MODAL_DELETE_REQUEST: null,
+    MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP: null
 })
 
 export default AppConstants
