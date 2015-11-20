@@ -21,10 +21,6 @@ class NEIReqBuilderHeader extends ReqBuilderHeader {
         // do nothing
     }
 
-    changeHeaderKVValue(rowIndex, value) {
-        // do nothing
-    }
-
 }
 
 

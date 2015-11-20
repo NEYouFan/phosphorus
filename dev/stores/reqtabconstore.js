@@ -282,17 +282,6 @@ let tabConActions = {
                         childTypeChangeable: false
                     }))
                 } else {
-                    //let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
-                    //if (savedHeaders && savedHeaders.length) {
-                    //    builders.headerKVs = []
-                    //    let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
-                    //    _.each(savedHeaders, (headerKV) => {
-                    //        builders.headerKVs.push(Object.assign({}, headerKVTpl, headerKV))
-                    //    })
-                    //} else {
-                    //    builders.headerKVs.shift()
-                    //    builders.headerKVs.unshift(DEFAULT_XFORM_HEADER_KV)
-                    //}
                     builders.bodyType.type = 'x-www-form-urlencoded'
                     // init request inputs
                     let xFormKVTpl = _.cloneDeep(DEFAULT_BODY_XFORM_KV)
@@ -340,12 +329,15 @@ let tabConActions = {
             // set headers
             builders.headerKVs = []
             let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
-            _.each(request.headers, (value, key) => {
+            _.each(request.headers, (header) => {
                 builders.headerKVs.push(Object.assign({}, headerKVTpl, {
-                    key: key,
-                    value: value,
+                    key: header.name,
+                    value: header.defaultValue,
                     readonly: true,
-                    valueReadonly: true
+                    valueReadonly: true,
+                    keyDataList: null,
+                    valueDataList: null,
+                    title: header.description
                 }))
             })
             // set response checker by it's outputs

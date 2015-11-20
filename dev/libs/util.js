@@ -277,6 +277,7 @@ let Util = {
                     isRest: !!inter.isRest,
                     name: inter.name,
                     description: inter.description,
+                    headers: inter.headers,
                     inputs: inter.inputs,
                     outputs: inter.outputs,
                     folderId: null,

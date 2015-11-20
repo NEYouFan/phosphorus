@@ -31,6 +31,7 @@ class KeyValue extends React.Component {
             }
             let valueInputProps = {
                 placeholder: kv.valuePlaceholder,
+                readOnly: kv.valueReadonly,
                 value: kv.value,
                 onChange: (e) => {
                     this.changeValue(e, index, kv)
