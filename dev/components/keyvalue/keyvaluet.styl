@@ -106,4 +106,28 @@
   select:disabled {
     cursor: not-allowed
   }
+
+  .bracket-start,
+  .bracket-end,
+  .brace-start,
+  .brace-end {
+    font-size: 18px
+    color: #ccc
+  }
+
+  .bracket-start:first-child:before {
+    content '['
+  }
+
+  .bracket-end:last-child:before {
+    content ']'
+  }
+
+  .brace-start:first-child:before {
+    content '{'
+  }
+
+  .brace-end:last-child:before {
+    content '}'
+  }
 }

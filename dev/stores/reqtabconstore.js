@@ -870,7 +870,9 @@ let bodyRawJSONActions = {
         return {
             targetIndex: indexes[indexes.length - 1],
             target: targetRow,
-            parent: parentRow.values || parentRow
+            parent: parentRow.values || parentRow,
+            parentValueType: parentRow.valueType,
+            parentChildValueType: parentRow.childValueType
         }
     },
 
@@ -891,7 +893,13 @@ let bodyRawJSONActions = {
     addBodyRawJSONKV(rowIndex) {
         let row = this.getBodyRawJSONRow(rowIndex)
         if (+row.targetIndex === row.parent.length - 1) {
-            row.parent.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
+            let item = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV)
+            if (row.parentValueType === 'array') {
+                if (!/^object$/.test(row.parentChildValueType)) {
+                    item.valueType = row.parentChildValueType
+                }
+            }
+            row.parent.push(item)
         }
     },
 
@@ -927,17 +935,20 @@ let bodyRawJSONActions = {
         } else if (/^array$/.test(valueType)) {
             row.target.valueReadonly = true
             row.target.childValueType = 'string'
+            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
         }
     },
 
     changeBodyRawJSONKVChildValueType(rowIndex, valueType) {
         let row = this.getBodyRawJSONRow(rowIndex)
         row.target.values = []
-        row.target.valueReadonly = false
         row.target.childValueType = valueType
-        if (/^object$/.test(valueType)) {
-            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
-            row.target.valueReadonly = true
+        if (!/^object$/.test(valueType)) {
+            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                valueType: valueType
+            }))
+        } else {
+            row.target.values.push([Object.assign({}, DEFAULT_BODY_RAW_JSON_KV)])
         }
     }
 }
