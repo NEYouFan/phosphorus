@@ -2,6 +2,9 @@
 'use strict'
 
 import async from 'async'
+import _ from 'lodash'
+import Util from '../../libs/util'
+import RequestDataMap from '../../libs/request_data_map'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqConTabStore from '../../stores/reqtabconstore'
 
@@ -130,33 +133,49 @@ let Requester = {
     },
 
     runCollection(collection, stores, callback) {
-        console.log(collection)
-        console.log(stores)
+        //console.log(collection)
+        //console.log(stores)
         collection.requests.forEach((req) => {
             req.reqStatus = 'waiting'
         })
         callback() // set waiting status
-        async.eachSeries(collection.requests, (req, cb) => {
-            if (req.reqStatus) {
-                req.reqStatus = 'fetching'
-                callback()
-                this.__getFetchOptions(req, stores)
-            } else (
-                cb()
-            )
-        })
+        //async.eachSeries(collection.requests, (req, cb) => {
+        //    if (req.reqStatus) {
+        //        req.reqStatus = 'fetching'
+        //        callback()
+        //        this.__getFetchOptions(req, collection, stores)
+        //    } else (
+        //        cb()
+        //    )
+        //})
+        this.__getFetchOptions(collection.requests[1], collection, stores)
     },
 
-    __getFetchOptions(req, stores) {
+    __getFetchOptions(req, collection, stores) {
         console.log(req)
+        let savedRequest = _.find(stores.requests, (r) => {
+            return r.id === req.id
+        })
         let options = {
             credentials: 'include',
             method: req.method
         }
         if (req.isNEI) {
-            options.headers = req.headers
-
+            options.headers = {}
+            if (req.isRest) {
+                options.headers['Content-Type'] = 'application/json'
+            } else {
+                options.headers['Content-Type'] = 'x-www-form-urlencoded'
+            }
+            req.headers.forEach((header) => {
+                options.headers[header.name] = header.defaultValue
+            })
         }
+        let savedBodyRawJSONKVs = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey] || []
+        let savedBodyRawJSON = Util.convertKVToJSON(savedBodyRawJSONKVs)
+        console.log(savedBodyRawJSONKVs)
+        console.log(savedBodyRawJSON)
+        let bodyRawJSONKVs = Util.convertNEIInputsToJSONStr(req, collection, savedBodyRawJSON)
     }
 }
 

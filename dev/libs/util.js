@@ -400,12 +400,6 @@ let Util = {
                 }
             })
         }
-
-        try {
-            savedData = JSON.parse(savedData)
-        } catch (err) {
-            savedData = {}
-        }
         getData(request.inputs, savedData)
         return JSON.stringify(result, null, '\t')
     },
@@ -794,6 +788,27 @@ let Util = {
             })
         }
         setData(json)
+    },
+
+    convertKVToJSON (kvs) {
+        let result = {}
+        let setData = (kvs, con) => {
+            kvs.forEach((kv) => {
+                if (kv.checked) {
+                    if (kv.value_type === 'array') {
+                        con[kv.key] = []
+                        setData(kv.values, con[kv.key])
+                    } else if(kv.value_type === 'object') {
+                        con[kv.key] = {}
+                        setData(kv.values, con[kv.key])
+                    } else {
+                        con[kv.key] = kv.value
+                    }
+                }
+            })
+        }
+        setData(kvs, result)
+        return result
     }
 }
 

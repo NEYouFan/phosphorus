@@ -101,6 +101,10 @@ let actions = {
                 collections: collections,
                 requests: requests
             })
+            // test
+            //Requester.runCollection(collectionsData[0], result, () => {
+            //    SideTabStore.emitChange()
+            //})
         })
     },
 
