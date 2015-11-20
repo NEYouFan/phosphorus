@@ -532,13 +532,24 @@ let Util = {
         let traversedLayers = 0
         let getItem = (output, resultContainer) => {
             if (isSysType(output.type)) {
-                let tempItem = Object.assign({}, itemTemplate, {
-                    key: output.name,
-                    title: output.description,
-                    values: [],
-                    valueType: typeMap[output.type]
-                })
-                resultContainer.push(tempItem)
+                if (output.isArray) {
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: output.name,
+                        title: output.description,
+                        values: [],
+                        valueType: 'array',
+                        childValueType: typeMap[output.type]
+                    })
+                    resultContainer.push(tempItem)
+                } else {
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: output.name,
+                        title: output.description,
+                        values: [],
+                        valueType: typeMap[output.type]
+                    })
+                    resultContainer.push(tempItem)
+                }
             } else {
                 if (traversedDataTypes.indexOf(output.type) !== -1) {
                     // circular reference
@@ -597,11 +608,13 @@ let Util = {
                     }
                     resultContainer.push(tempItem)
                 } else {
+                    // hash object
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: output.name,
                         title: output.description,
                         values: [],
-                        valueType: output.isArray ? 'array' : 'object'
+                        valueType: output.isArray ? 'array' : 'object',
+                        childValueType: 'object'
                     })
                     resultContainer.push(tempItem)
                     attributes.forEach((attr) => {
