@@ -144,17 +144,28 @@ class ReqBuilderBody extends React.Component {
     }
 
     getXFormCon() {
-        return (
-            <KeyValue
-                showKV={true}
-                kvs={this.props.builders.bodyXFormKVs}
-                toggleKV={(rowIndex,kv) => {this.toggleBodyXFormKV(rowIndex,kv)}}
-                addKV={() => {this.addBodyXFormKV()}}
-                removeKV={(rowIndex) => {this.removeBodyXFormKV(rowIndex)}}
-                changeKVKey={(rowIndex, value) => {this.changeBodyXFormKVKey(rowIndex, value)}}
-                changeKVValue={(rowIndex, fileInput) => {this.changeBodyXFormKVValue(rowIndex, fileInput)}}
-                />
-        )
+        let kv
+        if (this.props.builders.bodyXFormKVs.length === 0) {
+            kv = (
+                <div className="tip-con">
+                    <em className="glyphicon glyphicon-exclamation-sign"></em>
+                    <span>This request url has no input parameters.</span>
+                </div>
+            )
+        } else {
+            kv = (
+                <KeyValue
+                    showKV={true}
+                    kvs={this.props.builders.bodyXFormKVs}
+                    toggleKV={(rowIndex,kv) => {this.toggleBodyXFormKV(rowIndex,kv)}}
+                    addKV={() => {this.addBodyXFormKV()}}
+                    removeKV={(rowIndex) => {this.removeBodyXFormKV(rowIndex)}}
+                    changeKVKey={(rowIndex, value) => {this.changeBodyXFormKVKey(rowIndex, value)}}
+                    changeKVValue={(rowIndex, fileInput) => {this.changeBodyXFormKVValue(rowIndex, fileInput)}}
+                    />
+            )
+        }
+        return kv
     }
 
     getBinaryCon() {

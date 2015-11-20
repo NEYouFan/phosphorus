@@ -264,10 +264,19 @@ let tabConActions = {
             builders.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = true
             })
+            builders.headerKVs = []
             savedRequest = savedRequest || {}
             // nei request special logic
             if (!Util.isNoBodyMethod(request.method)) {
                 if (request.isRest) {
+                    // rest header is default set, nei need not set this header
+                    builders.headerKVs.push(Object.assign({}, DEFAULT_JSON_HEADER_KV, {
+                        readonly: true,
+                        valueReadonly: true,
+                        keyDataList: null,
+                        valueDataList: null,
+                        title: 'Default RESTful request header'
+                    }))
                     // restful request
                     builders.bodyType = {
                         type: 'raw',
@@ -282,6 +291,14 @@ let tabConActions = {
                         childTypeChangeable: false
                     }))
                 } else {
+                    // normal form header is default set, nei need not set this header
+                    builders.headerKVs.push(Object.assign({}, DEFAULT_XFORM_HEADER_KV, {
+                        readonly: true,
+                        valueReadonly: true,
+                        keyDataList: null,
+                        valueDataList: null,
+                        title: 'Default normal request header'
+                    }))
                     builders.bodyType.type = 'x-www-form-urlencoded'
                     // init request inputs
                     let xFormKVTpl = _.cloneDeep(DEFAULT_BODY_XFORM_KV)
@@ -327,18 +344,18 @@ let tabConActions = {
                 tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
             }
             // set headers
-            builders.headerKVs = []
-            let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
             _.each(request.headers, (header) => {
-                builders.headerKVs.push(Object.assign({}, headerKVTpl, {
-                    key: header.name,
-                    value: header.defaultValue,
-                    readonly: true,
-                    valueReadonly: true,
-                    keyDataList: null,
-                    valueDataList: null,
-                    title: header.description
-                }))
+                if (header.name.toLowerCase() !== CONTENT_TYPE_STR.toLowerCase()) {
+                    builders.headerKVs.push(Object.assign({}, DEFAULT_HEADERS_KV, {
+                        key: header.name,
+                        value: header.defaultValue,
+                        readonly: true,
+                        valueReadonly: true,
+                        keyDataList: null,
+                        valueDataList: null,
+                        title: header.description
+                    }))
+                }
             })
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
