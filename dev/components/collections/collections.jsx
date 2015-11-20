@@ -62,6 +62,7 @@ class Collections extends React.Component {
                     className={classes}
                     onClick={(e)=>{this.onClickURL(req.id,collection,e)}}
                     >
+                    {this.getRequestingStatus(req)}
                     <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
                     <div className="coll-req-url" title={reqURL}>{displayName}</div>
                     {reqActions}
@@ -206,6 +207,45 @@ class Collections extends React.Component {
                 <div className="mod-collections">{collectionNodes}</div>
             </div>
         )
+    }
+
+    getRequestingStatus(req) {
+        let cancelRequesting = (evt, req) => {
+            evt.stopPropagation()
+            delete req.reqStatus
+            evt.currentTarget.classList.add('hide')
+        }
+        switch (req.reqStatus) {
+            case 'waiting':
+                return (
+                    <div
+                        className="coll-req-status coll-req-wait"
+                        onClick={(e)=>{cancelRequesting(e,req)}}
+                        title="Skip this request">
+                        <em className="glyphicon glyphicon-minus-sign"></em>
+                    </div>
+                )
+            case 'fetching':
+                return (
+                    <div className="coll-req-status coll-req-ani" title="Request is sending...">
+                        <em className="glyphicon glyphicon-refresh"></em>
+                    </div>
+                )
+            case 'succeed':
+                return (
+                    <div className="coll-req-status coll-req-succeed" title="Request succeed">
+                        <em className="glyphicon glyphicon-ok"></em>
+                    </div>
+                )
+            case 'failed':
+                return (
+                    <div className="coll-req-status coll-req-failed" title="There is something wrong">
+                        <em className="glyphicon glyphicon-remove"></em>
+                    </div>
+                )
+            default:
+                return
+        }
     }
 
     toggleCollSlide(evt) {

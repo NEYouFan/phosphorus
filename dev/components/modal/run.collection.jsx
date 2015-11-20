@@ -38,7 +38,7 @@ class RunCollection extends ModalBody {
             return (
                 <div>
                     <p>There are {num} requests in current collection.</p>
-                    <p>Do you want to run all of them? This maybe take few minutes.</p>
+                    <p>Do you want to run all of them?</p>
                     <p className="s-tip">Notice: only saved data will be used.</p>
                 </div>
             )

@@ -1,6 +1,7 @@
 //author @huntbao
 'use strict'
 
+import async from 'async'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqConTabStore from '../../stores/reqtabconstore'
 
@@ -28,7 +29,7 @@ let Requester = {
         // deal form-data
         let bodyType = tabCon.builders.bodyType
         if (method !== 'GET') {
-            switch(bodyType.type) {
+            switch (bodyType.type) {
                 case 'form-data':
                     let fd = new FormData()
                     tabCon.builders.bodyFormDataKVs.map((kv) => {
@@ -129,7 +130,33 @@ let Requester = {
     },
 
     runCollection(collection, stores, callback) {
-        console.log('start running')
+        console.log(collection)
+        console.log(stores)
+        collection.requests.forEach((req) => {
+            req.reqStatus = 'waiting'
+        })
+        callback() // set waiting status
+        async.eachSeries(collection.requests, (req, cb) => {
+            if (req.reqStatus) {
+                req.reqStatus = 'fetching'
+                callback()
+                this.__getFetchOptions(req, stores)
+            } else (
+                cb()
+            )
+        })
+    },
+
+    __getFetchOptions(req, stores) {
+        console.log(req)
+        let options = {
+            credentials: 'include',
+            method: req.method
+        }
+        if (req.isNEI) {
+            options.headers = req.headers
+
+        }
     }
 }
 

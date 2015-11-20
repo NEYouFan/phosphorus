@@ -327,6 +327,33 @@
       .coll-req-url {
         width: 214px
       }
+
+      &-status {
+        margin: 0 0 0 -14px
+        font-size: 14px;
+        cursor: default
+      }
+
+      &-wait {
+        cursor: pointer
+
+        &:hover {
+          color: #ff615f
+        }
+      }
+
+      &-failed {
+        color #ff615f
+      }
+
+      &-succeed {
+        color #080
+      }
+
+      &-ani {
+        animation: sk-rotate 2.0s infinite linear;
+      }
+
     }
 
     .method-get {
