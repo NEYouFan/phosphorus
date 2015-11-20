@@ -14,7 +14,7 @@ class ReqBuilderURLParams extends React.Component {
             hide: this.props.builders.activeTabName !== 'URL Params'
         })
         let modClass = 'mod-reqbuilder-urlparams ' + (this.props.modClass || '')
-        let urlParams = 'This request url has no parameters.'
+        let urlParams
         if (this.props.builders.paramKVs.length) {
             let kvProps = {
                 kvs: this.props.builders.paramKVs,
@@ -35,6 +35,13 @@ class ReqBuilderURLParams extends React.Component {
                 }
             }
             urlParams = <KeyValue {...kvProps}/>
+        } else {
+            urlParams = (
+                <div>
+                    <em className="glyphicon glyphicon-exclamation-sign"></em>
+                    <span>This request url has no parameters.</span>
+                </div>
+            )
         }
         return (
             <div className={className}>

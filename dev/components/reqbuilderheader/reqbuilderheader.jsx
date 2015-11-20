@@ -13,17 +13,40 @@ class ReqBuilderHeader extends React.Component {
         let className = classNames({
             hide: this.props.builders.activeTabName !== 'Request Headers'
         })
+        let modClass = 'mod-reqbuilder-header ' + (this.props.modClass || '')
+        let header
+        if (this.props.builders.headerKVs.length) {
+            let props = {
+                kvs: this.props.builders.headerKVs,
+                toggleKV: (rowIndex) => {
+                    this.toggleHeaderKV(rowIndex)
+                },
+                addKV: () => {
+                    this.addHeaderKV()
+                },
+                removeKV: (rowIndex) => {
+                    this.removeHeaderKV(rowIndex)
+                },
+                changeKVKey: (rowIndex, value) => {
+                    this.changeHeaderKVKey(rowIndex, value)
+                },
+                changeKVValue: (rowIndex, value) => {
+                    this.changeHeaderKVValue(rowIndex, value)
+                }
+            }
+            header = <KeyValue {...props} />
+        } else {
+            header = (
+                <div>
+                    <em className="glyphicon glyphicon-exclamation-sign"></em>
+                    <span>This request url has no headers.</span>
+                </div>
+            )
+        }
         return (
             <div className={className}>
-                <div className="mod-reqbuilder-header">
-                    <KeyValue
-                        kvs={this.props.builders.headerKVs}
-                        toggleKV={(rowIndex) => {this.toggleHeaderKV(rowIndex)}}
-                        addKV={() => {this.addHeaderKV()}}
-                        removeKV={(rowIndex) => {this.removeHeaderKV(rowIndex)}}
-                        changeKVKey={(rowIndex, value) => {this.changeHeaderKVKey(rowIndex, value)}}
-                        changeKVValue={(rowIndex, value) => {this.changeHeaderKVValue(rowIndex, value)}}
-                        />
+                <div className={modClass}>
+                    {header}
                 </div>
             </div>
         )

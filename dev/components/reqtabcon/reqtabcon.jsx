@@ -14,6 +14,7 @@ import NEIReqURL from '../requrl/neirequrl.jsx'
 import KeyValue from '../keyvalue/keyvalue.jsx'
 import ReqBuilderTab from '../reqbuildertab/reqbuildertab.jsx'
 import ReqBuilderHeader from '../reqbuilderheader/reqbuilderheader.jsx'
+import NEIReqBuilderHeader from '../reqbuilderheader/neireqbuilderheader.jsx'
 import ReqBuilderURLParams from '../reqbuilderurlparams/reqbuilderurlparams.jsx'
 import NEIReqBuilderURLParams from '../reqbuilderurlparams/neireqbuilderurlparams.jsx'
 import ReqBuilderBody from '../reqbuilderbody/reqbuilderbody.jsx'
@@ -51,6 +52,10 @@ class ReqTabCon extends React.Component {
                 builders: builders,
                 showRawTypeList: tabCons.reqCons[index].showBodyRawTypeList
             }
+            let reqBuilderHeaderProps = {
+                tabIndex: index,
+                builders: builders
+            }
             let resCheckerProps = {
                 tabIndex: index,
                 builders: builders,
@@ -59,6 +64,7 @@ class ReqTabCon extends React.Component {
             let reqURL
             let reqBuilderURLParams
             let reqBuilderBody
+            let reqBuilderHeader
             let resChecker
             if (tab.isNEI) {
                 // nei tab
@@ -83,6 +89,8 @@ class ReqTabCon extends React.Component {
                     return !kv.key
                 })
                 reqBuilderBody = <NEIReqBuilderBody {...reqBuilderBodyProps}/>
+                reqBuilderHeaderProps.modClass = 'nei-reqbuilder-headers'
+                reqBuilderHeader = <NEIReqBuilderHeader {...reqBuilderHeaderProps}/>
                 // response checker
                 resChecker = <NEIResChecker {...resCheckerProps} />
             } else {
@@ -90,6 +98,7 @@ class ReqTabCon extends React.Component {
                 reqURL = <ReqURL {...reqURLProps} />
                 reqBuilderURLParams = <ReqBuilderURLParams {...reqBuilderURLParamsProps} />
                 reqBuilderBody = <ReqBuilderBody {...reqBuilderBodyProps}/>
+                reqBuilderHeader = <ReqBuilderHeader {...reqBuilderHeaderProps}/>
                 resChecker = <ResChecker {...resCheckerProps} />
             }
             return (
@@ -101,10 +110,7 @@ class ReqTabCon extends React.Component {
                         />
                     {reqBuilderURLParams}
                     {reqBuilderBody}
-                    <ReqBuilderHeader
-                        tabIndex={index}
-                        builders={builders}
-                        />
+                    {reqBuilderHeader}
                     {resChecker}
                     <Res
                         tabIndex={index}

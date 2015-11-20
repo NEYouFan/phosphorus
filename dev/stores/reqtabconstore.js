@@ -267,7 +267,6 @@ let tabConActions = {
             savedRequest = savedRequest || {}
             // nei request special logic
             if (!Util.isNoBodyMethod(request.method)) {
-                request.isRest = true
                 if (request.isRest) {
                     // restful request
                     builders.bodyType = {
@@ -277,25 +276,23 @@ let tabConActions = {
                     }
                     // init request inputs, build json kvs, saved data is `bodyRawJSONKVs`
                     let savedData = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey] || []
-                    //builders.bodyRawData = Util.convertNEIInputsToJSON(request, dataSource, savedData)
-                    //builders.bodyRawDataOriginal = builders.bodyRawData
                     builders.bodyRawJSONKVs = Util.convertNEIInputsToJSON(request, dataSource, savedData, Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
                         readonly: true,
                         typeChangeable: false,
                         childTypeChangeable: false
                     }))
                 } else {
-                    let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
-                    if (savedHeaders && savedHeaders.length) {
-                        builders.headerKVs = []
-                        let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
-                        _.each(savedHeaders, (headerKV) => {
-                            builders.headerKVs.push(Object.assign({}, headerKVTpl, headerKV))
-                        })
-                    } else {
-                        builders.headerKVs.shift()
-                        builders.headerKVs.unshift(DEFAULT_XFORM_HEADER_KV)
-                    }
+                    //let savedHeaders = savedRequest[RequestDataMap.headerKVs.saveKey]
+                    //if (savedHeaders && savedHeaders.length) {
+                    //    builders.headerKVs = []
+                    //    let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
+                    //    _.each(savedHeaders, (headerKV) => {
+                    //        builders.headerKVs.push(Object.assign({}, headerKVTpl, headerKV))
+                    //    })
+                    //} else {
+                    //    builders.headerKVs.shift()
+                    //    builders.headerKVs.unshift(DEFAULT_XFORM_HEADER_KV)
+                    //}
                     builders.bodyType.type = 'x-www-form-urlencoded'
                     // init request inputs
                     let xFormKVTpl = _.cloneDeep(DEFAULT_BODY_XFORM_KV)
@@ -340,6 +337,17 @@ let tabConActions = {
                 })
                 tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
             }
+            // set headers
+            builders.headerKVs = []
+            let headerKVTpl = _.cloneDeep(DEFAULT_HEADERS_KV)
+            _.each(request.headers, (value, key) => {
+                builders.headerKVs.push(Object.assign({}, headerKVTpl, {
+                    key: key,
+                    value: value,
+                    readonly: true,
+                    valueReadonly: true
+                }))
+            })
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
                 readonly: true,
@@ -397,7 +405,7 @@ let tabConActions = {
                             checked: item.checked,
                             values: refineBodyRawJSONData(item),
                             valueType: item.value_type,
-                            valueReadonly: item.value_readonly,
+                            valueReadonly: item.value_readonly
                         })
                     })
                 }

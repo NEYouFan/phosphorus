@@ -58,8 +58,8 @@ let tabs = {
     }
 }
 
-//let NEI_SERVER_URL = 'http://nei.hz.netease.com'
-let NEI_SERVER_URL = 'http://127.0.0.1'
+let NEI_SERVER_URL = 'http://nei.hz.netease.com'
+//let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = []
 let collectionsData = []
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Synchronize', 'Run all', 'Delete']
@@ -91,7 +91,7 @@ let actions = {
             })
             collectionsData.forEach((c) => {
                 c.host = hosts.collections[c.id]
-                c.folders && c.folders.forEach((f) => {
+                c.folders.forEach((f) => {
                     f.host = hosts.folders[f.id]
                 })
             })
@@ -195,12 +195,12 @@ let actions = {
         }
         tabs.loadingTip = {
             show: true,
-            text: 'loading...'
+            text: 'Importing...'
         }
         callback() // callback to show loading
         Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
-            if (!response || !response.ok || response.code !== 200) {
-                tabs.loadingTip.text = 'loading failed'
+            if (!response || !response.ok || !collection) {
+                tabs.loadingTip.text = 'Importing failed'
                 setTimeout(() => {
                     tabs.loadingTip.show = false
                     callback()

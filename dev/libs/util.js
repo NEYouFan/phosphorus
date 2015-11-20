@@ -5,7 +5,6 @@ import URL from 'url'
 import async from 'async'
 import QueryString from 'querystring'
 import _ from 'lodash'
-import TestData from './collection_test_data'
 
 const DEFAULT_PATH_VARIABLE_PLACEHOLDER = 'Path Variable Key'
 const pathVariableExp = new RegExp('/:(\\w+?[^/]*)', 'g')
@@ -291,7 +290,11 @@ let Util = {
             res = response
             return response.json()
         }).then((json) => {
-            convertDataAndReturn(json.result)
+            if (json.code !== 200) {
+                callback(null, res)
+            } else {
+                convertDataAndReturn(json.result)
+            }
         }).catch((err) => {
             callback(err, res)
         })
@@ -738,7 +741,7 @@ let Util = {
                     item.valueReadonly = true
                     let v = value[0]
                     if (!v || !Object.keys(v).length) {
-                        v = {'':''}
+                        v = {'': ''}
                     }
                     setData(v, item.values)
                 } else if (type === 'object') {
@@ -746,7 +749,7 @@ let Util = {
                     item.valueReadonly = true
                     let v = value
                     if (!Object.keys(v).length) {
-                        v = {'':''}
+                        v = {'': ''}
                     }
                     setData(v, item.values)
                 } else {

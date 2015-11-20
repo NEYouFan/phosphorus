@@ -149,6 +149,7 @@ let actions = {
         // refine `res_checker_data`
         if (savedData['is_nei']) {
             delete savedData.res_checker_data
+            delete savedData.headers
         } else {
             let refineResCheckerData = (data) => {
                 return data.values.map((item) => {

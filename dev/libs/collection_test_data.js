@@ -1,4 +1,0 @@
-exports.projectGroups = []
-
-
-exports.projects ={}

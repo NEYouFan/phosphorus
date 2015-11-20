@@ -214,8 +214,12 @@ input.inp-error::-webkit-input-placeholder {
   position: absolute
   top: -100px
   left: 50%
-  width 100px
-  margin: 0 0 0 -50px
+  min-width 100px
+  max-width 500px
+  transform: translate(-50%, 0)
+  text-overflow ellipsis
+  overflow hidden
+  white-space nowrap
   background-color #1acaaf
   z-index: 999
   padding: 8px 20px
