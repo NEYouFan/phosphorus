@@ -8,17 +8,17 @@ class KeyValueVT extends KeyValueT {
 
     render() {
         let total = this.props.kvs.length
-        let getSubNodes = (kv, parentKV) => {
-            if (parentKV && parentKV.valueType === 'array' && parentKV.childValueType === 'object') {
-                return (
-                    <div className="sub-kv-row">
-                        <div className="bracket-start"></div>
+        let getSubNodes = (kv) => {
+            if (kv.childValueType === 'object') {
+                return kv.values.map((skv, index) => {
+                    return (
+                        <div className="sub-kv-row" key={index}>
                             <div className="brace-start"></div>
-                            {getNodes(kv[0].values, kv)}
+                            {getNodes(skv.values, skv)}
                             <div className="brace-end"></div>
-                        <div className="bracket-end"></div>
-                    </div>
-                )
+                        </div>
+                    )
+                })
             }
             if (/^object$/.test(kv.valueType)) {
                 return (
@@ -59,7 +59,10 @@ class KeyValueVT extends KeyValueT {
                         this.changeKey(e, kv.index, kv)
                     },
                     list: kv.keyDataList,
-                    className: kv.keyError ? 'inp-error' : ''
+                    className: classNames({
+                        'inp-error': kv.keyError,
+                        'hide': kv.keyVisible === false
+                    })
                 }
                 let valueInputProps = {
                     placeholder: kv.valuePlaceholder,
@@ -70,10 +73,6 @@ class KeyValueVT extends KeyValueT {
                     },
                     list: kv.valueDataList,
                     className: kv.valueError ? 'inp-error' : ''
-                }
-                if (/^(string|number|boolean)$/.test(parentKV && parentKV.childValueType)) {
-                    keyInputProps.className += ' hide' //nokey
-                    kv.typeChangeable = false
                 }
                 let inputs = this.getInputs(kv, kv.index, keyInputProps, valueInputProps)
                 let titleTip
@@ -86,15 +85,19 @@ class KeyValueVT extends KeyValueT {
                         <div className="title-tip" title="You can paste JSON here"></div>
                     )
                 }
+                let kvRowWrapClasses = classNames({
+                    'kv-row-wrap': true,
+                    'hide': parentKV && parentKV.childValueType === 'object'
+                })
                 return (
                     <div className={rowClasses} key={index} onMouseOut={(e)=>{this.mouseOutRow(e)}} onMouseOver={(e)=>{this.mouseOverRow(e)}}>
-                        <div className="kv-row-wrap">
+                        <div className={kvRowWrapClasses}>
                             <div className={okSignClasses} onClick={()=>{this.toggle(kv.index, kv)}}></div>
                             {inputs}
                             {titleTip}
                             <div className="glyphicon glyphicon-remove" onClick={()=>{this.remove(kv.index)}}></div>
                         </div>
-                        {getSubNodes(kv, parentKV)}
+                        {getSubNodes(kv)}
                     </div>
                 )
             })

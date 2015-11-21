@@ -897,6 +897,8 @@ let bodyRawJSONActions = {
             if (row.parentValueType === 'array') {
                 if (!/^object$/.test(row.parentChildValueType)) {
                     item.valueType = row.parentChildValueType
+                    item.typeChangeable = false
+                    item.keyVisible = false
                 }
             }
             row.parent.push(item)
@@ -935,7 +937,10 @@ let bodyRawJSONActions = {
         } else if (/^array$/.test(valueType)) {
             row.target.valueReadonly = true
             row.target.childValueType = 'string'
-            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV))
+            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                keyVisible: false,
+                typeChangeable: false
+            }))
         }
     },
 
@@ -948,7 +953,9 @@ let bodyRawJSONActions = {
                 valueType: valueType
             }))
         } else {
-            row.target.values.push([Object.assign({}, DEFAULT_BODY_RAW_JSON_KV)])
+            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                values: [Object.assign({}, DEFAULT_BODY_RAW_JSON_KV)]
+            }))
         }
     }
 }
