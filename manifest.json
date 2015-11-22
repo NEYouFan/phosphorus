@@ -26,7 +26,7 @@
     "unlimitedStorage",
     "storage"
   ],
-  "content_security_policy": "script-src 'self' http://localhost:7070/webpack-dev-server.js http://localhost:7070/assets/index.js;object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' http://localhost:7070/webpack-dev-server.js http://localhost:7070/assets/index.js;object-src 'self'",
   "web_accessible_resources": [
     "index.html"
   ],

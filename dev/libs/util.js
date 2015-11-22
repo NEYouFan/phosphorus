@@ -730,12 +730,41 @@ let Util = {
             try {
                 json = eval('(' + value + ')')
             } catch (err) {
+                console.log(err)
             }
         }
         return json || value
     },
 
     addKVsByJSONRecurse(json, itemTemplate, container) {
+        let getArrayChildValueType = (arr) => {
+            let checkType = (type) => {
+                for (let i = 0, l = arr.length; i < l; i++) {
+                    // array is not taken into account
+                    if (Array.isArray(arr[i])) {
+                        return false
+                    } else {
+                        if (typeof arr[i] !== type) {
+                            return false
+                        }
+                    }
+                }
+                return true
+            }
+            if (checkType('string')) {
+                return 'string'
+            }
+            if (checkType('number')) {
+                return 'number'
+            }
+            if (checkType('boolean')) {
+                return 'boolean'
+            }
+            if (checkType('object')) {
+                return 'object'
+            }
+            return null // all of array elements are not the same type
+        }
         let setData = (json, con) => {
             _.forEachRight(json, (value, key) => {
                 let item = Object.assign({}, itemTemplate, {
@@ -745,13 +774,43 @@ let Util = {
                 item.values = []
                 if (Array.isArray(value)) {
                     item.valueType = 'array'
-                    item.childValueType = 'object'
+                    let childValueType = getArrayChildValueType(value)
+                    item.childValueType = childValueType || 'string'
                     item.valueReadonly = true
-                    let v = value[0]
-                    if (!v || !Object.keys(v).length) {
-                        v = {'': ''}
+                    if (childValueType === 'object') {
+                        let childItem = {
+                            valueType: 'object',
+                            keyVisible: false,
+                            value: '[[array item]]',
+                            valueReadonly: true
+                        }
+                        value.forEach((v) => {
+                            let tempItem = Object.assign({}, childItem, {
+                                values: [],
+                                checked: true
+                            })
+                            item.values.push(tempItem)
+                            setData(v, tempItem.values)
+                        })
+                    } else {
+                        if (childValueType) {
+                            let childItem = {
+                                valueType: childValueType,
+                                keyVisible: false
+                            }
+                            value.forEach((v) => {
+                                let tempItem = Object.assign({}, childItem, {
+                                    values: [],
+                                    checked: true,
+                                    value: v
+                                })
+                                item.values.push(tempItem)
+                            })
+                        } else {
+                            // if all of array elements are not the same type, change it to 'string' type
+                            item.valueType = 'string'
+                        }
                     }
-                    setData(v, item.values)
                 } else if (type === 'object') {
                     item.valueType = 'object'
                     item.valueReadonly = true
@@ -798,7 +857,7 @@ let Util = {
                     if (kv.value_type === 'array') {
                         con[kv.key] = []
                         setData(kv.values, con[kv.key])
-                    } else if(kv.value_type === 'object') {
+                    } else if (kv.value_type === 'object') {
                         con[kv.key] = {}
                         setData(kv.values, con[kv.key])
                     } else {
