@@ -893,12 +893,19 @@ let bodyRawJSONActions = {
     addBodyRawJSONKV(rowIndex) {
         let row = this.getBodyRawJSONRow(rowIndex)
         if (+row.targetIndex === row.parent.length - 1) {
-            let item = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV)
+            let item = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                values: []
+            })
             if (row.parentValueType === 'array') {
-                if (!/^object$/.test(row.parentChildValueType)) {
-                    item.valueType = row.parentChildValueType
-                    item.typeChangeable = false
-                    item.keyVisible = false
+                item.valueType = row.parentChildValueType
+                item.typeChangeable = false
+                item.keyVisible = false
+                if (/^object$/.test(row.parentChildValueType)) {
+                    item.value = '[[array item]]'
+                    item.valueReadonly = true
+                    item.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                        values: []
+                    }))
                 }
             }
             row.parent.push(item)
@@ -948,13 +955,18 @@ let bodyRawJSONActions = {
         let row = this.getBodyRawJSONRow(rowIndex)
         row.target.values = []
         row.target.childValueType = valueType
-        if (!/^object$/.test(valueType)) {
-            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
-                valueType: valueType
-            }))
-        } else {
-            row.target.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
-                values: [Object.assign({}, DEFAULT_BODY_RAW_JSON_KV)]
+        let item = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+            values: [],
+            valueType: valueType,
+            keyVisible: false,
+            typeChangeable: false
+        })
+        row.target.values.push(item)
+        if (/^object$/.test(valueType)) {
+            item.value = '[[array item]]'
+            item.valueReadonly = true
+            item.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                values: []
             }))
         }
     }

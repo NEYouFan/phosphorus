@@ -9,17 +9,6 @@ class KeyValueVT extends KeyValueT {
     render() {
         let total = this.props.kvs.length
         let getSubNodes = (kv) => {
-            if (kv.childValueType === 'object') {
-                return kv.values.map((skv, index) => {
-                    return (
-                        <div className="sub-kv-row" key={index}>
-                            <div className="brace-start"></div>
-                            {getNodes(skv.values, skv)}
-                            <div className="brace-end"></div>
-                        </div>
-                    )
-                })
-            }
             if (/^object$/.test(kv.valueType)) {
                 return (
                     <div className="sub-kv-row">
@@ -86,8 +75,7 @@ class KeyValueVT extends KeyValueT {
                     )
                 }
                 let kvRowWrapClasses = classNames({
-                    'kv-row-wrap': true,
-                    'hide': parentKV && parentKV.childValueType === 'object'
+                    'kv-row-wrap': true
                 })
                 return (
                     <div className={rowClasses} key={index} onMouseOut={(e)=>{this.mouseOutRow(e)}} onMouseOver={(e)=>{this.mouseOverRow(e)}}>
