@@ -592,10 +592,17 @@ let tabConActions = {
 let paramActions = {
 
     fillURLParams() {
+        let oldParamKVS = tabCons.items[tabIndex].builders.paramKVs
         let tabUrl = ReqTabStore.getTabUrl(tabIndex)
         let params = Util.getUrlParams(tabUrl)
+        let oldPV
         params = params.map((param) => {
-            return Object.assign({}, DEFAULT_PARAMS_KV, param)
+            oldPV = _.find(oldParamKVS, (kv) => {
+                return kv.isPV && kv.key === param.key
+            })
+            return Object.assign({}, DEFAULT_PARAMS_KV, param, {
+                value: oldPV && oldPV.value || param.value
+            })
         })
         params.push(Object.assign({}, DEFAULT_PARAMS_KV))
         tabCons.items[tabIndex].builders.paramKVs = params

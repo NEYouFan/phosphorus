@@ -102,7 +102,7 @@ let actions = {
                 requests: requests
             })
             // test
-            Requester.runCollection(collectionsData[1], result, () => {
+            Requester.runCollection(collectionsData[0], result, () => {
                 SideTabStore.emitChange()
             })
         })
@@ -202,8 +202,8 @@ let actions = {
             text: 'Importing...'
         }
         callback() // callback to show loading
-        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
-            if (!response || !response.ok || !collection) {
+        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (res, collection) => {
+            if (!res || !res.ok || !collection) {
                 tabs.loadingTip.text = 'Importing failed'
                 setTimeout(() => {
                     tabs.loadingTip.show = false

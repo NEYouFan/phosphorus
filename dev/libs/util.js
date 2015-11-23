@@ -285,19 +285,19 @@ let Util = {
                 }
                 collection.requests.push(request)
             })
-            callback(collection, res)
+            callback(res, collection)
         }
         fetch(projectUrl + pId, fetchOptions).then((response) => {
             res = response
             return response.json()
         }).then((json) => {
             if (json.code !== 200) {
-                callback(null, res)
+                callback(res, null)
             } else {
                 convertDataAndReturn(json.result)
             }
         }).catch((err) => {
-            callback(err, res)
+            callback(res, err)
         })
     },
 

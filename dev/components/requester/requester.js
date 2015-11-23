@@ -134,37 +134,48 @@ let Requester = {
     },
 
     runCollection(collection, stores, callback) {
-        //console.log(collection)
-        //console.log(stores)
         collection.requests.forEach((req) => {
             req.reqStatus = 'waiting'
         })
-        //async.eachSeries(collection.requests, (req, cb) => {
-        //    if (req.reqStatus) {
-        //        req.reqStatus = 'fetching'
-        //        callback()
-        //        this.__getFetchOptions(req, collection, stores)
-        //    } else (
-        //        cb()
-        //    )
-        //})
-        collection.requests[0].reqStatus = 'fetching'
-        callback() // set waiting status
-        let fetchUrl = this.__getFetchUrl(collection.requests[0], collection, stores)
-        console.log(fetchUrl)
-        let fetchOptions = this.__getFetchOptions(collection.requests[0], collection, stores)
-        console.log(fetchOptions)
+        let sendReq = (req, cb) => {
+            req.reqStatus = 'fetching'
+            callback() // update status
+            let savedRequest = _.find(stores.requests, (r) => {
+                return r.id === req.id
+            })
+            savedRequest = savedRequest || {}
+            let fetchUrl = this.__getFetchUrl(req, savedRequest, collection, stores)
+            let fetchOptions = this.__getFetchOptions(req, savedRequest, collection, stores)
+            this.__fetch(fetchUrl, fetchOptions, (res, data) => {
+                if (!res || !res.ok) {
+                    req.reqStatus = 'failed'
+                } else {
+                    // res checker
+                    req.reqStatus = 'succeed'
+
+                }
+                callback() // update status
+                cb()
+            })
+        }
+        async.eachSeries(collection.requests, (req, cb) => {
+            if (req.reqStatus) {
+                req.reqStatus = 'fetching'
+                callback()
+                sendReq(req, cb)
+            } else (
+                cb()
+            )
+        }, (err) => {
+            // all requests are done
+        })
     },
 
-    __getFetchUrl(req, collection, stores) {
+    __getFetchUrl(req, savedRequest, collection, stores) {
         let url
-        let savedRequest = _.find(stores.requests, (r) => {
-            return r.id === req.id
-        })
-        savedRequest = savedRequest || {}
         let savedURLParams = savedRequest['url_params']
-        let path = req.path
         if (req.isNEI) {
+            let path = req.path
             if (Util.isNoBodyMethod(req.method)) {
                 let urlParams = []
                 let savedParam
@@ -179,6 +190,8 @@ let Requester = {
                     })
                 })
                 url = Util.getURLByQueryParams(path, urlParams)
+            } else {
+                url = path
             }
         } else {
             url = savedRequest.url
@@ -201,11 +214,7 @@ let Requester = {
         return (hosts.folders[req.folderId] || hosts.collections[req.collectionId] || '') + url
     },
 
-    __getFetchOptions(req, collection, stores) {
-        let savedRequest = _.find(stores.requests, (r) => {
-            return r.id === req.id
-        })
-        savedRequest = savedRequest || {}
+    __getFetchOptions(req, savedRequest, collection, stores) {
         let options = {
             credentials: 'include',
             method: req.method,
@@ -287,15 +296,18 @@ let Requester = {
                     default:
                         break
                 }
-                // deal headers
-                let savedHeaders = savedRequest['headers']
-                savedHeaders.forEach((header) => {
-                    if (header.checked && header.key) {
-                        options.headers[header.key] = header.value
-                    }
-                })
             }
         }
+        if (!req.isNEI) {
+            // deal not nei request's headers
+            let savedHeaders = savedRequest['headers']
+            savedHeaders.forEach((header) => {
+                if (header.checked && header.key) {
+                    options.headers[header.key] = header.value
+                }
+            })
+        }
+        return options
     }
 }
 
