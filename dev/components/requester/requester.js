@@ -8,6 +8,8 @@ import Util from '../../libs/util'
 import RequestDataMap from '../../libs/request_data_map'
 import ReqTabStore from '../../stores/reqtabstore'
 import ReqConTabStore from '../../stores/reqtabconstore'
+import ModalAction from '../../actions/modalaction'
+import SideTabAction from '../../actions/sidtabaction'
 
 let Requester = {
 
@@ -134,10 +136,14 @@ let Requester = {
     },
 
     runCollection(collection, stores, callback) {
+        let totalReqsNum = collection.requests.length
+        let cancelledReqsNum = 0
+        let succeedReqsNum = 0
+        let failedReqsNum = 0
         collection.requests.forEach((req) => {
             req.reqStatus = 'waiting'
         })
-        let checkResStatus = (req, savedRequest, data) => {
+        let getResStatus = (req, savedRequest, data) => {
             let result
             if (req.isNEI) {
                 if (!req.outputs.length) {
@@ -157,7 +163,13 @@ let Requester = {
                     result = false
                 }
             }
-            return result ? 'succeed' : 'failed'
+            if (result) {
+                succeedReqsNum++
+                return 'succeed'
+            } else {
+                failedReqsNum++
+                return 'failed'
+            }
         }
         let sendReq = (req, cb) => {
             req.reqStatus = 'fetching'
@@ -171,24 +183,45 @@ let Requester = {
             this.__fetch(fetchUrl, fetchOptions, (res, data) => {
                 if (!res || !res.ok) {
                     req.reqStatus = 'failed'
+                    failedReqsNum++
                 } else {
                     // res checker
-                    req.reqStatus = checkResStatus(req, savedRequest, data)
+                    req.reqStatus = getResStatus(req, savedRequest, data)
                 }
                 callback() // update status
                 cb()
             })
         }
+        let index = 0
         async.eachSeries(collection.requests, (req, cb) => {
+            index++
             if (req.reqStatus) {
                 req.reqStatus = 'fetching'
-                callback()
-                sendReq(req, cb)
-            } else (
+                SideTabAction.setLoadingTip({
+                    show: true,
+                    text: `Send request ${index}...`
+                })
+                callback() // update status
+                // every request has 300ms delayed
+                setTimeout(() => {
+                    sendReq(req, cb)
+                }, 300)
+            } else {
+                cancelledReqsNum++
                 cb()
-            )
+            }
         }, (err) => {
             // all requests are done
+            // show report
+            SideTabAction.setLoadingTip({
+                show: false
+            })
+            ModalAction.openRunCollectionReport({
+                total: totalReqsNum,
+                cancelled: cancelledReqsNum,
+                succeed: succeedReqsNum,
+                failed: failedReqsNum
+            })
         })
     },
 
@@ -290,7 +323,7 @@ let Requester = {
                     options.headers['Content-Type'] = 'x-www-form-urlencoded'
                     options.body = getNEIXFormData()
                 }
-                req.headers.forEach((header) => {
+                req.headers && req.headers.forEach((header) => {
                     options.headers[header.name] = header.defaultValue
                 })
             } else {

@@ -295,6 +295,15 @@ AppDispatcher.register((action) => {
             ModalStore.emitChange()
             break
 
+        case AppConstants.MODAL_RUN_COLLECTION_REPORT:
+            actions.openModal({
+                type: AppConstants.MODAL_RUN_COLLECTION_REPORT,
+                title: 'Collection running result',
+                data: action.data
+            })
+            ModalStore.emitChange()
+            break
+
         default:
             break
     }

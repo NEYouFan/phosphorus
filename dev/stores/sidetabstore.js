@@ -58,8 +58,8 @@ let tabs = {
     }
 }
 
-//let NEI_SERVER_URL = 'http://nei.hz.netease.com'
-let NEI_SERVER_URL = 'http://127.0.0.1'
+let NEI_SERVER_URL = 'http://nei.hz.netease.com'
+//let NEI_SERVER_URL = 'http://127.0.0.1'
 let historyData = []
 let collectionsData = []
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Synchronize', 'Run all', 'Delete']
@@ -70,6 +70,10 @@ let actions = {
 
     changeIndex(activeTabName) {
         tabs.activeTabName = activeTabName
+    },
+
+    setLoadingTip(tip) {
+        Object.assign(tabs.loadingTip, tip)
     },
 
     getCollections(callback) {
@@ -100,10 +104,6 @@ let actions = {
                 hosts: hosts,
                 collections: collections,
                 requests: requests
-            })
-            // test
-            Requester.runCollection(collectionsData[0], result, () => {
-                SideTabStore.emitChange()
             })
         })
     },
@@ -829,6 +829,11 @@ AppDispatcher.register((action) => {
             actions.deleteRequest(action.options, () => {
                 SideTabStore.emitChange()
             })
+            break
+
+        case AppConstants.SIDE_SET_LOADING_TIP:
+            actions.setLoadingTip(action.data)
+            SideTabStore.emitChange()
             break
 
         default:

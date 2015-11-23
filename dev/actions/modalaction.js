@@ -147,6 +147,13 @@ class ModalAction  {
         })
     }
 
+    static openRunCollectionReport(data) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.MODAL_RUN_COLLECTION_REPORT,
+            data: data
+        })
+    }
+
 }
 
 export default ModalAction

@@ -24,6 +24,7 @@ let AppConstants = keyMirror({
     SIDE_DELETE_REQUEST: null,
     SIDE_EDIT_REQUEST: null,
     SIDE_MOVE_REQUEST: null,
+    SIDE_SET_LOADING_TIP: null,
     // req tab action
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,
@@ -119,7 +120,8 @@ let AppConstants = keyMirror({
     MODAL_EDIT_REQUEST: null,
     MODAL_MOVE_REQUEST: null,
     MODAL_DELETE_REQUEST: null,
-    MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP: null
+    MODAL_COLLECTION_ALREADY_BEEN_IMPORTED_TIP: null,
+    MODAL_RUN_COLLECTION_REPORT: null
 })
 
 export default AppConstants

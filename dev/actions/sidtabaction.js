@@ -140,6 +140,13 @@ class SideTabAction  {
         })
     }
 
+    static setLoadingTip(data) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_SET_LOADING_TIP,
+            data: data
+        })
+    }
+
 }
 
 export default SideTabAction

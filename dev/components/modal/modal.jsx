@@ -24,6 +24,7 @@ import SaveNewRequest from './save.new.request.jsx'
 import EditRequest from './edit.request.jsx'
 import DeletingRequest from './deleting.request.jsx'
 import MoveRequest from './moving.request.jsx'
+import RunCollectionReport from './run.collection.report.jsx'
 
 class Modal extends React.Component {
 
@@ -162,6 +163,11 @@ class Modal extends React.Component {
             case AppConstants.MODAL_DELETE_FOLDER:
                 return (
                     <DeleteFolder modal={this.props.modal}/>
+                )
+
+            case AppConstants.MODAL_RUN_COLLECTION_REPORT:
+                return (
+                    <RunCollectionReport modal={this.props.modal}/>
                 )
 
             default:
