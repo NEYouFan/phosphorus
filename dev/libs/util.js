@@ -730,7 +730,7 @@ let Util = {
             try {
                 json = eval('(' + value + ')')
             } catch (err) {
-                console.log(err)
+                //console.log(err)
             }
         }
         return json || value
@@ -849,6 +849,19 @@ let Util = {
         setData(json)
     },
 
+    getValueByType(value, type) {
+        switch(type) {
+            case 'string':
+                return String(value)
+            case 'number':
+                return Number(value)
+            case 'boolean':
+                return Boolean(value)
+            default:
+                return value
+        }
+    },
+
     convertKVToJSON (kvs) {
         let result = {}
         let setData = (kvs, con) => {
@@ -856,12 +869,27 @@ let Util = {
                 if (kv.checked) {
                     if (kv.value_type === 'array') {
                         con[kv.key] = []
-                        setData(kv.values, con[kv.key])
+                        if (kv.child_value_type === 'object') {
+                            kv.values.forEach((v, index) => {
+                                if (v.checked) {
+                                    con[kv.key][index] = {}
+                                    setData(v.values, con[kv.key][index])
+                                }
+                            })
+                        } else {
+                            kv.values.forEach((v) => {
+                                if (v.checked && v.value !== '') {
+                                    con[kv.key].push(this.getValueByType(v.value, kv.child_value_type))
+                                }
+                            })
+                        }
                     } else if (kv.value_type === 'object') {
                         con[kv.key] = {}
                         setData(kv.values, con[kv.key])
                     } else {
-                        con[kv.key] = kv.value
+                        if (kv.key) {
+                            con[kv.key] = this.getValueByType(kv.value || '', kv.value_type)
+                        }
                     }
                 }
             })

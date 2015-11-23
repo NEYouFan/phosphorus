@@ -102,9 +102,9 @@ let actions = {
                 requests: requests
             })
             // test
-            //Requester.runCollection(collectionsData[0], result, () => {
-            //    SideTabStore.emitChange()
-            //})
+            Requester.runCollection(collectionsData[0], result, () => {
+                SideTabStore.emitChange()
+            })
         })
     },
 

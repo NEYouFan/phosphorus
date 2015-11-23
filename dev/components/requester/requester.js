@@ -138,7 +138,6 @@ let Requester = {
         collection.requests.forEach((req) => {
             req.reqStatus = 'waiting'
         })
-        callback() // set waiting status
         //async.eachSeries(collection.requests, (req, cb) => {
         //    if (req.reqStatus) {
         //        req.reqStatus = 'fetching'
@@ -148,6 +147,8 @@ let Requester = {
         //        cb()
         //    )
         //})
+        collection.requests[1].reqStatus = 'fetching'
+        callback() // set waiting status
         this.__getFetchOptions(collection.requests[1], collection, stores)
     },
 
@@ -155,27 +156,66 @@ let Requester = {
         console.log(req)
         let savedRequest = _.find(stores.requests, (r) => {
             return r.id === req.id
-        })
+        }) || {}
         let options = {
             credentials: 'include',
             method: req.method
         }
+        let getNEIBodyRawJSON = () => {
+            let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
+            let savedBodyRawJSON = Util.convertKVToJSON(savedBodyRawJSONKVs)
+            return Util.convertNEIInputsToJSONStr(req, collection, savedBodyRawJSON)
+        }
+        let getNEIXFormData = () => {
+
+        }
+        let getBodyRawJSON = () => {
+            let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
+            return Util.convertKVToJSON(savedBodyRawJSONKVs)
+        }
+        let getXFormData = () => {
+
+        }
+        let getFormData = () => {
+
+        }
+        console.log(savedRequest)
         if (req.isNEI) {
             options.headers = {}
             if (req.isRest) {
                 options.headers['Content-Type'] = 'application/json'
+                options.body = getNEIBodyRawJSON()
             } else {
                 options.headers['Content-Type'] = 'x-www-form-urlencoded'
+                options.body = getNEIXFormData()
             }
             req.headers.forEach((header) => {
                 options.headers[header.name] = header.defaultValue
             })
+        } else {
+            let bodyType = savedRequest['body_type']
+            // while bat running collection's requests, binary type is not taken into account
+            switch (bodyType.type) {
+                case 'raw':
+                    if (bodyType.value === 'application/json') {
+                        options.body = getBodyRawJSON()
+                    } else {
+                        options.body = savedRequest['body_raw_data']
+                    }
+                    break
+
+                case 'x-www-form-urlencoded':
+                    options.body = getXFormData()
+                    break
+
+                case 'form-data':
+                    options.body = getFormData()
+                    break
+
+                default:
+                    break
+            }
         }
-        let savedBodyRawJSONKVs = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey] || []
-        let savedBodyRawJSON = Util.convertKVToJSON(savedBodyRawJSONKVs)
-        console.log(savedBodyRawJSONKVs)
-        console.log(savedBodyRawJSON)
-        let bodyRawJSONKVs = Util.convertNEIInputsToJSONStr(req, collection, savedBodyRawJSON)
     }
 }
 

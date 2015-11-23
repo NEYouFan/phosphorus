@@ -157,7 +157,8 @@ let actions = {
                         key: item.key,
                         checked: item.checked,
                         values: refineResCheckerData(item),
-                        value_type: item.valueType
+                        value_type: item.valueType,
+                        child_value_type: item.childValueType
                     }
                 })
             }
@@ -174,7 +175,10 @@ let actions = {
                     checked: item.checked,
                     values: refineBodyRawJSONData(item),
                     value_type: item.valueType,
-                    value_readonly: item.valueReadonly
+                    value_readonly: item.valueReadonly,
+                    child_value_type: item.childValueType,
+                    key_visible: item.keyVisible,
+                    type_changeable: item.typeChangeable
                 }
             })
         }

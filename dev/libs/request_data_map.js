@@ -75,7 +75,10 @@ const REQUEST_DATA_MAP = {
             value: 'value',
             values: 'values',
             valueType: 'value_type',
-            valueReadonly: 'value_readonly'
+            childValueType: 'child_value_type',
+            valueReadonly: 'value_readonly',
+            keyVisible: 'key_visible',
+            typeChangeable: 'type_changeable'
         }
     }
 }

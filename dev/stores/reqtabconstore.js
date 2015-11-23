@@ -414,7 +414,10 @@ let tabConActions = {
                             checked: item.checked,
                             values: refineBodyRawJSONData(item),
                             valueType: item.value_type,
-                            valueReadonly: item.value_readonly
+                            valueReadonly: item.value_readonly,
+                            childValueType: item.child_value_type,
+                            keyVisible: item.key_visible,
+                            typeChangeable: item.type_changeable
                         })
                     })
                 }
