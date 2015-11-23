@@ -45,8 +45,12 @@ class ReqURL extends React.Component {
                             placeholder="Enter request URL here"/>
                     </div>
                 </div>
-                <button className="requrl-send" onClick={()=>{this.sendReq()}}>Send</button>
-                <button className="requrl-save" onClick={()=>{this.saveReq()}} disabled={!this.props.tab.isDirty}>Save</button>
+                <button className="requrl-send" onClick={()=>{this.sendReq()}}>
+                    <em className="glyphicon glyphicon-send"></em>
+                </button>
+                <button className="requrl-save" onClick={()=>{this.saveReq()}} disabled={!this.props.tab.isDirty}>
+                    <em className="glyphicon glyphicon-floppy-disk"></em>
+                </button>
             </div>
         )
     }
