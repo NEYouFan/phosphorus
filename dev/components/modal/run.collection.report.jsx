@@ -12,7 +12,7 @@ class RunCollectionReport extends Tip {
                 <p>Cancelled:  <em>{this.getRequestExp(data.cancelled)}</em></p>
                 <p>Succeed:  <em className="success">{this.getRequestExp(data.succeed)}</em></p>
                 <p>Failed:  <em className="fail">{this.getRequestExp(data.failed)}</em></p>
-                <p className="s-tip">Notice: Expand the collection, you will see the request status flag. If you want to review request detail, you need click the send button.</p>
+                <p className="s-tip">Notice: Expand the collection, you will see the request status flag. If you want to review request detail, you need to click the send button.</p>
             </div>
         )
     }
