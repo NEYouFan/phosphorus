@@ -102,7 +102,7 @@ let actions = {
                 requests: requests
             })
             // test
-            Requester.runCollection(collectionsData[0], result, () => {
+            Requester.runCollection(collectionsData[1], result, () => {
                 SideTabStore.emitChange()
             })
         })
@@ -320,18 +320,23 @@ let actions = {
         let dealData = (collections) => {
             let req = null
             collections.find((c) => {
-                req = _.find(c.requests, (req) => {
-                    return req.id === tabs.activeReqId
-                })
+                // nei collections cannot be changed
+                if (!c.isNEI) {
+                    req = _.find(c.requests, (req) => {
+                        return req.id === tabs.activeReqId
+                    })
+                }
                 return req
             })
-            // can update: path, url, name, description
-            let updateFields = ['path', 'method']
-            updateFields.forEach((field) => {
-                if (options.hasOwnProperty(field)) {
-                    req[field] = options[field]
-                }
-            })
+            if (req) {
+                // can update: path, url, name, description
+                let updateFields = ['path', 'method']
+                updateFields.forEach((field) => {
+                    if (options.hasOwnProperty(field)) {
+                        req[field] = options[field]
+                    }
+                })
+            }
         }
         StorageArea.get('collections', (result) => {
             let collections = result.collections || []

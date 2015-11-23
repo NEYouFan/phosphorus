@@ -3,6 +3,7 @@
 
 import async from 'async'
 import _ from 'lodash'
+import URL from 'url'
 import Util from '../../libs/util'
 import RequestDataMap from '../../libs/request_data_map'
 import ReqTabStore from '../../stores/reqtabstore'
@@ -147,19 +148,68 @@ let Requester = {
         //        cb()
         //    )
         //})
-        collection.requests[1].reqStatus = 'fetching'
+        collection.requests[0].reqStatus = 'fetching'
         callback() // set waiting status
-        this.__getFetchOptions(collection.requests[1], collection, stores)
+        let fetchUrl = this.__getFetchUrl(collection.requests[0], collection, stores)
+        console.log(fetchUrl)
+        let fetchOptions = this.__getFetchOptions(collection.requests[0], collection, stores)
+        console.log(fetchOptions)
+    },
+
+    __getFetchUrl(req, collection, stores) {
+        let url
+        let savedRequest = _.find(stores.requests, (r) => {
+            return r.id === req.id
+        })
+        savedRequest = savedRequest || {}
+        let savedURLParams = savedRequest['url_params']
+        let path = req.path
+        if (req.isNEI) {
+            if (Util.isNoBodyMethod(req.method)) {
+                let urlParams = []
+                let savedParam
+                req.inputs.forEach((input) => {
+                    savedParam = _.find(savedURLParams, (p) => {
+                        return !p.is_pv && p.key === input.name
+                    })
+                    urlParams.push({
+                        checked: true,
+                        key: input.name,
+                        value: savedParam && savedParam.value || ''
+                    })
+                })
+                url = Util.getURLByQueryParams(path, urlParams)
+            }
+        } else {
+            url = savedRequest.url
+        }
+        let urlParams = Util.getUrlParams(url)
+        let savedPV
+        urlParams.forEach((urlParam) => {
+            if (urlParam.isPV) {
+                savedPV = _.find(savedURLParams, (p) => {
+                    return p.is_pv && p.key === urlParam.key
+                })
+                url = url.replace(':' + urlParam.key, savedPV && savedPV.value)
+            }
+        })
+        let result = URL.parse(url)
+        if (result.host) {
+            return url
+        }
+        let hosts = stores.hosts
+        return (hosts.folders[req.folderId] || hosts.collections[req.collectionId] || '') + url
     },
 
     __getFetchOptions(req, collection, stores) {
-        console.log(req)
         let savedRequest = _.find(stores.requests, (r) => {
             return r.id === req.id
-        }) || {}
+        })
+        savedRequest = savedRequest || {}
         let options = {
             credentials: 'include',
-            method: req.method
+            method: req.method,
+            headers: {}
         }
         let getNEIBodyRawJSON = () => {
             let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
@@ -167,53 +217,83 @@ let Requester = {
             return Util.convertNEIInputsToJSONStr(req, collection, savedBodyRawJSON)
         }
         let getNEIXFormData = () => {
-
+            let savedXFormData = savedRequest['body_x_form_data'] || {}
+            let fd = new FormData()
+            _.forEach(req.inputs, (input) => {
+                let savedField = _.find(savedXFormData, (kv) => {
+                    return kv.key === input.name
+                })
+                fd.append(input.name, savedField && savedField.value || '')
+            })
+            return fd
         }
         let getBodyRawJSON = () => {
             let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
             return Util.convertKVToJSON(savedBodyRawJSONKVs)
         }
         let getXFormData = () => {
-
+            let savedXFormData = savedRequest['body_x_form_data'] || {}
+            let fd = new FormData()
+            _.forEach(savedXFormData, (kv) => {
+                if (kv.checked && kv.key) {
+                    fd.append(kv.key, kv.value)
+                }
+            })
+            return fd
         }
         let getFormData = () => {
-
-        }
-        console.log(savedRequest)
-        if (req.isNEI) {
-            options.headers = {}
-            if (req.isRest) {
-                options.headers['Content-Type'] = 'application/json'
-                options.body = getNEIBodyRawJSON()
-            } else {
-                options.headers['Content-Type'] = 'x-www-form-urlencoded'
-                options.body = getNEIXFormData()
-            }
-            req.headers.forEach((header) => {
-                options.headers[header.name] = header.defaultValue
+            let savedFormData = savedRequest['body_form_data'] || {}
+            let fd = new FormData()
+            _.forEach(savedFormData, (kv) => {
+                if (kv.checked && kv.key) {
+                    fd.append(kv.key, kv.value)
+                }
             })
-        } else {
-            let bodyType = savedRequest['body_type']
-            // while bat running collection's requests, binary type is not taken into account
-            switch (bodyType.type) {
-                case 'raw':
-                    if (bodyType.value === 'application/json') {
-                        options.body = getBodyRawJSON()
-                    } else {
-                        options.body = savedRequest['body_raw_data']
+            return fd
+        }
+        if (!Util.isNoBodyMethod(req.method)) {
+            if (req.isNEI) {
+                if (req.isRest) {
+                    options.headers['Content-Type'] = 'application/json'
+                    options.body = getNEIBodyRawJSON()
+                } else {
+                    options.headers['Content-Type'] = 'x-www-form-urlencoded'
+                    options.body = getNEIXFormData()
+                }
+                req.headers.forEach((header) => {
+                    options.headers[header.name] = header.defaultValue
+                })
+            } else {
+                // deal request body
+                let bodyType = savedRequest['body_type']
+                // while bat running collection's requests, binary type is not taken into account
+                switch (bodyType.type) {
+                    case 'raw':
+                        if (bodyType.value === 'application/json') {
+                            options.body = getBodyRawJSON()
+                        } else {
+                            options.body = savedRequest['body_raw_data']
+                        }
+                        break
+
+                    case 'x-www-form-urlencoded':
+                        options.body = getXFormData()
+                        break
+
+                    case 'form-data':
+                        options.body = getFormData()
+                        break
+
+                    default:
+                        break
+                }
+                // deal headers
+                let savedHeaders = savedRequest['headers']
+                savedHeaders.forEach((header) => {
+                    if (header.checked && header.key) {
+                        options.headers[header.key] = header.value
                     }
-                    break
-
-                case 'x-www-form-urlencoded':
-                    options.body = getXFormData()
-                    break
-
-                case 'form-data':
-                    options.body = getFormData()
-                    break
-
-                default:
-                    break
+                })
             }
         }
     }

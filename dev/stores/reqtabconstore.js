@@ -316,13 +316,26 @@ let tabConActions = {
                     })
                 }
             } else {
+                // get path varible first
+                builders.paramKVs = []
+                let urlParams = Util.getUrlParams(request.path)
+                urlParams.forEach((urlParam) => {
+                    if (urlParam.isPV) {
+                        builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV, {
+                            key: urlParam.key,
+                            checked: true,
+                            readonly: true,
+                            isPV: true
+                        }))
+                    }
+                })
                 // url param kvs
-                builders.paramKVs = request.inputs.map((urlParam, index) => {
-                    return Object.assign({}, DEFAULT_PARAMS_KV, {
+                request.inputs.forEach((urlParam) => {
+                    builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV, {
                         key: urlParam.name,
                         title: urlParam.description,
                         checked: true
-                    })
+                    }))
                 })
                 let savedURLParams = savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey]
                 // set saved url param value
@@ -330,15 +343,15 @@ let tabConActions = {
                     let foundSavedPV
                     if (kv.isPV) {
                         foundSavedPV = _.find(savedURLParams, (p) => {
-                            return p.is_pv && p.key === param.key
+                            return p.is_pv && p.key === kv.key
                         })
                     } else {
                         foundSavedPV = _.find(savedURLParams, (p) => {
-                            return p.key === param.key
+                            return !p.is_pv && p.key === kv.key
                         })
                     }
                     if (foundSavedPV) {
-                        param.value = foundSavedPV.value
+                        kv.value = foundSavedPV.value
                     }
                 })
                 tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
