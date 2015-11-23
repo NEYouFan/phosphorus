@@ -137,6 +137,28 @@ let Requester = {
         collection.requests.forEach((req) => {
             req.reqStatus = 'waiting'
         })
+        let checkResStatus = (req, savedRequest, data) => {
+            let result
+            if (req.isNEI) {
+                if (!req.outputs.length) {
+                    result = true
+                }
+            } else {
+                if (!savedRequest['res_checker_data'].length) {
+                    result = true
+                }
+            }
+            if (!result) {
+                try {
+                    let json = JSON.parse(data)
+                    let resCheckerKVs = Util.convertNEIOutputsToJSON(req, collection)
+                    result = Util.checkResponseResult(resCheckerKVs, json)
+                } catch(err) {
+                    result = false
+                }
+            }
+            return result ? 'succeed' : 'failed'
+        }
         let sendReq = (req, cb) => {
             req.reqStatus = 'fetching'
             callback() // update status
@@ -151,8 +173,7 @@ let Requester = {
                     req.reqStatus = 'failed'
                 } else {
                     // res checker
-                    req.reqStatus = 'succeed'
-
+                    req.reqStatus = checkResStatus(req, savedRequest, data)
                 }
                 callback() // update status
                 cb()
