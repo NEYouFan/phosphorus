@@ -87,7 +87,7 @@ AppDispatcher.register((action) => {
             actions.openModal({
                 type: AppConstants.MODAL_EDIT_COLL_HOST,
                 title: 'Edit host',
-                okText: 'Apply',
+                okText: 'Save',
                 cancelText: 'Cancel',
                 data: action.collection
             })
@@ -98,7 +98,7 @@ AppDispatcher.register((action) => {
             actions.openModal({
                 type: AppConstants.MODAL_EDIT_FOLDER_HOST,
                 title: 'Edit host',
-                okText: 'Apply',
+                okText: 'Save',
                 cancelText: 'Cancel',
                 data: action.folder
             })

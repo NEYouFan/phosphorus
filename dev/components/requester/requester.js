@@ -201,11 +201,10 @@ let Requester = {
                     show: true,
                     text: `Send request ${index}...`
                 })
-                callback() // update status
-                // every request has 300ms delayed
+                // every request has 500ms delayed
                 setTimeout(() => {
                     sendReq(req, cb)
-                }, 300)
+                }, 500)
             } else {
                 cancelledReqsNum++
                 cb()

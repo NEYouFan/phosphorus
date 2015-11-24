@@ -447,7 +447,7 @@ let tabConActions = {
             isNEI: request.isNEI,
             isDirty: false,
             urlError: false,
-            folderId: request.id,
+            folderId: request.folderId,
             collectionId: request.collectionId
         }
         ReqTabAction.changeTab(tab)
@@ -554,7 +554,6 @@ let tabConActions = {
         let canSend = this.checkReqSend(hosts)
         if (!canSend) return
         Requester.fetch((res, data) => {
-            console.log(res)
             tabConActions.switchBuilderTab(RESPONSE_STR)
             let tabCon = tabCons.items[tabIndex]
             let builders = tabCon.builders

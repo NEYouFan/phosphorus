@@ -532,6 +532,13 @@ let actions = {
                 options.tab.id = reqItem.id
                 options.tab.name = reqItem.name
                 options.tab.isDirty = false
+                Object.assign(options.tab, {
+                    id: reqItem.id,
+                    name: reqItem.name,
+                    isDirty: false,
+                    folderId: options.folderId,
+                    collectionId: collectionId
+                })
                 ReqTabStore.changeTab(options.tab)
                 // highlight saved request
                 tabs.activeReqId = reqItem.id
