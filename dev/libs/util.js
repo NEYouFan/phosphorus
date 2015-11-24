@@ -433,7 +433,7 @@ let Util = {
                 })
                 let tempItem = Object.assign({}, itemTemplate, {
                     key: input.name,
-                    value: savedItem && savedItem.value,
+                    value: savedItem && savedItem.value || input.defaultValue,
                     title: input.description,
                     values: [],
                     valueType: typeMap[input.type]
