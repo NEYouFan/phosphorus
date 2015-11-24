@@ -29,7 +29,7 @@ gulp.task('change-manifest', ['change-html'], (cb) => {
         .pipe(gulp.dest('chrome'))
 })
 
-gulp.task('release', ['change-html', 'change-manifest'], (cb) => {
+gulp.task('extract-files', ['change-manifest'], (cb) => {
     let cssFilter = function (file) {
         if (file.path.match(/\.css$/)) {
             return true
@@ -43,6 +43,17 @@ gulp.task('release', ['change-html', 'change-manifest'], (cb) => {
     ], {base: './'})
         .pipe(gulpif(cssFilter, minifyCss()))
         .pipe(gulp.dest('chrome'))
+        .pipe(zip('chrome.zip'))
+        .pipe(gulp.dest('.'))
+})
+
+gulp.task('release', ['extract-files'], (cb) => {
+    let cssFilter = function (file) {
+        if (file.path.match(/\.css$/)) {
+            return true
+        }
+    }
+    return gulp.src(['chrome/**/*.*'])
         .pipe(zip('chrome.zip'))
         .pipe(gulp.dest('.'))
 })
