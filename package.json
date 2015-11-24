@@ -9,7 +9,7 @@
     "deploy": "webpack -p --config webpack.production.config.js"
   },
   "author": "HuntBao",
-  "license": "BSD",
+  "license": "UNLICENSED",
   "repository": {
     "type": "git",
     "url": "https://github.com/huntbao/phosphorus.git"
