@@ -5,8 +5,7 @@
 let bg = {
 
     init() {
-        var self = this
-        self.browserAction()
+        this.browserAction()
     },
 
     browserAction() {
