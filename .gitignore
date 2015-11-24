@@ -2,4 +2,5 @@
 node_modules
 chrome
 dist.zip
+dist/index.js
 npm-debug.log

@@ -8,8 +8,12 @@
     "dev": "webpack-dev-server --inline --devtool inline-source-map --colors --port 7070",
     "deploy": "webpack -p --config webpack.production.config.js"
   },
-  "author": "",
+  "author": "HuntBao",
   "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/huntbao/phosphorus.git"
+  },
   "dependencies": {
     "async": "^1.5.0",
     "brace": "^0.5.1",
