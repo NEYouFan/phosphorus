@@ -30,6 +30,7 @@ class Index extends React.Component {
     constructor(props) {
         super(props)
         this.state = this.getAppStates()
+        this.state.showSide = true
     }
 
     getAppStates() {
@@ -81,16 +82,21 @@ class Index extends React.Component {
         let reqTabCon = this.state.reqTabCon
         let classes = classNames({
             'main-wrap': true,
-            'show-loading': sideTabs.loadingTip.show
+            'show-loading': sideTabs.loadingTip.show,
+            'show-side': this.state.showSide
         })
         return (
             <div className={classes} onClick={()=>{this.hideDropdownMenu()}}>
-                <h1>Phosphorus</h1>
-
                 <div className="loading-tip">{sideTabs.loadingTip.text}</div>
                 <div className="side">
+                    <h1>Phosphorus</h1>
                     <SideTab tabs={sideTabs}/>
                     <Collections sideTab={sideTab} reqTabs={reqTabTabs} activeReqTabIndex={reqTab.activeIndex}/>
+
+                    <div className="toggle-show" onClick={(e)=>{this.toggleSide(e)}}>
+                        <em className="glyphicon glyphicon-chevron-left"></em>
+                        <em className="glyphicon glyphicon-chevron-right"></em>
+                    </div>
                 </div>
                 <div className="bd">
                     <ReqTab
@@ -149,6 +155,13 @@ class Index extends React.Component {
         if (builders.bodyRawDataOriginal !== builders.bodyRawData) {
             ReqTabAction.setDirtyTab()
         }
+    }
+
+    toggleSide() {
+        let showSide = !this.state.showSide
+        this.setState({
+            showSide: showSide
+        })
     }
 
 }

@@ -235,7 +235,7 @@ let actions = {
             text: 'Synchronizing...'
         }
         callback() // callback to show tip
-        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (collection, response) => {
+        Util.fetchNEIProject(NEI_SERVER_URL, options.id, (response, collection) => {
             if (!response.ok) {
                 tabs.loadingTip.text = 'Sync failed'
                 setTimeout(() => {

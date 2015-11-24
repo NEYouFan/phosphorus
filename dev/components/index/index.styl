@@ -186,24 +186,75 @@ input.inp-error::-webkit-input-placeholder {
     -webkit-user-select none
     cursor: default
   }
+
+  .show-side {
+    .side {
+      left: 0;
+
+      .glyphicon-chevron-left {
+        display: block
+      }
+
+      .glyphicon-chevron-right {
+        display: none
+      }
+    }
+
+    .bd {
+      left 320px
+    }
+  }
 }
 
 .side {
   width: 300px;
   position: absolute;
-  top: 60px;
-  left: 0;
+  top: 0
+  left: -320px;
   bottom: 0;
   padding: 6px 10px 10px
+  z-index: 1
+  transition all ease .1s
+
+  .toggle-show {
+    position: absolute
+    bottom: 4px
+    right: -19px
+    text-align: center
+    height: 30px
+    line-height: 30px
+    background-color: #ccc
+    cursor: pointer
+    border-radius: 0 3px 3px 0
+    color: #fff
+    font-size: 12px;
+    width: 18px;
+    transition all ease .1s
+
+    &:hover {
+      background-color: #999
+    }
+
+    .glyphicon-chevron-left {
+      display: none
+      margin: 7px 0 0;
+    }
+
+    .glyphicon-chevron-right {
+      display: block
+      margin: 7px 0 0;
+    }
+  }
 }
 
 .bd {
   border-left: 1px solid #f2f2f2;
   position: absolute
-  left: 320px
+  left: 0
   right: 0
   bottom: 0
   top: 0;
+  transition all ease .1s
 }
 
 .copy-textarea {
