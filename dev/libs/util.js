@@ -493,6 +493,10 @@ let Util = {
                         valueReadonly: true,
                         childValueType: typeMap[dataType.subtype] || 'object'
                     })
+                    let storedData = _.find(data, (d) => {
+                        return d.key === input.name
+                    })
+                    let storedValues = storedData && storedData.values || []
                     if (tempItem.childValueType === 'object') {
                         let childItem = Object.assign({}, itemTemplate, {
                             valueType: tempItem.childValueType,
@@ -501,19 +505,25 @@ let Util = {
                             valueReadonly: true,
                             key: '[[array item]]'
                         })
-                        tempItem.values.push(childItem)
                         let childAttributes = _.filter(dataSource.attributes, (attr) => {
                             return attr.parentId === dataType.subtype
                         })
                         childAttributes = _.uniq(childAttributes, 'id')
-                        childAttributes.forEach((attr) => {
-                            getItem(attr, childItem.values, data.values)
+                        storedValues.forEach((sv) => {
+                            let item = _.clone(childItem)
+                            item.values = []
+                            childAttributes.forEach((attr) => {
+                                getItem(attr, item.values, sv.values)
+                            })
+                            tempItem.values.push(item)
                         })
+                        if (!tempItem.values.length) {
+                            childAttributes.forEach((attr) => {
+                                getItem(attr, childItem.values)
+                            })
+                            tempItem.values.push(childItem)
+                        }
                     } else {
-                        let storedData = _.find(data, (d) => {
-                            return d.key === input.name
-                        })
-                        let storedValues = storedData && storedData.values || []
                         let childItem = Object.assign({}, itemTemplate, {
                             keyVisible: false,
                             valueType: tempItem.childValueType,
