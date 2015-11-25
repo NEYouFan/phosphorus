@@ -287,18 +287,21 @@ let Util = {
             })
             callback(res, collection)
         }
-        fetch(projectUrl + pId, fetchOptions).then((response) => {
-            res = response
-            return response.json()
-        }).then((json) => {
-            if (json.code !== 200) {
-                callback(res, null)
-            } else {
-                convertDataAndReturn(json.result)
-            }
-        }).catch((err) => {
-            callback(res, err)
-        })
+        fetch(projectUrl + pId, fetchOptions)
+            .then((response) => {
+                res = response
+                return response.json()
+            })
+            .then((json) => {
+                if (json.code !== 200) {
+                    callback(res, null)
+                } else {
+                    convertDataAndReturn(json.result)
+                }
+            })
+            .catch((err) => {
+                callback(res, err)
+            })
     },
 
     isNoBodyMethod(method) {
@@ -344,6 +347,20 @@ let Util = {
         let isSysType = (type) => {
             return /^(10001|10002|10003)$/.test(type)
         }
+        let getEnumValue = (attributes) => {
+            let result = attributes.map((attr) => {
+                return attr.name
+            })
+            return result.join(',')
+        }
+        let getAttributesByType = (type) => {
+            let attributes = _.filter(dataSource.attributes, (attr) => {
+                return attr.parentId === type
+            })
+            // dataSource has bug, attributes maybe duplicated
+            attributes = _.uniq(attributes, 'id')
+            return attributes
+        }
 
         let traversedDataTypes = []
         let traversedLayers = 0
@@ -374,16 +391,31 @@ let Util = {
                 }
                 traversedDataTypes.push(input.type)
                 traversedLayers++
-                let attributes = []
-                dataSource.attributes.forEach((ds) => {
-                    if (ds.parentId === input.type) {
-                        attributes.push(ds)
+                let dataType = _.find(dataSource.datatypes, (dt) => {
+                    return dt.id === input.type
+                })
+                if (dataType.format === 1) {
+                    // enums
+                    tempResult = getEnumValue(getAttributesByType(input.type))
+                } else if (dataType.format === 2) {
+                    // array
+                    if (isSysType(dataType.subtype)) {
+                        tempResult = data[input.name]
+                    } else {
+                        tempResult = []
+                        data[input.name].forEach((obj, index) => {
+                            tempResult[index] = {}
+                            getAttributesByType(dataType.subtype).forEach((attr) => {
+                                tempResult[index][attr.name] = obj[attr.name]
+                            })
+                        })
                     }
-                })
-                attributes.forEach((attr) => {
-                    attr.isSysType = isSysType(attr.type)
-                    tempResult[attr.name] = getInputValue(attr, data[input.name] || {})
-                })
+                } else {
+                    getAttributesByType(input.type).forEach((attr) => {
+                        attr.isSysType = isSysType(attr.type)
+                        tempResult[attr.name] = getInputValue(attr, data[input.name] || {})
+                    })
+                }
             }
             return tempResult
         }
@@ -916,13 +948,13 @@ let Util = {
     },
 
     getValueByType(value, type) {
-        switch(type) {
+        switch (type) {
             case 'string':
                 return String(value)
             case 'number':
                 return Number(value)
             case 'boolean':
-                return Boolean(value)
+                return value === 'true'
             default:
                 return value
         }

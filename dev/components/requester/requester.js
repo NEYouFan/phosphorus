@@ -117,7 +117,18 @@ let Requester = {
                         getData(kv.values, container[kv.key])
                     } else if (kv.valueType === 'array') {
                         container[kv.key] = []
-                        getData(kv.values, container[kv.key])
+                        if (kv.childValueType === 'object') {
+                            kv.values.forEach((skv, index) => {
+                                container[kv.key][index] = {}
+                                getData(skv.values, container[kv.key][index])
+                            })
+                        } else {
+                            kv.values.forEach((skv) => {
+                                if (skv.checked && skv.value !== '') {
+                                    container[kv.key].push(convertValue(skv.value, kv.childValueType))
+                                }
+                            })
+                        }
                     } else {
                         let value = convertValue(kv.value, kv.valueType)
                         if (Array.isArray(container)) {
@@ -159,7 +170,7 @@ let Requester = {
                     let json = JSON.parse(data)
                     let resCheckerKVs = Util.convertNEIOutputsToJSON(req, collection)
                     result = Util.checkResponseResult(resCheckerKVs, json)
-                } catch(err) {
+                } catch (err) {
                     result = false
                 }
             }
