@@ -424,6 +424,12 @@ let Util = {
             }
             return typeMap[10001]
         }
+        let getEnumValue = (attributes) => {
+            let result = attributes.map((attr) => {
+                return attr.name
+            })
+            return result.join(',')
+        }
         let traversedDataTypes = []
         let traversedLayers = 0
         let getItem = (input, resultContainer, data) => {
@@ -472,6 +478,8 @@ let Util = {
                         key: input.name,
                         title: input.description,
                         values: [],
+                        valueReadonly: true,
+                        value: getEnumValue(attributes),
                         valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
                     })
                     resultContainer.push(tempItem)
@@ -502,6 +510,10 @@ let Util = {
                             getItem(attr, childItem.values, data.values)
                         })
                     } else {
+                        let storedData = _.find(data, (d) => {
+                            return d.key === input.name
+                        })
+                        let storedValues = storedData && storedData.values || []
                         let childItem = Object.assign({}, itemTemplate, {
                             keyVisible: false,
                             valueType: tempItem.childValueType,
@@ -509,7 +521,14 @@ let Util = {
                             parentValueType: 'array',
                             readonly: false
                         })
-                        tempItem.values.push(childItem)
+                        storedValues.forEach((sv) => {
+                            let item = _.clone(childItem)
+                            item.value = sv.value
+                            tempItem.values.push(item)
+                        })
+                        if (!tempItem.values.length) {
+                            tempItem.values.push(childItem)
+                        }
                     }
                     resultContainer.push(tempItem)
                 } else {
