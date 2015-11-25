@@ -121,7 +121,9 @@ let actions = {
         let savedData = {}
         _.each(RequestDataMap, (value, key) => {
             let data = tab[key] || tabCon[key]
-            if (typeof value === 'object') {
+            if (Array.isArray(data) && data.length === 1 && data[0].isPrimite) {
+                savedData[value.saveKey] = Util.getPrimiteValue(data[0].value, data[0].valueType)
+            } else if (typeof value === 'object') {
                 if (Array.isArray(data)) {
                     savedData[value.saveKey] = []
                     _.each(data, (item) => {
@@ -166,25 +168,27 @@ let actions = {
                 item.values = refineResCheckerData(item)
             })
         }
-        // refine `body_raw_json`
-        let refineBodyRawJSONData = (data) => {
-            return data.values.map((item) => {
-                return {
-                    key: item.key,
-                    value: item.value,
-                    checked: item.checked,
-                    values: refineBodyRawJSONData(item),
-                    value_type: item.valueType,
-                    value_readonly: item.valueReadonly,
-                    child_value_type: item.childValueType,
-                    key_visible: item.keyVisible,
-                    type_changeable: item.typeChangeable
-                }
+        if (Array.isArray(savedData['body_raw_json'])) {
+            // refine `body_raw_json`
+            let refineBodyRawJSONData = (data) => {
+                return data.values.map((item) => {
+                    return {
+                        key: item.key,
+                        value: item.value,
+                        checked: item.checked,
+                        values: refineBodyRawJSONData(item),
+                        value_type: item.valueType,
+                        value_readonly: item.valueReadonly,
+                        child_value_type: item.childValueType,
+                        key_visible: item.keyVisible,
+                        type_changeable: item.typeChangeable
+                    }
+                })
+            }
+            savedData['body_raw_json'].forEach((item) => {
+                item.values = refineBodyRawJSONData(item)
             })
         }
-        savedData['body_raw_json'].forEach((item) => {
-            item.values = refineBodyRawJSONData(item)
-        })
         // save to local storage
         console.log(savedData)
         // already have id, directly save it

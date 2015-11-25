@@ -284,7 +284,7 @@ let tabConActions = {
                         value: 'application/json'
                     }
                     // init request inputs, build json kvs, saved data is `bodyRawJSONKVs`
-                    let savedData = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey] || []
+                    let savedData = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey]
                     builders.bodyRawJSONKVs = Util.convertNEIInputsToJSON(request, dataSource, savedData, Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
                         readonly: true,
                         typeChangeable: false,

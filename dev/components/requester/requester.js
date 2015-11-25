@@ -142,7 +142,11 @@ let Requester = {
                 }
             })
         }
-        getData(bodyRawJSONKVs, json)
+        if (bodyRawJSONKVs.length && bodyRawJSONKVs[0].isPrimite) {
+            json = bodyRawJSONKVs[0].value
+        } else {
+            getData(bodyRawJSONKVs, json)
+        }
         return JSON.stringify(json)
     },
 

@@ -308,23 +308,24 @@ let Util = {
         return /^(get|copy|head|purge|unlock|view)$/.test(method.toLowerCase())
     },
 
+    getPrimiteValue(value, type) {
+        switch (type) {
+            case 'string':
+                // string
+                return String(value)
+            case 'number':
+                // number
+                return Number(value)
+            case 'boolean':
+                // boolean
+                return value === 'true'
+            default:
+                return value
+        }
+    },
+
     convertNEIInputsToJSONStr(request, dataSource, savedData) {
         let result = {}
-        let getPrimiteValue = (type, value) => {
-            switch (type) {
-                case 10001:
-                    // string
-                    return String(value)
-                case 10002:
-                    // number
-                    return Number(value)
-                case 10003:
-                    // boolean
-                    return Boolean(value)
-                default:
-                    return value
-            }
-        }
         let typeMap = {
             10001: 'string',
             10002: 'number',
@@ -377,7 +378,7 @@ let Util = {
                     if (checkValueIsType(data[input.name], input.type)) {
                         tempResult = data[input.name]
                     } else {
-                        tempResult = getPrimiteValue(input.type, '')
+                        tempResult = this.getPrimiteValue(typeMap[input.type], '')
                     }
                 }
             } else {
@@ -422,7 +423,7 @@ let Util = {
         let getData = (inputs, data) => {
             inputs.forEach((input) => {
                 if (input.isPrimite) {
-                    result = getPrimiteValue(input.type, data || '')
+                    result = data
                 } else {
                     for (let i = 0; i < traversedLayers; i++) {
                         traversedDataTypes.pop()
@@ -588,14 +589,29 @@ let Util = {
             }
         }
         let getData = (inputs, data) => {
-            inputs.forEach((input, index) => {
-                getItem(input, result, data)
-                for (let i = 0; i < traversedLayers; i++) {
-                    traversedDataTypes.pop()
-                }
-                traversedLayers = 0
-            })
+            if (inputs.length === 1 && inputs[0].isPrimite) {
+                let input = inputs[0]
+                let item = Object.assign({}, itemTemplate, {
+                    key: input.name,
+                    value: typeof(savedData) === 'undefined' ? inputs.defaultValue : data,
+                    title: input.description,
+                    values: [],
+                    valueType: typeMap[input.type],
+                    keyVisible: false,
+                    isPrimite: true
+                })
+                result.push(item)
+            } else {
+                inputs.forEach((input, index) => {
+                    getItem(input, result, data)
+                    for (let i = 0; i < traversedLayers; i++) {
+                        traversedDataTypes.pop()
+                    }
+                    traversedLayers = 0
+                })
+            }
         }
+        savedData = typeof(savedData) === 'undefined' ? [] : savedData
         getData(request.inputs, savedData)
         return error || result
     },
@@ -992,8 +1008,13 @@ let Util = {
                 }
             })
         }
-        setData(kvs, result)
-        return result
+        if (/^(string|number|boolean)$/.test(typeof kvs)) {
+            // is primite type
+            return kvs
+        } else {
+            setData(kvs, result)
+            return result
+        }
     }
 }
 
