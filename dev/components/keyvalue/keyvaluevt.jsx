@@ -34,7 +34,7 @@ class KeyValueVT extends KeyValueT {
                 let rowClasses = classNames({
                     'kv-row': true,
                     'removable': !kv.readonly,
-                    'onlyone': total === 1
+                    'onlyone': kv.values.length === 1
                 })
                 let okSignClasses = classNames({
                     'glyphicon glyphicon-ok-sign': true,
@@ -128,7 +128,7 @@ class KeyValueVT extends KeyValueT {
             }
         }
         return (
-            <div className={classes} onFocus={(e)=>{this.focus(rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
+            <div className={classes} onFocus={(e)=>{this.focus(kv,rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <input {...valueInputProps} />
                 <select value={valueType} onChange={(e) => {this.changeKVValueType(rowIndex,e)}} disabled={!kv.typeChangeable}>

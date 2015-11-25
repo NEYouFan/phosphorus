@@ -1,6 +1,7 @@
 //author @huntbao
 'use strict'
 import ReqBuilderBody from './reqbuilderbody.jsx'
+import ReqBodyAction from '../../actions/reqbodyaction'
 
 class NEIReqBuilderBody extends ReqBuilderBody {
 
@@ -21,12 +22,10 @@ class NEIReqBuilderBody extends ReqBuilderBody {
         // do nothing
     }
 
-    addBodyRawJSONKV() {
-        // do nothing
-    }
-
-    removeBodyRawJSONKV(rowIndex) {
-        // do nothing
+    addBodyRawJSONKV(rowIndex, kv) {
+        if (kv.parentValueType === 'array') {
+            ReqBodyAction.addBodyRawJSONKV(rowIndex, kv)
+        }
     }
 
     toggleBodyFormDataKV(rowIndex, kv) {

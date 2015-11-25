@@ -116,7 +116,7 @@ class ReqBuilderBody extends React.Component {
                 <KeyValueVT
                     kvs={this.props.builders.bodyRawJSONKVs}
                     toggleKV={(rowIndex,kv) => {this.toggleBodyRawJSONKV(rowIndex,kv)}}
-                    addKV={(rowIndex) => {this.addBodyRawJSONKV(rowIndex)}}
+                    addKV={(rowIndex, kv) => {this.addBodyRawJSONKV(rowIndex, kv)}}
                     removeKV={(rowIndex) => {this.removeBodyRawJSONKV(rowIndex)}}
                     changeKVKey={(rowIndex, value) => {this.changeBodyRawJSONKVKey(rowIndex, value)}}
                     changeKVValue={(rowIndex, value) => {this.changeBodyRawJSONKVValue(rowIndex, value)}}
@@ -196,7 +196,7 @@ class ReqBuilderBody extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
-    addBodyRawJSONKV(rowIndex) {
+    addBodyRawJSONKV(rowIndex, kv) {
         ReqBodyAction.addBodyRawJSONKV(rowIndex)
     }
 

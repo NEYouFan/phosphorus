@@ -71,7 +71,7 @@ class KeyValue extends React.Component {
 
     getInputs(kv, rowIndex, keyInputProps, valueInputProps) {
         return (
-            <div className="input-wrap" onFocus={(e)=>{this.focus(rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
+            <div className="input-wrap" onFocus={(e)=>{this.focus(kv, rowIndex,e)}} onBlur={(e)=>{this.blur(e)}}>
                 <input {...keyInputProps} />
                 <input {...valueInputProps}/>
             </div>
@@ -86,9 +86,9 @@ class KeyValue extends React.Component {
         this.props.toggleKV(rowIndex, kv)
     }
 
-    focus(rowIndex, evt) {
+    focus(kv, rowIndex, evt) {
         if (rowIndex === this.props.kvs.length - 1) {
-            this.props.addKV(rowIndex)
+            this.props.addKV(rowIndex, kv)
         }
         evt.currentTarget.classList.add('active')
     }

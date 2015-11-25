@@ -38,10 +38,11 @@ class ReqBodyAction  {
         })
     }
 
-    static addBodyRawJSONKV(rowIndex) {
+    static addBodyRawJSONKV(rowIndex, kv) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_RAW_JSON_ADD_KV,
-            rowIndex: rowIndex
+            rowIndex: rowIndex,
+            kv: kv
         })
     }
 

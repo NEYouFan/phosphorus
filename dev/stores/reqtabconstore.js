@@ -912,7 +912,7 @@ let bodyRawJSONActions = {
         dealChild(row.target)
     },
 
-    addBodyRawJSONKV(rowIndex) {
+    addBodyRawJSONKV(rowIndex, kv) {
         let row = this.getBodyRawJSONRow(rowIndex)
         if (+row.targetIndex === row.parent.length - 1) {
             let item = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
@@ -920,14 +920,23 @@ let bodyRawJSONActions = {
             })
             if (row.parentValueType === 'array') {
                 item.valueType = row.parentChildValueType
+                item.parentValueType = row.parentValueType
                 item.typeChangeable = false
                 item.keyVisible = false
                 if (/^object$/.test(row.parentChildValueType)) {
                     item.value = '[[array item]]'
                     item.valueReadonly = true
-                    item.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
-                        values: []
-                    }))
+                    if (kv) {
+                        // in NEI, the new added object item should be same as the first element
+                        item.values = _.cloneDeep(kv.values)
+                        item.values.forEach((kv) => {
+                            kv.value = ''
+                        })
+                    } else {
+                        item.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                            values: []
+                        }))
+                    }
                 }
             }
             row.parent.push(item)
@@ -1298,7 +1307,7 @@ AppDispatcher.register((action) => {
             break
 
         case AppConstants.REQ_BODY_RAW_JSON_ADD_KV:
-            actions.addBodyRawJSONKV(action.rowIndex)
+            actions.addBodyRawJSONKV(action.rowIndex, action.kv)
             ReqTabConStore.emitChange()
             break
 

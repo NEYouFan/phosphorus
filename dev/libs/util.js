@@ -475,6 +475,43 @@ let Util = {
                         valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
                     })
                     resultContainer.push(tempItem)
+                } else if (dataType.format === 2) {
+                    // array
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: input.name,
+                        title: input.description,
+                        values: [],
+                        valueType: 'array',
+                        valueReadonly: true,
+                        childValueType: typeMap[dataType.subtype] || 'object'
+                    })
+                    if (tempItem.childValueType === 'object') {
+                        let childItem = Object.assign({}, itemTemplate, {
+                            valueType: tempItem.childValueType,
+                            typeChangeable: false,
+                            parentValueType: 'array',
+                            valueReadonly: true,
+                            key: '[[array item]]'
+                        })
+                        tempItem.values.push(childItem)
+                        let childAttributes = _.filter(dataSource.attributes, (attr) => {
+                            return attr.parentId === dataType.subtype
+                        })
+                        childAttributes = _.uniq(childAttributes, 'id')
+                        childAttributes.forEach((attr) => {
+                            getItem(attr, childItem.values, data.values)
+                        })
+                    } else {
+                        let childItem = Object.assign({}, itemTemplate, {
+                            keyVisible: false,
+                            valueType: tempItem.childValueType,
+                            typeChangeable: false,
+                            parentValueType: 'array',
+                            readonly: false
+                        })
+                        tempItem.values.push(childItem)
+                    }
+                    resultContainer.push(tempItem)
                 } else {
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: input.name,
