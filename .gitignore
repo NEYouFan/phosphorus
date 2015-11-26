@@ -1,6 +1,4 @@
 .idea
 node_modules
 chrome
-dist.zip
-dist
 npm-debug.log
