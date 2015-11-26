@@ -578,6 +578,7 @@ let tabConActions = {
                 } catch (e) {
                     //
                     console.log(e)
+                    builders.resCheckerResult = false
                     builders.resShowType.prettyType = 'HTML'
                     tabCon.aceEditorConfig.mode = 'html'
                 }

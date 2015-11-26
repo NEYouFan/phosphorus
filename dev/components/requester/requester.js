@@ -87,15 +87,18 @@ let Requester = {
     __fetch(url, options, callback) {
         let res
         let startTime = Date.now()
-        fetch(url, options).then((response) => {
-            res = response
-            res.time = Date.now() - startTime
-            return response.text()
-        }).then((data) => {
-            callback(res, data)
-        }).catch((err) => {
-            callback(res, err)
-        })
+        fetch(url, options)
+            .then((response) => {
+                res = response
+                res.time = Date.now() - startTime
+                return response.text()
+            })
+            .then((data) => {
+                callback(res, data)
+            })
+            .catch((err) => {
+                callback(res, err)
+            })
     },
 
     __getJSON(bodyRawJSONKVs) {
@@ -173,7 +176,10 @@ let Requester = {
                 try {
                     let json = JSON.parse(data)
                     let resCheckerKVs = Util.convertNEIOutputsToJSON(req, collection)
-                    result = Util.checkResponseResult(resCheckerKVs, json)
+                    resCheckerKVs.forEach((kv) => {
+                        kv.checked = true
+                    })
+                    result = Util.checkResponseResult(resCheckerKVs, json) === true
                 } catch (err) {
                     result = false
                 }
@@ -289,7 +295,7 @@ let Requester = {
             headers: {}
         }
         let getNEIBodyRawJSON = () => {
-            let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
+            let savedBodyRawJSONKVs = savedRequest['body_raw_json']
             let savedBodyRawJSON = Util.convertKVToJSON(savedBodyRawJSONKVs)
             return Util.convertNEIInputsToJSONStr(req, collection, savedBodyRawJSON)
         }
