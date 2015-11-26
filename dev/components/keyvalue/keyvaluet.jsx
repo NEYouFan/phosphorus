@@ -22,7 +22,8 @@ class KeyValueT extends KeyValue {
                     'kv-row': true,
                     'removable': !kv.readonly,
                     'onlyone': total === 1,
-                    'kv-row-object': parentValueType === 'object' || parentChildValueType === 'object'
+                    'kv-row-array': parentValueType === 'array',
+                    'kv-row-object': parentValueType === 'object' || parentValueType !== 'array' && parentChildValueType === 'object'
                 })
                 let okSignClasses = classNames({
                     'glyphicon glyphicon-ok-sign': true,
@@ -36,7 +37,10 @@ class KeyValueT extends KeyValue {
                         this.changeKey(e, kv.index, kv)
                     },
                     list: kv.keyDataList,
-                    className: kv.keyError ? 'inp-error' : ''
+                    className: classNames({
+                        'inp-error': kv.keyError,
+                        'hide': kv.keyVisible === false
+                    })
                 }
                 let valueInputProps = {
                     placeholder: kv.valuePlaceholder,
