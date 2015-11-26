@@ -78,7 +78,7 @@ let actions = {
         let isActive
         let hit
         _.remove(tabs.items, (tab, index) => {
-            if(tab.collectionId === collectionId) {
+            if (tab.collectionId === collectionId) {
                 hit = true
                 if (!isActive) {
                     isActive = tabs.activeIndex === index
@@ -123,6 +123,13 @@ let actions = {
             let data = tab[key] || tabCon[key]
             if (Array.isArray(data) && data.length === 1 && data[0].isPrimite) {
                 savedData[value.saveKey] = Util.getPrimiteValue(data[0].value, data[0].valueType)
+            } else if (Array.isArray(data) && data.length === 1 && data[0].keyVisible === false) {
+                if (data[0].valueType === 'array') {
+                    savedData[value.saveKey] = []
+                    data[0].values.forEach((kv) => {
+                        savedData[value.saveKey].push(kv)
+                    })
+                }
             } else if (typeof value === 'object') {
                 if (Array.isArray(data)) {
                     savedData[value.saveKey] = []

@@ -11,7 +11,7 @@ class KeyValueVT extends KeyValueT {
         let classes = classNames({
             'input-wrap': true
         })
-        let valueTypes = ['String', 'Number', 'Boolean', 'Array', 'Object']
+        let valueTypes = ['String', 'Number', 'Boolean', 'Array', 'Object', 'Variable']
         let getOptionNodes = (types) => {
             return types.map((io, index) => {
                 return <option value={io.toLowerCase()} key={index}>{io}</option>

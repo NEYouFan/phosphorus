@@ -441,9 +441,10 @@ let Util = {
         let result = []
         let error = false
         let isSysType = (type) => {
-            return /^(10001|10002|10003)$/.test(type)
+            return /^(10000|10001|10002|10003)$/.test(type)
         }
         let typeMap = {
+            10000: 'variable',
             10001: 'string',
             10002: 'number',
             10003: 'boolean'
@@ -467,17 +468,45 @@ let Util = {
         let traversedLayers = 0
         let getItem = (input, resultContainer, data) => {
             if (isSysType(input.type)) {
-                let savedItem = _.find(data, (d) => {
-                    return d.key === input.name
-                })
-                let tempItem = Object.assign({}, itemTemplate, {
-                    key: input.name,
-                    value: savedItem && savedItem.value || input.defaultValue,
-                    title: input.description,
-                    values: [],
-                    valueType: typeMap[input.type]
-                })
-                resultContainer.push(tempItem)
+                if (input.isArray) {
+                    let childValueType = typeMap[input.type]
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        keyVisible: false,
+                        value: '[[array item]]',
+                        values: [],
+                        valueReadonly: true,
+                        valueType: 'array',
+                        childValueType: childValueType
+                    })
+                    let arrItem = Object.assign({}, itemTemplate, {
+                        keyVisible: false,
+                        valueType: childValueType,
+                        parentValueType: 'array'
+                    })
+                    if (Array.isArray(data) && data.length && data[0].values) {
+                        data[0].values.forEach((kv) => {
+                            let item = _.clone(arrItem)
+                            item.value = kv.value
+                            tempItem.values.push(item)
+                        })
+                    }
+                    if (!tempItem.values.length) {
+                        tempItem.values.push(arrItem)
+                    }
+                    resultContainer.push(tempItem)
+                } else {
+                    let savedItem = _.find(data, (d) => {
+                        return d.key === input.name
+                    })
+                    let tempItem = Object.assign({}, itemTemplate, {
+                        key: input.name,
+                        value: savedItem && savedItem.value || input.defaultValue,
+                        title: input.description,
+                        values: [],
+                        valueType: typeMap[input.type]
+                    })
+                    resultContainer.push(tempItem)
+                }
             } else {
                 if (traversedDataTypes.indexOf(input.type) !== -1) {
                     // circular reference
@@ -505,6 +534,7 @@ let Util = {
                 })
                 // dataSource has bug, attributes maybe duplicated
                 attributes = _.uniq(attributes, 'id')
+                let childValueType = typeMap[dataType.subtype] || 'object'
                 if (dataType.format === 1) {
                     //enums
                     let tempItem = Object.assign({}, itemTemplate, {
@@ -524,13 +554,13 @@ let Util = {
                         values: [],
                         valueType: 'array',
                         valueReadonly: true,
-                        childValueType: typeMap[dataType.subtype] || 'object'
+                        childValueType: childValueType
                     })
                     let storedData = _.find(data, (d) => {
                         return d.key === input.name
                     })
                     let storedValues = storedData && storedData.values || []
-                    if (tempItem.childValueType === 'object') {
+                    if (childValueType === 'object') {
                         let childItem = Object.assign({}, itemTemplate, {
                             valueType: tempItem.childValueType,
                             typeChangeable: false,
@@ -559,7 +589,7 @@ let Util = {
                     } else {
                         let childItem = Object.assign({}, itemTemplate, {
                             keyVisible: false,
-                            valueType: tempItem.childValueType,
+                            valueType: childValueType,
                             typeChangeable: false,
                             parentValueType: 'array',
                             readonly: false
@@ -575,16 +605,45 @@ let Util = {
                     }
                     resultContainer.push(tempItem)
                 } else {
+                    // hash object
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: input.name,
                         title: input.description,
+                        valueReadonly: true,
                         values: [],
-                        valueType: input.isArray ? 'array' : 'object'
+                        valueType: input.isArray ? 'array' : 'object',
+                        childValueType: childValueType
                     })
+                    if (input.isArray) {
+                        tempItem.keyVisible = false
+                        tempItem.value = input.name
+                        let childItem = Object.assign({}, itemTemplate, {
+                            value: '[[array item]]',
+                            keyVisible: false,
+                            values: [],
+                            valueReadonly: true,
+                            valueType: childValueType,
+                            parentValueType: 'array'
+                        })
+                        if (childValueType === 'object' && Array.isArray(data) && data.length && data[0].values) {
+                            data[0].values.forEach((kv) => {
+                                let item = _.clone(childItem)
+                                item.values = []
+                                attributes.forEach((attr, index) => {
+                                    getItem(attr, item.values, kv.values)
+                                })
+                                tempItem.values.push(item)
+                            })
+                        }
+                        if (!tempItem.values.length) {
+                            tempItem.values.push(childItem)
+                        }
+                    } else {
+                        attributes.forEach((attr) => {
+                            getItem(attr, tempItem.values, data.values)
+                        })
+                    }
                     resultContainer.push(tempItem)
-                    attributes.forEach((attr) => {
-                        getItem(attr, tempItem.values, data.values)
-                    })
                 }
             }
         }
@@ -620,9 +679,10 @@ let Util = {
         let result = []
         let error = false
         let isSysType = (type) => {
-            return /^(10001|10002|10003)$/.test(type)
+            return /^(10000|10001|10002|10003)$/.test(type)
         }
         let typeMap = {
+            10000: 'variable',
             10001: 'string',
             10002: 'number',
             10003: 'boolean'
@@ -640,24 +700,18 @@ let Util = {
         let traversedLayers = 0
         let getItem = (output, resultContainer) => {
             if (isSysType(output.type)) {
+                let tempItem = Object.assign({}, itemTemplate, {
+                    key: output.name,
+                    title: output.description,
+                    values: []
+                })
                 if (output.isArray) {
-                    let tempItem = Object.assign({}, itemTemplate, {
-                        key: output.name,
-                        title: output.description,
-                        values: [],
-                        valueType: 'array',
-                        childValueType: typeMap[output.type]
-                    })
-                    resultContainer.push(tempItem)
+                    tempItem.valueType = 'array'
+                    tempItem.childValueType = typeMap[output.type]
                 } else {
-                    let tempItem = Object.assign({}, itemTemplate, {
-                        key: output.name,
-                        title: output.description,
-                        values: [],
-                        valueType: typeMap[output.type]
-                    })
-                    resultContainer.push(tempItem)
+                    tempItem.valueType = typeMap[output.type]
                 }
+                resultContainer.push(tempItem)
             } else {
                 if (traversedDataTypes.indexOf(output.type) !== -1) {
                     // circular reference
@@ -687,6 +741,7 @@ let Util = {
                 })
                 // dataSource has bug, attributes maybe duplicated
                 attributes = _.uniq(attributes, 'id')
+                let childValueType = typeMap[dataType.subtype] || 'object'
                 if (dataType.format === 1) {
                     //enums
                     let tempItem = Object.assign({}, itemTemplate, {
@@ -703,16 +758,23 @@ let Util = {
                         title: output.description,
                         values: [],
                         valueType: 'array',
-                        childValueType: typeMap[dataType.subtype] || 'object'
+                        childValueType: childValueType
                     })
-                    if (tempItem.childValueType === 'object') {
+                    if (childValueType === 'object') {
+                        let childItem = Object.assign({}, itemTemplate, {
+                            value: '[[array item]]',
+                            keyVisible: false,
+                            values: [],
+                            valueType: childValueType
+                        })
                         let childAttributes = _.filter(dataSource.attributes, (attr) => {
                             return attr.parentId === dataType.subtype
                         })
                         childAttributes = _.uniq(childAttributes, 'id')
                         childAttributes.forEach((attr) => {
-                            getItem(attr, tempItem.values)
+                            getItem(attr, childItem.values)
                         })
+                        tempItem.values.push(childItem)
                     }
                     resultContainer.push(tempItem)
                 } else {
@@ -722,12 +784,25 @@ let Util = {
                         title: output.description,
                         values: [],
                         valueType: output.isArray ? 'array' : 'object',
-                        childValueType: 'object'
+                        childValueType: childValueType
                     })
+                    if (output.isArray) {
+                        let childItem = Object.assign({}, itemTemplate, {
+                            value: '[[array item]]',
+                            keyVisible: false,
+                            values: [],
+                            valueType: childValueType
+                        })
+                        tempItem.values.push(childItem)
+                        attributes.forEach((attr) => {
+                            getItem(attr, childItem.values)
+                        })
+                    } else {
+                        attributes.forEach((attr) => {
+                            getItem(attr, tempItem.values)
+                        })
+                    }
                     resultContainer.push(tempItem)
-                    attributes.forEach((attr) => {
-                        getItem(attr, tempItem.values)
-                    })
                 }
             }
         }

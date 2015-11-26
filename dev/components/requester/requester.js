@@ -102,7 +102,7 @@ let Requester = {
     },
 
     __getJSON(bodyRawJSONKVs) {
-        let json = {}
+        let json
         let convertValue = (value, valueType) => {
             if (valueType === 'boolean') {
                 return value === 'true'
@@ -148,7 +148,35 @@ let Requester = {
         if (bodyRawJSONKVs.length && bodyRawJSONKVs[0].isPrimite) {
             json = bodyRawJSONKVs[0].value
         } else {
-            getData(bodyRawJSONKVs, json)
+            let firstKV = bodyRawJSONKVs[0]
+            if (firstKV.keyVisible === false) {
+                if (firstKV.valueType === 'array') {
+                    json = []
+                    if (firstKV.childValueType === 'object') {
+                        firstKV.values.forEach((kv) => {
+                            if (kv.checked) {
+                                let item = {}
+                                getData(kv, item)
+                                json.push(item)
+                            }
+                        })
+                    } else {
+                        firstKV.values.forEach((kv) => {
+                            if (kv.checked) {
+                                json.push(convertValue(kv.value, kv.valueType))
+                            }
+                        })
+                    }
+                } else {
+                    // primite value
+                    if (firstKV.checked) {
+                        json = convertValue(firstKV.value, firstKV.valueType)
+                    }
+                }
+            } else {
+                json = {}
+                getData(bodyRawJSONKVs, json)
+            }
         }
         return JSON.stringify(json)
     },
