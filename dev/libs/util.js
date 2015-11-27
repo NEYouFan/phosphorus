@@ -450,7 +450,7 @@ let Util = {
             10003: 'boolean'
         }
         let getEnumType = (enumName) => {
-            if ((+enumName).toString() === enumName) {
+            if (/^(\d+)$/.test(enumName)) {
                 return typeMap[10002]
             }
             if (/^(true|false)$/.test(enumName)) {
@@ -1039,6 +1039,16 @@ let Util = {
     },
 
     getValueByType(value, type) {
+        // try to convert variable value type
+        let getVarValue = () => {
+            if (/^(\d+)$/.test(value)) {
+                return this.getValueByType(value, 'number')
+            }
+            if (/^(true|false)$/.test(value)) {
+                return this.getValueByType(value, 'boolean')
+            }
+            return this.getValueByType(value, 'string')
+        }
         switch (type) {
             case 'string':
                 return String(value)
@@ -1046,6 +1056,8 @@ let Util = {
                 return Number(value)
             case 'boolean':
                 return value === 'true'
+            case 'variable':
+                return getVarValue()
             default:
                 return value
         }

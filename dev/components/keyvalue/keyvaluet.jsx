@@ -92,7 +92,7 @@ class KeyValueT extends KeyValue {
         let classes = classNames({
             'input-wrap': true
         })
-        let valueTypes = ['String', 'Number', 'Boolean', 'Array', 'Object', 'Variable']
+        let valueTypes = ['String', 'Number', 'Boolean', 'Array', 'Object', 'Variable', 'Parent']
         let getOptionNodes = (types) => {
             return types.map((io, index) => {
                 return <option value={io.toLowerCase()} key={index}>{io}</option>
@@ -101,10 +101,6 @@ class KeyValueT extends KeyValue {
         let getChildNodes = () => {
             if (kv.valueType === 'array') {
                 let childValueTypes = valueTypes.concat()
-                let layers = rowIndex.split('.').length
-                if (layers > 1) {
-                    childValueTypes.push('Parent')
-                }
                 // child type has no `Array`
                 _.remove(childValueTypes, (type) => {
                     return type === 'Array'

@@ -33,7 +33,8 @@ const REQUEST_DATA_MAP = {
         fields: {
             name: 'name',
             type: 'type',
-            value: 'value'
+            value: 'value',
+            jsonType: 'json_type'
         }
     },
     bodyFormDataKVs: {
@@ -63,9 +64,13 @@ const REQUEST_DATA_MAP = {
             checked: 'checked',
             key: 'key',
             values: 'values',
-            valueType: 'value_type'
+            valueType: 'value_type',
+            childValueType: 'child_value_type',
+            typeChangeable: 'type_changeable',
+            childTypeChangeable: 'child_type_changeable'
         }
     },
+    resJSONType: 'res_json_type',
     bodyRawJSONKVs: {
         saveKey: 'body_raw_json',
         requiredField: 'key',

@@ -121,16 +121,7 @@ let actions = {
         let savedData = {}
         _.each(RequestDataMap, (value, key) => {
             let data = tab[key] || tabCon[key]
-            if (Array.isArray(data) && data.length === 1 && data[0].isPrimite) {
-                savedData[value.saveKey] = Util.getPrimiteValue(data[0].value, data[0].valueType)
-            } else if (Array.isArray(data) && data.length === 1 && data[0].keyVisible === false) {
-                if (data[0].valueType === 'array') {
-                    savedData[value.saveKey] = []
-                    data[0].values.forEach((kv) => {
-                        savedData[value.saveKey].push(kv)
-                    })
-                }
-            } else if (typeof value === 'object') {
+            if (typeof value === 'object') {
                 if (Array.isArray(data)) {
                     savedData[value.saveKey] = []
                     _.each(data, (item) => {
@@ -143,7 +134,7 @@ let actions = {
                         }
                     })
                 } else {
-                    if (data[value.requiredField]) {
+                    if (data && data[value.requiredField]) {
                         let sItem = {}
                         _.each(value.fields, (v, k) => {
                             sItem[v] = data[k]
@@ -160,20 +151,24 @@ let actions = {
             delete savedData.res_checker_data
             delete savedData.headers
         } else {
-            let refineResCheckerData = (data) => {
-                return data.values.map((item) => {
-                    return {
-                        key: item.key,
-                        checked: item.checked,
-                        values: refineResCheckerData(item),
-                        value_type: item.valueType,
-                        child_value_type: item.childValueType
-                    }
+            if (Array.isArray(savedData['res_checker_data'])) {
+                let refineResCheckerData = (data) => {
+                    return data.values.map((item) => {
+                        return {
+                            key: item.key,
+                            checked: item.checked,
+                            values: refineResCheckerData(item),
+                            value_type: item.valueType,
+                            childValueType: item.childValueType,
+                            type_changeable: item.typeChangeable,
+                            child_type_changeable: item.childTypeChangeable
+                        }
+                    })
+                }
+                savedData['res_checker_data'].forEach((item) => {
+                    item.values = refineResCheckerData(item)
                 })
             }
-            savedData['res_checker_data'].forEach((item) => {
-                item.values = refineResCheckerData(item)
-            })
         }
         if (Array.isArray(savedData['body_raw_json'])) {
             // refine `body_raw_json`

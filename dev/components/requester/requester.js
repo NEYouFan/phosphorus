@@ -60,7 +60,7 @@ let Requester = {
                     break
                 case 'raw':
                     if (bodyType.value === 'application/json') {
-                        fetchOptions.body = this.__getJSON(tabCon.builders.bodyRawJSONKVs)
+                        fetchOptions.body = this.__getJSON(tabCon.builders.bodyRawJSONKVs, bodyType.jsonType)
                     } else {
                         fetchOptions.body = tabCon.builders.bodyRawData
                     }
@@ -101,17 +101,8 @@ let Requester = {
             })
     },
 
-    __getJSON(bodyRawJSONKVs) {
+    __getJSON(bodyRawJSONKVs, jsonType) {
         let json
-        let convertValue = (value, valueType) => {
-            if (valueType === 'boolean') {
-                return value === 'true'
-            } else if (valueType === 'number') {
-                return parseFloat(value) || 0
-            } else {
-                return value
-            }
-        }
         let getData = (kvs, container) => {
             kvs.forEach((kv) => {
                 if (kv.key) {
@@ -128,12 +119,12 @@ let Requester = {
                         } else {
                             kv.values.forEach((skv) => {
                                 if (skv.checked && skv.value !== '') {
-                                    container[kv.key].push(convertValue(skv.value, kv.childValueType))
+                                    container[kv.key].push(Util.getValueByType(skv.value, kv.childValueType))
                                 }
                             })
                         }
                     } else {
-                        let value = convertValue(kv.value, kv.valueType)
+                        let value = Util.getValueByType(kv.value, kv.valueType)
                         if (Array.isArray(container)) {
                             let item = {}
                             item[kv.key] = value
@@ -145,37 +136,35 @@ let Requester = {
                 }
             })
         }
-        if (bodyRawJSONKVs.length && bodyRawJSONKVs[0].isPrimite) {
-            json = bodyRawJSONKVs[0].value
+        if (jsonType === 'object') {
+            json = {}
+            getData(bodyRawJSONKVs, json)
         } else {
-            let firstKV = bodyRawJSONKVs[0]
-            if (firstKV.keyVisible === false) {
-                if (firstKV.valueType === 'array') {
+            if (bodyRawJSONKVs === null) {
+                json = null
+            } else {
+                let item = bodyRawJSONKVs[0]
+                if (jsonType === 'array') {
                     json = []
-                    if (firstKV.childValueType === 'object') {
-                        firstKV.values.forEach((kv) => {
+                    let arrIndex = 0
+                    if (item.childValueType === 'object') {
+                        item.values.forEach((kv) => {
                             if (kv.checked) {
-                                let item = {}
-                                getData(kv, item)
-                                json.push(item)
+                                json[arrIndex] = {}
+                                getData(kv.values, json[arrIndex])
+                                arrIndex++
                             }
                         })
                     } else {
-                        firstKV.values.forEach((kv) => {
+                        item.values.forEach((kv) => {
                             if (kv.checked) {
-                                json.push(convertValue(kv.value, kv.valueType))
+                                json.push(Util.getValueByType(kv.value, kv.valueType))
                             }
                         })
                     }
                 } else {
-                    // primite value
-                    if (firstKV.checked) {
-                        json = convertValue(firstKV.value, firstKV.valueType)
-                    }
+                    json = Util.getValueByType(item.value, item.valueType)
                 }
-            } else {
-                json = {}
-                getData(bodyRawJSONKVs, json)
             }
         }
         return JSON.stringify(json)

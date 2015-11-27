@@ -19,6 +19,7 @@ const DEFAULT_ACTIVE_INDEX = 0
 const DEFAULT_KEY_STR = 'Key'
 const DEFAULT_VALUE_STR = 'Value'
 const BLANK_STR = ''
+const ARRAY_ITEM_PLACEHOLDER = '[[array item]]'
 const REQ_HEADERS_DATA_LIST = 'reqheadersdatalist'
 const REQ_MIDIATYPES_DATA_LIST = 'mediatypesdatalist'
 const CONTENT_TYPE_STR = 'Content-Type'
@@ -400,6 +401,10 @@ let tabConActions = {
                                         builders[key].push(Object.assign({}, itemTpl))
                                     })
                                 }
+                            } else if (typeof(savedRequest[value.saveKey]) === 'object') {
+                                _.each(value.fields, (vv, kk) => {
+                                    builders[key][kk] = savedRequest[value.saveKey][vv]
+                                })
                             } else {
                                 builders[key] = savedRequest[value.saveKey]
                             }
@@ -409,39 +414,62 @@ let tabConActions = {
                     }
                 })
                 builders.bodyRawDataOriginal = builders.bodyRawData
-                // refine res checker kvs
-                let refineResCheckerData = (data) => {
-                    return data.values.map((item) => {
-                        return Object.assign({}, DEFAULT_RES_CHECKER_KV, {
-                            key: item.key,
-                            checked: item.checked,
-                            values: refineResCheckerData(item),
-                            valueType: item.value_type
+                if (builders.resCheckerKVs) {
+                    // refine res checker kvs
+                    let refineResCheckerData = (data) => {
+                        return data.values.map((item) => {
+                            return Object.assign({}, DEFAULT_RES_CHECKER_KV, {
+                                key: item.key,
+                                checked: item.checked,
+                                values: refineResCheckerData(item),
+                                valueType: item.value_type,
+                                childValueType: item.child_value_type,
+                                typeChangeable: item.type_changeable,
+                                childTypeChangeable: item.child_type_changeable
+                            })
                         })
+                    }
+                    builders.resCheckerKVs.forEach((item) => {
+                        item.values = refineResCheckerData(item)
                     })
-                }
-                builders.resCheckerKVs.forEach((item) => {
-                    item.values = refineResCheckerData(item)
-                })
-                // refine body raw json kvs
-                let refineBodyRawJSONData = (data) => {
-                    return data.values.map((item) => {
-                        return Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
-                            key: item.key,
-                            value: item.value,
-                            checked: item.checked,
-                            values: refineBodyRawJSONData(item),
-                            valueType: item.value_type,
-                            valueReadonly: item.value_readonly,
-                            childValueType: item.child_value_type,
-                            keyVisible: item.key_visible,
-                            typeChangeable: item.type_changeable
+                    if (builders.resJSONType !== 'object') {
+                        Object.assign(builders.resCheckerKVs[0], {
+                            duplicatable: false,
+                            readonly: true,
+                            typeChangeable: false,
+                            key: `[[${builders.resJSONType} item]]`
                         })
-                    })
+                    }
+                } else {
+                    builders.resCheckerKVs = null
                 }
-                builders.bodyRawJSONKVs.forEach((item) => {
-                    item.values = refineBodyRawJSONData(item)
-                })
+
+                if (builders.bodyRawJSONKVs) {
+                    // refine body raw json kvs
+                    let refineBodyRawJSONData = (data) => {
+                        return data.values.map((item) => {
+                            return Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                                key: item.key,
+                                value: item.value,
+                                checked: item.checked,
+                                values: refineBodyRawJSONData(item),
+                                valueType: item.value_type,
+                                valueReadonly: item.value_readonly,
+                                childValueType: item.child_value_type,
+                                keyVisible: item.key_visible,
+                                typeChangeable: item.type_changeable
+                            })
+                        })
+                    }
+                    builders.bodyRawJSONKVs.forEach((item) => {
+                        item.values = refineBodyRawJSONData(item)
+                    })
+                    if (builders.bodyType.jsonType !== 'object') {
+                        builders.bodyRawJSONKVs[0].duplicatable = false
+                    }
+                } else {
+                    builders.bodyRawJSONKVs = null
+                }
             }
         }
         let tab = {
@@ -898,8 +926,7 @@ let bodyRawJSONActions = {
         }
         builders.bodyType.jsonType = jsonType
         let newKV = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
-            values: [],
-            valueType: jsonType
+            values: []
         })
         switch (jsonType) {
             case 'object':
@@ -909,11 +936,13 @@ let bodyRawJSONActions = {
             case 'array':
                 Object.assign(newKV, {
                     keyVisible: false,
-                    value: '[[array item]]',
+                    key: ARRAY_ITEM_PLACEHOLDER, // while save data, the key should have value
+                    value: ARRAY_ITEM_PLACEHOLDER,
                     readonly: true,
                     valueReadonly: true,
                     typeChangeable: false,
-                    duplicatable: false
+                    duplicatable: false,
+                    valueType: jsonType
                 })
                 let childItem = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
                     values: [],
@@ -928,9 +957,11 @@ let bodyRawJSONActions = {
             case 'number':
             case 'boolean':
                 Object.assign(newKV, {
+                    key: ARRAY_ITEM_PLACEHOLDER, // while save data, the key should have value
                     keyVisible: false,
                     typeChangeable: false,
-                    duplicatable: false
+                    duplicatable: false,
+                    valueType: jsonType
                 })
                 builders.bodyRawJSONKVs = [newKV]
                 break
@@ -988,7 +1019,7 @@ let bodyRawJSONActions = {
                 item.typeChangeable = false
                 item.keyVisible = false
                 if (/^object$/.test(row.parentChildValueType)) {
-                    item.value = '[[array item]]'
+                    item.value = ARRAY_ITEM_PLACEHOLDER
                     item.valueReadonly = true
                     if (kv) {
                         // in NEI, the new added object item should be same as the first element
@@ -1058,7 +1089,7 @@ let bodyRawJSONActions = {
         })
         row.target.values.push(item)
         if (/^object$/.test(valueType)) {
-            item.value = '[[array item]]'
+            item.value = ARRAY_ITEM_PLACEHOLDER
             item.valueReadonly = true
             item.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
                 values: []
@@ -1154,8 +1185,7 @@ let resCheckerActions = {
         }
         builders.resJSONType = jsonType
         let newKV = Object.assign({}, DEFAULT_RES_CHECKER_KV, {
-            values: [],
-            valueType: jsonType
+            values: []
         })
         switch (jsonType) {
             case 'object':
@@ -1170,7 +1200,8 @@ let resCheckerActions = {
                     key: `[[${jsonType} item]]`,
                     readonly: true,
                     typeChangeable: false,
-                    duplicatable: false
+                    duplicatable: false,
+                    valueType: jsonType
                 })
                 builders.resCheckerKVs = [newKV]
                 break
