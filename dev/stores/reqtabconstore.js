@@ -607,11 +607,14 @@ let tabConActions = {
                     tabCon.aceEditorConfig.mode = 'json'
                     builders.fetchResponseIsJSON = true
                     // response checker
-                    builders.resCheckerResult = Util.checkResponseResult(builders.resCheckerKVs, jsonData)
+                    builders.resCheckerResult = Util.checkResponseResult(builders.resCheckerKVs, builders.resJSONType, jsonData)
                 } catch (e) {
                     //
                     console.log(e)
-                    builders.resCheckerResult = false
+                    builders.resCheckerResult = {
+                        status: 'failed',
+                        info: 'Response data is not valid JSON'
+                    }
                     builders.resShowType.prettyType = 'HTML'
                     tabCon.aceEditorConfig.mode = 'html'
                 }
