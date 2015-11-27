@@ -648,19 +648,8 @@ let Util = {
             }
         }
         let getData = (inputs, data) => {
-            if (inputs.length === 1 && inputs[0].isPrimite) {
-                let input = inputs[0]
-                let item = Object.assign({}, itemTemplate, {
-                    key: input.name,
-                    value: typeof(savedData) === 'undefined' ? inputs.defaultValue : data,
-                    title: input.description,
-                    values: [],
-                    valueType: typeMap[input.type],
-                    keyVisible: false,
-                    isPrimite: true
-                })
-                result.push(item)
-            } else {
+            let paramsInfo = this.getNEIParamsInfo(inputs, dataSource)
+            if (paramsInfo.valueType === 'object') {
                 inputs.forEach((input, index) => {
                     getItem(input, result, data)
                     for (let i = 0; i < traversedLayers; i++) {
@@ -668,6 +657,70 @@ let Util = {
                     }
                     traversedLayers = 0
                 })
+            } else {
+                if (paramsInfo.valueType === 'array') {
+                    let item = Object.assign({}, itemTemplate, {
+                        key: '[[array]]',
+                        value: '[[array]]',
+                        valueReadonly: true,
+                        title: inputs[0].description,
+                        values: [],
+                        valueType: 'array',
+                        childValueType: paramsInfo.childValueType,
+                        keyVisible: false,
+                        duplicatable: false
+                    })
+                    if (paramsInfo.childValueType === 'object') {
+                        let objItem = Object.assign({}, itemTemplate, {
+                            key: '[[array item]]',
+                            value: '[[array item]]',
+                            valueReadonly: true,
+                            values: [],
+                            valueType: paramsInfo.childValueType,
+                            keyVisible: false,
+                            parentValueType: 'array',
+                            readonly: false
+                        })
+                        if (data[0]) {
+                            data[0].values.forEach((kv) => {
+                                let tItem = Object.assign({}, objItem, {values: []})
+                                paramsInfo.values.forEach((obj) => {
+                                    getItem(obj, tItem.values, kv.values)
+                                    for (let i = 0; i < traversedLayers; i++) {
+                                        traversedDataTypes.pop()
+                                    }
+                                    traversedLayers = 0
+                                })
+                                item.values.push(tItem)
+                            })
+                        } else {
+                            // no stored data, default put one item
+                            paramsInfo.values.forEach((obj) => {
+                                getItem(obj, objItem.values)
+                            })
+                            item.values.push(objItem)
+                        }
+                    } else {
+                        let primitiveItem = Object.assign({}, itemTemplate, {
+                            key: '[[array item]]',
+                            value: '',
+                            values: [],
+                            valueType: paramsInfo.childValueType,
+                            keyVisible: false,
+                            parentValueType: 'array',
+                            readonly: false
+                        })
+                        if (data[0]) {
+                            data[0].values.forEach((kv) => {
+                                let tItem = Object.assign({}, primitiveItem, kv)
+                                item.values.push(tItem)
+                            })
+                        } else {
+                            item.values.push(primitiveItem)
+                        }
+                    }
+                    result.push(item)
+                }
             }
         }
         savedData = typeof(savedData) === 'undefined' ? [] : savedData
@@ -1177,6 +1230,53 @@ let Util = {
             setData(kvs, result)
             return result
         }
+    },
+
+    getNEIParamsInfo (params, dataSource) {
+        let typeMap = {
+            10000: 'variable',
+            10001: 'string',
+            10002: 'number',
+            10003: 'boolean'
+        }
+        let result = {
+            valueType: 'object',
+            childValueType: null,
+            values: [],
+            dataTypeFormat: null
+        }
+        let first = params[0]
+        if (first) {
+            if (first.isPrimite) {
+                if (first.isArray) {
+                    result.valueType = 'array'
+                } else {
+                    result.valueType = typeMap[first.type]
+                    if (!result.valueType) {
+                        let dataType = _.find(dataSource.datatypes, (dt) => {
+                            return dt.id === first.type
+                        })
+                        result.dataTypeFormat = dataType.format
+                        // todo: nei has no enums datatype here
+                        if (dataType.format === 2) {
+                            // array
+                            result.valueType = 'array'
+                            let subDataType = _.find(dataSource.datatypes, (dt) => {
+                                return dt.id === dataType.subtype
+                            })
+                            result.childValueType = typeMap[subDataType.id]
+                            if (!result.childValueType) {
+                                result.childValueType = 'object'
+                                result.values = _.filter(dataSource.attributes, (attr) => {
+                                    return attr.parentId === subDataType.id
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result
     }
 }
 

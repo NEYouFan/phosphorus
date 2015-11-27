@@ -287,7 +287,8 @@ let tabConActions = {
                     builders.bodyType = {
                         type: 'raw',
                         name: 'JSON(application/json)',
-                        value: 'application/json'
+                        value: 'application/json',
+                        jsonType: Util.getNEIParamsInfo(request.inputs, dataSource).valueType
                     }
                     // init request inputs, build json kvs, saved data is `bodyRawJSONKVs`
                     let savedData = savedRequest[RequestDataMap.bodyRawJSONKVs.saveKey]
@@ -613,7 +614,7 @@ let tabConActions = {
                     console.log(e)
                     builders.resCheckerResult = {
                         status: 'failed',
-                        info: 'Response data is not valid JSON'
+                        info: 'Response data is not a valid JSON'
                     }
                     builders.resShowType.prettyType = 'HTML'
                     tabCon.aceEditorConfig.mode = 'html'
@@ -940,7 +941,7 @@ let bodyRawJSONActions = {
                 Object.assign(newKV, {
                     keyVisible: false,
                     key: ARRAY_ITEM_PLACEHOLDER, // while save data, the key should have value
-                    value: ARRAY_ITEM_PLACEHOLDER,
+                    value: '[[array]]',
                     readonly: true,
                     valueReadonly: true,
                     typeChangeable: false,
@@ -1200,7 +1201,7 @@ let resCheckerActions = {
             case 'number':
             case 'boolean':
                 Object.assign(newKV, {
-                    key: `[[${jsonType} item]]`,
+                    key: `[[${jsonType}]]`,
                     readonly: true,
                     typeChangeable: false,
                     duplicatable: false,

@@ -20,11 +20,14 @@ class NEIReqBuilderBody extends ReqBuilderBody {
 
     toggleBodyRawJSONKV(rowIndex, kv) {
         // do nothing
+        if (kv.parentValueType === 'array') {
+            super.toggleBodyRawJSONKV(rowIndex, kv)
+        }
     }
 
     addBodyRawJSONKV(rowIndex, kv) {
         if (kv.parentValueType === 'array') {
-            ReqBodyAction.addBodyRawJSONKV(rowIndex, kv)
+            super.addBodyRawJSONKV(rowIndex, kv)
         }
     }
 
