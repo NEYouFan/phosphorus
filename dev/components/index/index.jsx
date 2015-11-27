@@ -13,6 +13,7 @@ import ModalStore from '../../stores/modalstore'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ReqBodyAction from '../../actions/reqbodyaction'
 import ResAction from '../../actions/resaction'
+import ResCheckerAction from '../../actions/rescheckeraction'
 import ReqTabAction from '../../actions/reqtabaction'
 import Search from '../search/search.jsx'
 import SideTab from '../sidetab/sidetab.jsx'
@@ -140,6 +141,9 @@ class Index extends React.Component {
         }
         if (reqCon.showResPrettyTypeList) {
             ResAction.toggleResPrettyTypeList()
+        }
+        if (reqCon.showResJSONTypeList) {
+            ResCheckerAction.toggleJSONTypeList()
         }
     }
 

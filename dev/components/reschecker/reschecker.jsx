@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import KeyValueT from '../keyvalue/keyvaluet.jsx'
 import ResCheckerAction from '../../actions/rescheckeraction'
 import ReqTabAction from '../../actions/reqtabaction'
+import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 
 class ResChecker extends React.Component {
 
@@ -19,7 +20,10 @@ class ResChecker extends React.Component {
             checkResult = <div className="error-tip">{resCheckerResult.info}</div>
         }
         let mainCon
-        if (this.props.builders.resCheckerKVs === 'Circular Reference') {
+        let kvs = this.props.builders.resCheckerKVs
+        if (kvs === null) {
+            mainCon = null
+        } else if (kvs === 'Circular Reference') {
             mainCon =
                 <div className="error-tip">
                     Outputs parameters exists Circular Reference, please check it.
@@ -27,9 +31,10 @@ class ResChecker extends React.Component {
         } else {
             mainCon =
                 <KeyValueT
-                    kvs={this.props.builders.resCheckerKVs}
+                    jsonType={this.props.builders.resJSONType}
+                    kvs={kvs}
                     toggleKV={(rowIndex) => {this.toggleResCheckerKV(rowIndex)}}
-                    addKV={(rowIndex) => {this.addResCheckerKV(rowIndex)}}
+                    addKV={(rowIndex,kv) => {this.addResCheckerKV(rowIndex,kv)}}
                     removeKV={(rowIndex) => {this.removeResCheckerKV(rowIndex)}}
                     changeKVKey={(rowIndex, value) => {this.changeResCheckerKVKey(rowIndex, value)}}
                     changeKVValue={(rowIndex, value) => {this.changeResCheckerKVValue(rowIndex, value)}}
@@ -37,13 +42,25 @@ class ResChecker extends React.Component {
                     changeKVChildValueType={(rowIndex, value) => {this.changeResCheckerKVChildValueType(rowIndex, value)}}
                     />
         }
+        let jsonTypeclasses = classNames({
+            'select-wrap': true,
+            'show-list': this.props.showJSONTypeList
+        })
         return (
             <div className={className}>
                 <div className="mod-res-checker">
                     <div className="res-checker-tip">
                         <em className="glyphicon glyphicon-exclamation-sign"></em>
-                        <span>Response Checker is mainly for checking JSON data response result. You can define your response JSON data's keys and types.</span>
+                        <span>Response Checker is mainly for checking JSON data response result. You can define your response JSON data's structure here.</span>
                     </div>
+                    <span className={jsonTypeclasses}>
+                        <span>The response JSON's type should be: </span>
+                        <span className="select-dis-value" onClick={(e)=>{this.toggleJSONTypeList(e)}}>
+                            <span className="dis-name">{this.props.builders.resJSONType}</span>
+                            <span className="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                        <DropDownMenu menus={this.props.jsonTypes} onClickItem={(v)=>{this.onSelectJSONTypeValue(v)}}/>
+                    </span>
                     {checkResult}
                     {mainCon}
                 </div>
@@ -56,8 +73,10 @@ class ResChecker extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
-    addResCheckerKV(rowIndex) {
-        ResCheckerAction.addResCheckerKV(rowIndex)
+    addResCheckerKV(rowIndex, kv) {
+        if (kv.duplicatable !== false) {
+            ResCheckerAction.addResCheckerKV(rowIndex, kv)
+        }
     }
 
     removeResCheckerKV(rowIndex) {
@@ -81,6 +100,18 @@ class ResChecker extends React.Component {
 
     changeResCheckerKVChildValueType(rowIndex, value) {
         ResCheckerAction.changeResCheckerKVChildValueType(rowIndex, value)
+    }
+
+    toggleJSONTypeList(evt) {
+        evt.stopPropagation()
+        if (!evt.currentTarget.parentNode.classList.contains('disabled')) {
+            ResCheckerAction.toggleJSONTypeList()
+        }
+    }
+
+    onSelectJSONTypeValue(jsonType) {
+        ResCheckerAction.changeJSONTypeValue(jsonType)
+        ReqTabAction.setDirtyTab()
     }
 
 }

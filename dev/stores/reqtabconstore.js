@@ -148,10 +148,12 @@ const DEFAULT_CON_ITEM = {
         resShowType: Object.assign({}, DEFAULT_RES_SHOW_TYPE),
         resFilePath: null, // response local file path: preview iframe src
         resCheckerKVs: [DEFAULT_RES_CHECKER_KV],
-        resCheckerResult: null
+        resCheckerResult: null,
+        resJSONType: 'object'
     },
     showBodyRawTypeList: false,
     showBodyJSONTypeList: false,
+    showResJSONTypeList: false,
     showReqMethodList: false,
     showResPrettyTypeList: false,
     aceEditorConfig: {
@@ -935,6 +937,7 @@ let bodyRawJSONActions = {
 
             case 'null':
                 builders.bodyRawJSONKVs = null
+                break
 
             default:
                 break
@@ -1136,6 +1139,48 @@ let resCheckerActions = {
         row.target.childValueType = valueType
         if (/^object$/.test(valueType)) {
             row.target.values.push(Object.assign({}, DEFAULT_RES_CHECKER_KV))
+        }
+    },
+
+    toggleResCheckerJSONTypeList() {
+        tabCons.items[tabIndex].showResJSONTypeList = !tabCons.items[tabIndex].showResJSONTypeList
+    },
+
+    changeResCheckerJSONType(jsonType) {
+        let builders = tabCons.items[tabIndex].builders
+        let oldJSONType = builders.resJSONType
+        if (oldJSONType === jsonType) {
+            return
+        }
+        builders.resJSONType = jsonType
+        let newKV = Object.assign({}, DEFAULT_RES_CHECKER_KV, {
+            values: [],
+            valueType: jsonType
+        })
+        switch (jsonType) {
+            case 'object':
+                builders.resCheckerKVs = [newKV]
+                break
+
+            case 'array':
+            case 'string':
+            case 'number':
+            case 'boolean':
+                Object.assign(newKV, {
+                    key: `[[${jsonType} item]]`,
+                    readonly: true,
+                    typeChangeable: false,
+                    duplicatable: false
+                })
+                builders.resCheckerKVs = [newKV]
+                break
+
+            case 'null':
+                builders.resCheckerKVs = null
+                break
+
+            default:
+                break
         }
     }
 }
@@ -1523,6 +1568,16 @@ AppDispatcher.register((action) => {
 
         case AppConstants.RES_CHECKER_CHANGE_KV_CHILD_VALUE_TYPE:
             actions.changeResCheckerKVChildValueType(action.rowIndex, action.value)
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_TOGGLE_JSON_TYPE_LIST:
+            actions.toggleResCheckerJSONTypeList()
+            ReqTabConStore.emitChange()
+            break
+
+        case AppConstants.RES_CHECKER_CHANGE_JSON_TYPE:
+            actions.changeResCheckerJSONType(action.jsonType)
             ReqTabConStore.emitChange()
             break
         // response checker action <---

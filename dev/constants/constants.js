@@ -100,6 +100,8 @@ let AppConstants = keyMirror({
     RES_CHECKER_CHANGE_KV_KEY: null,
     RES_CHECKER_CHANGE_KV_VALUE_TYPE: null,
     RES_CHECKER_CHANGE_KV_CHILD_VALUE_TYPE: null,
+    RES_CHECKER_TOGGLE_JSON_TYPE_LIST: null,
+    RES_CHECKER_CHANGE_JSON_TYPE: null,
     // modal actions
     MODAL_CLOSE: null,
     MODAL_OPEN: null,

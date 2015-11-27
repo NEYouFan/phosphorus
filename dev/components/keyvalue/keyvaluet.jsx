@@ -59,7 +59,7 @@ class KeyValueT extends KeyValue {
                     )
                 } else if (kv.index === '0' && !kv.readonly && this.props.jsonType === 'object') {
                     titleTip = (
-                        <div className="title-tip" title="You can paste JSON here"></div>
+                        <div className="title-tip" title="You can paste JSON object here"></div>
                     )
                 }
                 return (
@@ -101,7 +101,10 @@ class KeyValueT extends KeyValue {
         let getChildNodes = () => {
             if (kv.valueType === 'array') {
                 let childValueTypes = valueTypes.concat()
-                childValueTypes.push('Parent')
+                let layers = rowIndex.split('.').length
+                if (layers > 1) {
+                    childValueTypes.push('Parent')
+                }
                 // child type has no `Array`
                 _.remove(childValueTypes, (type) => {
                     return type === 'Array'

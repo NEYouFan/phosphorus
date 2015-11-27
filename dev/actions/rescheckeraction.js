@@ -13,10 +13,11 @@ class ReqResCheckerAction {
         })
     }
 
-    static addResCheckerKV(rowIndex) {
+    static addResCheckerKV(rowIndex, kv) {
         AppDispatcher.dispatch({
             actionType: AppConstants.RES_CHECKER_ADD_KV,
-            rowIndex: rowIndex
+            rowIndex: rowIndex,
+            kv: kv
         })
     }
 
@@ -48,6 +49,19 @@ class ReqResCheckerAction {
             actionType: AppConstants.RES_CHECKER_CHANGE_KV_CHILD_VALUE_TYPE,
             rowIndex: rowIndex,
             value: value
+        })
+    }
+
+    static toggleJSONTypeList() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.RES_CHECKER_TOGGLE_JSON_TYPE_LIST
+        })
+    }
+
+    static changeJSONTypeValue(jsonType) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.RES_CHECKER_CHANGE_JSON_TYPE,
+            jsonType: jsonType
         })
     }
 

@@ -61,6 +61,8 @@ class ReqTabCon extends React.Component {
             let resCheckerProps = {
                 tabIndex: index,
                 builders: builders,
+                jsonTypes: tabCons.jsonTypes,
+                showJSONTypeList: tabCons.reqCons[index].showResJSONTypeList,
                 tab: tab
             }
             let reqURL
