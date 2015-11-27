@@ -45,7 +45,7 @@ class KeyValue extends React.Component {
                 titleTip = (
                     <div className="title-tip" title={kv.title}></div>
                 )
-            } else if (index === 0 && !kv.readonly) {
+            } else if (index === 0 && !kv.readonly && this.props.jsonType === 'object') {
                 titleTip = (
                     <div className="title-tip" title="You can paste JSON here"></div>
                 )

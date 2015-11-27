@@ -9,7 +9,6 @@ import KeyValue from './keyvalue.jsx'
 class KeyValueT extends KeyValue {
 
     render() {
-        let total = this.props.kvs.length
         let getSubNodes = (kv) => {
             if (/^(object|array)$/.test(kv.valueType)) {
                 return getNodes(kv.values, kv, kv.valueType, kv.childValueType)
@@ -21,7 +20,7 @@ class KeyValueT extends KeyValue {
                 let rowClasses = classNames({
                     'kv-row': true,
                     'removable': !kv.readonly,
-                    'onlyone': total === 1,
+                    'onlyone': kvs.length === 1,
                     'kv-row-array': parentValueType === 'array',
                     'kv-row-object': parentValueType === 'object' || parentValueType !== 'array' && parentChildValueType === 'object'
                 })
@@ -58,7 +57,7 @@ class KeyValueT extends KeyValue {
                     titleTip = (
                         <div className="res-title-tip" title={kv.title}></div>
                     )
-                } else if (kv.index === '0' && !kv.readonly) {
+                } else if (kv.index === '0' && !kv.readonly && this.props.jsonType === 'object') {
                     titleTip = (
                         <div className="title-tip" title="You can paste JSON here"></div>
                     )

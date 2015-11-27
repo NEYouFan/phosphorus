@@ -15,19 +15,35 @@ class ReqBuilderBody extends React.Component {
 
     getRawNodes(type, isChecked, isDisabled, bodyType) {
         if (type !== 'raw') return
+        let jsonType = this.props.builders.bodyType.jsonType
         let rawTypeClasses = classNames({
-            'reqbuilder-body-rawtype': true,
-            'show-raw-value': isChecked && !isDisabled,
-            'show-raw-list': this.props.showRawTypeList
+            'select-wrap': true,
+            'show-value': isChecked && !isDisabled,
+            'show-list': this.props.showRawTypeList
+        })
+        let jsonTypeclasses = classNames({
+            'select-wrap': true,
+            'show-value': isChecked && !isDisabled,
+            'show-list': this.props.showJSONTypeList,
+            'hide': bodyType.value !== 'application/json'
         })
         return (
-            <span className={rawTypeClasses}>
-                <span className="rawtype-wrap" onClick={(e)=>{this.toggleRawTypeList(e)}}>
-                    <span className="rawtype-name">{bodyType.name}</span>
-                    <span className="glyphicon glyphicon-chevron-down"></span>
+            <div className="select-lists">
+                <span className={rawTypeClasses}>
+                    <span className="select-dis-value" onClick={(e)=>{this.toggleRawTypeList(e)}}>
+                        <span className="dis-name">{bodyType.name}</span>
+                        <span className="glyphicon glyphicon-chevron-down"></span>
+                    </span>
+                    <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawTypeValue(v)}}/>
                 </span>
-                <DropDownMenu menus={this.props.rawTypes} onClickItem={(v)=>{this.onSelectRawTypeValue(v)}}/>
-            </span>
+                <span className={jsonTypeclasses}>
+                    <span className="select-dis-value" onClick={(e)=>{this.toggleJSONTypeList(e)}}>
+                        <span className="dis-name">{jsonType}</span>
+                        <span className="glyphicon glyphicon-chevron-down"></span>
+                    </span>
+                    <DropDownMenu menus={this.props.jsonTypes} onClickItem={(v)=>{this.onSelectJSONTypeValue(v)}}/>
+                </span>
+            </div>
         )
     }
 
@@ -98,14 +114,18 @@ class ReqBuilderBody extends React.Component {
 
     getRawJSONCon() {
         let kvvt
-        if (this.props.builders.bodyRawJSONKVs.length === 0) {
+        let jsonKVs = this.props.builders.bodyRawJSONKVs
+        if (jsonKVs === null) {
+            return kvvt
+        }
+        if (jsonKVs.length === 0) {
             kvvt = (
                 <div className="tip-con">
                     <em className="glyphicon glyphicon-exclamation-sign"></em>
                     <span>This request url has no input parameters.</span>
                 </div>
             )
-        } else if (this.props.builders.bodyRawJSONKVs === 'Circular Reference') {
+        } else if (jsonKVs === 'Circular Reference') {
             kvvt =
                 <div className="tip-con error-tip">
                     <em className="glyphicon glyphicon-exclamation-sign"></em>
@@ -114,7 +134,8 @@ class ReqBuilderBody extends React.Component {
         } else {
             kvvt = (
                 <KeyValueVT
-                    kvs={this.props.builders.bodyRawJSONKVs}
+                    jsonType={this.props.builders.bodyType.jsonType}
+                    kvs={jsonKVs}
                     toggleKV={(rowIndex,kv) => {this.toggleBodyRawJSONKV(rowIndex,kv)}}
                     addKV={(rowIndex, kv) => {this.addBodyRawJSONKV(rowIndex, kv)}}
                     removeKV={(rowIndex) => {this.removeBodyRawJSONKV(rowIndex)}}
@@ -181,7 +202,7 @@ class ReqBuilderBody extends React.Component {
 
     toggleRawTypeList(evt) {
         evt.stopPropagation()
-        if (evt.currentTarget.parentNode.classList.contains('show-raw-value')) {
+        if (evt.currentTarget.parentNode.classList.contains('show-value')) {
             ReqBodyAction.toggleRawTypeList()
         }
     }
@@ -191,13 +212,27 @@ class ReqBuilderBody extends React.Component {
         ReqTabAction.setDirtyTab()
     }
 
+    toggleJSONTypeList(evt) {
+        evt.stopPropagation()
+        if (evt.currentTarget.parentNode.classList.contains('show-value')) {
+            ReqBodyAction.toggleJSONTypeList()
+        }
+    }
+
+    onSelectJSONTypeValue(jsonType) {
+        ReqBodyAction.changeJSONTypeValue(jsonType)
+        ReqTabAction.setDirtyTab()
+    }
+
     toggleBodyRawJSONKV(rowIndex) {
         ReqBodyAction.toggleBodyRawJSONKV(rowIndex)
         ReqTabAction.setDirtyTab()
     }
 
     addBodyRawJSONKV(rowIndex, kv) {
-        ReqBodyAction.addBodyRawJSONKV(rowIndex)
+        if (kv.duplicatable !== false) {
+            ReqBodyAction.addBodyRawJSONKV(rowIndex)
+        }
     }
 
     removeBodyRawJSONKV(rowIndex) {

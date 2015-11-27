@@ -19,39 +19,6 @@
 
       &.checked {
         color: #333
-
-        .reqbuilder-body-rawtype {
-          color: #333
-        }
-      }
-
-      .reqbuilder-body-rawtype {
-        font-size: 12px
-        position: relative
-        margin: -3px 0 0 12px;
-        cursor: default
-        color: #eee
-
-        .rawtype-wrap {
-          margin: 1px 0 0;
-          display: block;
-        }
-
-        .mod-dropdown-menu {
-          position: absolute
-          display: none
-        }
-
-        &.show-raw-list {
-          .mod-dropdown-menu {
-            display block
-          }
-        }
-
-        &.show-raw-value {
-          color #06c
-          cursor: pointer
-        }
       }
     }
 
@@ -69,6 +36,42 @@
 
       span {
         margin: -4px 0 0 8px
+      }
+    }
+  }
+
+  .select-lists {
+    display: flex
+
+    .select-wrap {
+      position: relative
+      margin: -4px 0 0 8px;
+
+      .select-dis-value {
+        cursor: default;
+        margin: 0 0 0 8px
+        font-size: 12px
+        color: #ccc
+      }
+
+      .mod-dropdown-menu {
+        position: absolute
+        top: 22px;
+        right: 0;
+        display: none
+      }
+
+      &.show-list {
+        .mod-dropdown-menu {
+          display: block
+        }
+      }
+
+      &.show-value {
+        .select-dis-value {
+          color #06c;
+          cursor: pointer
+        }
       }
     }
   }

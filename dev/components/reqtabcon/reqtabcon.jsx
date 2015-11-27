@@ -49,8 +49,10 @@ class ReqTabCon extends React.Component {
                 tabIndex: index,
                 bodyTypes: builders.bodyTypes,
                 rawTypes: tabCons.rawTypes,
+                jsonTypes: tabCons.jsonTypes,
                 builders: builders,
-                showRawTypeList: tabCons.reqCons[index].showBodyRawTypeList
+                showRawTypeList: tabCons.reqCons[index].showBodyRawTypeList,
+                showJSONTypeList: tabCons.reqCons[index].showBodyJSONTypeList
             }
             let reqBuilderHeaderProps = {
                 tabIndex: index,

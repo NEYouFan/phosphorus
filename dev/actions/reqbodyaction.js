@@ -17,17 +17,29 @@ class ReqBodyAction  {
         })
     }
 
-    static changeBodyTypeValue(bodyTypeValue, bodyTypeName) {
+    static changeBodyTypeValue(bodyTypeValue) {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_CHANGE_TYPE_VALUE,
-            bodyTypeValue: bodyTypeValue,
-            bodyTypeName: bodyTypeName
+            bodyTypeValue: bodyTypeValue
         })
     }
 
     static toggleRawTypeList() {
         AppDispatcher.dispatch({
             actionType: AppConstants.REQ_BODY_TOGGLE_TYPE_LIST
+        })
+    }
+
+    static toggleJSONTypeList() {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_TOGGLE_JSON_TYPE_LIST
+        })
+    }
+
+    static changeJSONTypeValue(jsonType) {
+        AppDispatcher.dispatch({
+            actionType: AppConstants.REQ_BODY_RAW_JSON_CHANGE_JSON_TYPE,
+            jsonType: jsonType
         })
     }
 

@@ -62,6 +62,8 @@ let AppConstants = keyMirror({
     REQ_BODY_CHANGE_TYPE_VALUE: null,
     REQ_BODY_TOGGLE_TYPE_LIST: null,
     // body raw json kv action
+    REQ_BODY_RAW_JSON_TOGGLE_JSON_TYPE_LIST: null,
+    REQ_BODY_RAW_JSON_CHANGE_JSON_TYPE: null,
     REQ_BODY_RAW_JSON_TOGGLE_KV: null,
     REQ_BODY_RAW_JSON_ADD_KV: null,
     REQ_BODY_RAW_JSON_REMOVE_KV: null,

@@ -88,10 +88,6 @@ const DEFAULT_CON_ITEM = {
     builders: {
         bodyTypes: [
             {
-                type: 'raw',
-                disabled: false
-            },
-            {
                 type: 'x-www-form-urlencoded',
                 disabled: false
             },
@@ -101,6 +97,10 @@ const DEFAULT_CON_ITEM = {
             },
             {
                 type: 'binary',
+                disabled: false
+            },
+            {
+                type: 'raw',
                 disabled: false
             }
         ],
@@ -132,7 +132,8 @@ const DEFAULT_CON_ITEM = {
         bodyType: {
             type: 'raw',
             name: 'JSON(application/json)',
-            value: 'application/json'
+            value: 'application/json',
+            jsonType: 'object'
         },
         bodyFormDataKVs: [DEFAULT_BODY_FORMDATA_KV],
         bodyRawJSONKVs: [DEFAULT_BODY_RAW_JSON_KV],
@@ -150,6 +151,7 @@ const DEFAULT_CON_ITEM = {
         resCheckerResult: null
     },
     showBodyRawTypeList: false,
+    showBodyJSONTypeList: false,
     showReqMethodList: false,
     showResPrettyTypeList: false,
     aceEditorConfig: {
@@ -223,6 +225,7 @@ let tabCons = {
     //reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
     reqMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     prettyTypes: ['JSON', 'XML', 'HTML', 'Text'],
+    jsonTypes: ['object', 'array', 'string', 'number', 'boolean', 'null'],
     items: [_.cloneDeep(DEFAULT_CON_ITEM)],
     aceEditorId: 'brace-editor'
 }
@@ -881,6 +884,63 @@ let bodyActions = {
 
 let bodyRawJSONActions = {
 
+    toggleBodyRawJSONList() {
+        tabCons.items[tabIndex].showBodyJSONTypeList = !tabCons.items[tabIndex].showBodyJSONTypeList
+    },
+
+    changeBodyRawJSONType(jsonType) {
+        let builders = tabCons.items[tabIndex].builders
+        let oldJSONType = builders.bodyType.jsonType
+        if (oldJSONType === jsonType) {
+            return
+        }
+        builders.bodyType.jsonType = jsonType
+        let newKV = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+            values: [],
+            valueType: jsonType
+        })
+        switch (jsonType) {
+            case 'object':
+                builders.bodyRawJSONKVs = [newKV]
+                break
+
+            case 'array':
+                Object.assign(newKV, {
+                    keyVisible: false,
+                    value: '[[array item]]',
+                    readonly: true,
+                    valueReadonly: true,
+                    typeChangeable: false,
+                    duplicatable: false
+                })
+                let childItem = Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {
+                    values: [],
+                    keyVisible: false,
+                    typeChangeable: false
+                })
+                newKV.values.push(childItem)
+                builders.bodyRawJSONKVs = [newKV]
+                break
+
+            case 'string':
+            case 'number':
+            case 'boolean':
+                Object.assign(newKV, {
+                    keyVisible: false,
+                    typeChangeable: false,
+                    duplicatable: false
+                })
+                builders.bodyRawJSONKVs = [newKV]
+                break
+
+            case 'null':
+                builders.bodyRawJSONKVs = null
+
+            default:
+                break
+        }
+    },
+
     getBodyRawJSONRow(rowIndex) {
         let bodyRawJSONKVs = tabCons.items[tabIndex].builders.bodyRawJSONKVs
         let indexes = rowIndex.split('.')
@@ -1124,6 +1184,7 @@ let ReqTabConStore = Object.assign({}, Events.EventEmitter.prototype, {
                 reqCons: tabCons.items,
                 reqMethods: tabCons.reqMethods,
                 rawTypes: tabCons.rawTypes,
+                jsonTypes: tabCons.jsonTypes,
                 prettyTypes: tabCons.prettyTypes,
                 aceEditorId: tabCons.aceEditorId
             }
@@ -1302,6 +1363,15 @@ AppDispatcher.register((action) => {
             ReqTabConStore.emitChange()
             break
         // body raw json kv action
+        case AppConstants.REQ_BODY_RAW_JSON_TOGGLE_JSON_TYPE_LIST:
+            actions.toggleBodyRawJSONList()
+            ReqTabConStore.emitChange()
+            break
+        case AppConstants.REQ_BODY_RAW_JSON_CHANGE_JSON_TYPE:
+            actions.changeBodyRawJSONType(action.jsonType)
+            ReqTabConStore.emitChange()
+            break
+
         case AppConstants.REQ_BODY_RAW_JSON_TOGGLE_KV:
             actions.toggleBodyRawJSONKV(action.rowIndex)
             ReqTabConStore.emitChange()

@@ -135,6 +135,9 @@ class Index extends React.Component {
         if (reqCon.showBodyRawTypeList) {
             ReqBodyAction.toggleRawTypeList()
         }
+        if (reqCon.showBodyJSONTypeList) {
+            ReqBodyAction.toggleJSONTypeList()
+        }
         if (reqCon.showResPrettyTypeList) {
             ResAction.toggleResPrettyTypeList()
         }
