@@ -370,6 +370,7 @@ let Util = {
                         keyVisible: false,
                         valueType: childValueType,
                         parentValueType: 'array',
+                        values: [],
                         readonly: false
                     })
                     let storedData = _.find(data, (d) => {
@@ -378,6 +379,7 @@ let Util = {
                     if (storedData && storedData.values) {
                         storedData.values.forEach((kv) => {
                             let item = _.clone(arrItem)
+                            item.values = []
                             item.value = kv.value
                             tempItem.values.push(item)
                         })
@@ -461,7 +463,8 @@ let Util = {
                             valueReadonly: true,
                             key: '[[array item]]',
                             value: '[[array item]]',
-                            keyVisible: false
+                            keyVisible: false,
+                            readonly: false
                         })
                         let childAttributes = _.filter(dataSource.attributes, (attr) => {
                             return attr.parentId === dataType.subtype
@@ -520,7 +523,8 @@ let Util = {
                             values: [],
                             valueReadonly: true,
                             valueType: childValueType,
-                            parentValueType: 'array'
+                            parentValueType: 'array',
+                            readonly: false
                         })
                         if (childValueType === 'object' && Array.isArray(data) && data.length && data[0].values) {
                             data[0].values.forEach((kv) => {
