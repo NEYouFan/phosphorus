@@ -231,7 +231,7 @@ class ReqBuilderBody extends React.Component {
 
     addBodyRawJSONKV(rowIndex, kv) {
         if (kv.duplicatable !== false) {
-            ReqBodyAction.addBodyRawJSONKV(rowIndex)
+            ReqBodyAction.addBodyRawJSONKV(rowIndex, kv)
         }
     }
 

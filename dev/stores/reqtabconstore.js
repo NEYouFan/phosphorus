@@ -1029,7 +1029,9 @@ let bodyRawJSONActions = {
                         // in NEI, the new added object item should be same as the first element
                         item.values = _.cloneDeep(kv.values)
                         item.values.forEach((kv) => {
-                            kv.value = ''
+                            if (!/^(object|array)$/.test(kv.valueType)) {
+                                kv.value = ''
+                            }
                         })
                     } else {
                         item.values.push(Object.assign({}, DEFAULT_BODY_RAW_JSON_KV, {

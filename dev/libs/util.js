@@ -471,8 +471,9 @@ let Util = {
                 if (input.isArray) {
                     let childValueType = typeMap[input.type]
                     let tempItem = Object.assign({}, itemTemplate, {
+                        key: input.name,
                         keyVisible: false,
-                        value: '[[array item]]',
+                        value: input.name,
                         values: [],
                         valueReadonly: true,
                         valueType: 'array',
@@ -481,7 +482,8 @@ let Util = {
                     let arrItem = Object.assign({}, itemTemplate, {
                         keyVisible: false,
                         valueType: childValueType,
-                        parentValueType: 'array'
+                        parentValueType: 'array',
+                        readonly: false
                     })
                     if (Array.isArray(data) && data.length && data[0].values) {
                         data[0].values.forEach((kv) => {
@@ -542,14 +544,15 @@ let Util = {
                         title: input.description,
                         values: [],
                         valueReadonly: true,
-                        value: getEnumValue(attributes),
-                        valueType: getEnumType(attributes[0].name)// all enums has same type, just judge the first element
+                        value: getEnumValue(attributes)
                     })
                     resultContainer.push(tempItem)
                 } else if (dataType.format === 2) {
                     // array
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: input.name,
+                        keyVisible: false,
+                        value: input.name,
                         title: input.description,
                         values: [],
                         valueType: 'array',
@@ -566,7 +569,9 @@ let Util = {
                             typeChangeable: false,
                             parentValueType: 'array',
                             valueReadonly: true,
-                            key: '[[array item]]'
+                            key: '[[array item]]',
+                            value: '[[array item]]',
+                            keyVisible: false
                         })
                         let childAttributes = _.filter(dataSource.attributes, (attr) => {
                             return attr.parentId === dataType.subtype
@@ -608,6 +613,8 @@ let Util = {
                     // hash object
                     let tempItem = Object.assign({}, itemTemplate, {
                         key: input.name,
+                        keyVisible: false,
+                        value: input.name,
                         title: input.description,
                         valueReadonly: true,
                         values: [],
@@ -639,8 +646,11 @@ let Util = {
                             tempItem.values.push(childItem)
                         }
                     } else {
+                        let storedData = _.find(data, (d) => {
+                            return d.key === input.name
+                        })
                         attributes.forEach((attr) => {
-                            getItem(attr, tempItem.values, data.values)
+                            getItem(attr, tempItem.values, storedData && storedData.values || [])
                         })
                     }
                     resultContainer.push(tempItem)
@@ -693,7 +703,8 @@ let Util = {
                                 })
                                 item.values.push(tItem)
                             })
-                        } else {
+                        }
+                        if (!item.values.length) {
                             // no stored data, default put one item
                             paramsInfo.values.forEach((obj) => {
                                 getItem(obj, objItem.values)
@@ -715,11 +726,22 @@ let Util = {
                                 let tItem = Object.assign({}, primitiveItem, kv)
                                 item.values.push(tItem)
                             })
-                        } else {
+                        }
+                        if (!item.values.length) {
                             item.values.push(primitiveItem)
                         }
                     }
                     result.push(item)
+                } else {
+                    // just primitive value
+                    let primitiveItem = Object.assign({}, itemTemplate, {
+                        key: `[[${paramsInfo.valueType}]]`,
+                        keyVisible: false,
+                        value: data[0] && data[0].value,
+                        values: [],
+                        valueType: paramsInfo.valueType
+                    })
+                    result.push(primitiveItem)
                 }
             }
         }
