@@ -315,7 +315,7 @@ let resChecker = [
 
 let resData = {
     "code": 200,
-    "msg": "³É¹¦",
+    "msg": "ï¿½É¹ï¿½",
     "result": [
         {
             "id": 10019,
@@ -323,14 +323,14 @@ let resData = {
             "creatorId": 10001,
             "type": 0,
             "fromUsrGroup": "0",
-            "creatorName": "ÕÅÏþÈÝ",
+            "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
             "projects": [
                 {
                     "id": 10046,
                     "name": "JIRA6_REST_API",
                     "type": 0,
                     "creatorId": 10004,
-                    "creatorName": "°üÓÂÃ÷",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 168
                 },
                 {
@@ -338,15 +338,15 @@ let resData = {
                     "name": "proj1",
                     "type": 0,
                     "creatorId": 10001,
-                    "creatorName": "ÕÅÏþÈÝ",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 },
                 {
                     "id": 10039,
-                    "name": "¹«¹²×ÊÔ´¿â",
+                    "name": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½",
                     "type": 1,
                     "creatorId": 10001,
-                    "creatorName": "ÕÅÏþÈÝ",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 }
             ]
@@ -357,14 +357,14 @@ let resData = {
             "creatorId": 10001,
             "type": 0,
             "fromUsrGroup": "0",
-            "creatorName": "ÕÅÏþÈÝ",
+            "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
             "projects": [
                 {
                     "id": 10045,
                     "name": "JIRA6_REST_API",
                     "type": 0,
                     "creatorId": 10004,
-                    "creatorName": "°üÓÂÃ÷",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 168
                 },
                 {
@@ -372,15 +372,15 @@ let resData = {
                     "name": "project",
                     "type": 0,
                     "creatorId": 10001,
-                    "creatorName": "ÕÅÏþÈÝ",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 },
                 {
                     "id": 10030,
-                    "name": "¹«¹²×ÊÔ´¿â",
+                    "name": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½",
                     "type": 1,
                     "creatorId": 10001,
-                    "creatorName": "ÕÅÏþÈÝ",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 }
             ]
@@ -391,49 +391,49 @@ let resData = {
             "creatorId": 10004,
             "type": 0,
             "fromUsrGroup": "0",
-            "creatorName": "°üÓÂÃ÷",
+            "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
             "projects": [
                 {
                     "id": 10052,
                     "name": "test",
                     "type": 0,
                     "creatorId": 10004,
-                    "creatorName": "°üÓÂÃ÷",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 },
                 {
                     "id": 10048,
-                    "name": "¹«¹²×ÊÔ´¿â",
+                    "name": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½",
                     "type": 1,
                     "creatorId": 10004,
-                    "creatorName": "°üÓÂÃ÷",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 }
             ]
         },
         {
             "id": 10011,
-            "name": "Ä¬ÈÏ·Ö×é",
+            "name": "Ä¬ï¿½Ï·ï¿½ï¿½ï¿½",
             "creatorId": 10004,
             "type": 1,
             "fromUsrGroup": "0",
-            "creatorName": "°üÓÂÃ÷",
+            "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
             "projects": [
                 {
                     "id": 10051,
                     "name": "aaaa",
                     "type": 0,
                     "creatorId": 10004,
-                    "creatorName": "°üÓÂÃ÷",
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
                     "qbsId": 0
                 },
                 {
-                    "id": 10026,
-                    "name": 1111,
+                    "id": 10052,
+                    "name": "aaaa",
                     "type": 1,
                     "creatorId": 10004,
-                    "creatorName": "°üÓÂÃ÷",
-                    "qbsId": 0
+                    "creatorName": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+                    "qbsId": true
                 }
             ]
         }
@@ -520,10 +520,10 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
                         } else if (resultKeyType === 'object') {
                             keyPaths.push(key)
                             let tempResult = checkData(rc.valu, data[key])
-                            keyPaths.pop()
                             if (tempResult) {
                                 return tempResult
                             }
+                            keyPaths.pop()
                         }
                     } else {
                         return {
@@ -585,13 +585,6 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
         }
     } else if (resJSONType === 'object') {
         checkResult = checkJSONObj(resChecker, resData)
-    } else if (resJSONType === 'null') {
-        if (resData !== null) {
-            checkResult = {
-                status: 'failed',
-                info: `Response data should be "null", but it is "${resDataType}"`
-            }
-        }
     } else {
         if (resDataType !== resJSONType) {
             checkResult = {

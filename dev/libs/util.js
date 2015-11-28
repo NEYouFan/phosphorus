@@ -902,10 +902,10 @@ let Util = {
                             } else if (resultKeyType === 'object') {
                                 keyPaths.push(key)
                                 let tempResult = checkData(rc.valu, data[key])
-                                keyPaths.pop()
                                 if (tempResult) {
                                     return tempResult
                                 }
+                                keyPaths.pop()
                             }
                         } else {
                             return {
@@ -967,13 +967,6 @@ let Util = {
             }
         } else if (resJSONType === 'object') {
             checkResult = checkJSONObj(resChecker, resData)
-        } else if (resJSONType === 'null') {
-            if (resData !== null) {
-                checkResult = {
-                    status: 'failed',
-                    info: `Response data should be "null", but it is "${resDataType}"`
-                }
-            }
         } else {
             if (resDataType !== resJSONType) {
                 checkResult = {
