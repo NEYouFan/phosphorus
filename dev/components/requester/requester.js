@@ -178,7 +178,7 @@ let Requester = {
         collection.requests.forEach((req) => {
             req.reqStatus = 'waiting'
         })
-        let getResStatus = (req, savedRequest, data) => {
+        let getResStatus = (req, savedRequest, jsonData) => {
             let result
             if (req.isNEI) {
                 if (!req.outputs.length) {
@@ -190,16 +190,11 @@ let Requester = {
                 }
             }
             if (!result) {
-                try {
-                    let json = JSON.parse(data)
-                    let resCheckerKVs = Util.convertNEIOutputsToJSON(req, collection)
-                    resCheckerKVs.forEach((kv) => {
-                        kv.checked = true
-                    })
-                    result = Util.checkResponseResult(resCheckerKVs, json) === true
-                } catch (err) {
-                    result = false
-                }
+                let resCheckerKVs = Util.convertNEIOutputsToJSON(req, collection)
+                resCheckerKVs.forEach((kv) => {
+                    kv.checked = true
+                })
+                result = Util.checkResponseResult(resCheckerKVs, jsonData) === true
             }
             if (result) {
                 succeedReqsNum++
@@ -223,8 +218,13 @@ let Requester = {
                     req.reqStatus = 'failed'
                     failedReqsNum++
                 } else {
-                    // res checker
-                    req.reqStatus = getResStatus(req, savedRequest, data)
+                    try {
+                        // res checker
+                        req.reqStatus = getResStatus(req, savedRequest, JSON.parse(data))
+                    } catch (err) {
+                        req.reqStatus = 'failed'
+                        failedReqsNum++
+                    }
                 }
                 callback() // update status
                 cb()
@@ -301,7 +301,7 @@ let Requester = {
         if (result.host) {
             return url
         }
-        let hosts = stores.hosts
+        let hosts = stores.hosts || {}
         return (hosts.folders[req.folderId] || hosts.collections[req.collectionId] || '') + url
     },
 
@@ -312,9 +312,14 @@ let Requester = {
             headers: {}
         }
         let getNEIBodyRawJSON = () => {
-            let savedBodyRawJSONKVs = savedRequest['body_raw_json']
-            let savedBodyRawJSON = Util.convertKVToJSON(savedBodyRawJSONKVs)
-            return Util.convertNEIInputsToJSONStr(req, collection, savedBodyRawJSON)
+            let bodyRawJSONKVs = Util.convertNEIInputsToJSON(req, collection, savedRequest['body_raw_json'], {
+                checked: true,
+                key: '',
+                value: '',
+                valueType: 'string',
+                childValueType: 'string'
+            })
+            return this.__getJSON(bodyRawJSONKVs, Util.getNEIParamsInfo(req.inputs, collection).valueType)
         }
         let getNEIXFormData = () => {
             let savedXFormData = savedRequest['body_x_form_data'] || {}
@@ -329,7 +334,9 @@ let Requester = {
         }
         let getBodyRawJSON = () => {
             let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
-            return Util.convertKVToJSON(savedBodyRawJSONKVs)
+            return this.__getJSON(savedBodyRawJSONKVs, {
+                jsonType: savedRequest['body_type']['json_type']
+            })
         }
         let getXFormData = () => {
             let savedXFormData = savedRequest['body_x_form_data'] || {}

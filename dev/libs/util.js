@@ -324,119 +324,6 @@ let Util = {
         }
     },
 
-    convertNEIInputsToJSONStr(request, dataSource, savedData) {
-        let result = {}
-        let typeMap = {
-            10001: 'string',
-            10002: 'number',
-            10003: 'boolean'
-        }
-        let checkValueIsType = (value, type) => {
-            return typeof(value) === typeMap[type]
-        }
-        let isAllValueValidType = (arr, type) => {
-            if (Array.isArray(arr)) {
-                let result = true
-                arr.forEach((value) => {
-                    result = checkValueIsType(value, type)
-                })
-                return result
-            } else {
-                return false
-            }
-        }
-        let isSysType = (type) => {
-            return /^(10001|10002|10003)$/.test(type)
-        }
-        let getEnumValue = (attributes) => {
-            let result = attributes.map((attr) => {
-                return attr.name
-            })
-            return result.join(',')
-        }
-        let getAttributesByType = (type) => {
-            let attributes = _.filter(dataSource.attributes, (attr) => {
-                return attr.parentId === type
-            })
-            // dataSource has bug, attributes maybe duplicated
-            attributes = _.uniq(attributes, 'id')
-            return attributes
-        }
-
-        let traversedDataTypes = []
-        let traversedLayers = 0
-        let getInputValue = (input, data) => {
-            let tempResult = {}
-            if (input.isSysType) {
-                if (input.isArray) {
-                    if (isAllValueValidType(data[input.name], input.type)) {
-                        tempResult = data[input.name]
-                    } else {
-                        tempResult = []
-                    }
-                } else {
-                    if (checkValueIsType(data[input.name], input.type)) {
-                        tempResult = data[input.name]
-                    } else {
-                        tempResult = this.getPrimiteValue(typeMap[input.type], '')
-                    }
-                }
-            } else {
-                if (traversedDataTypes.indexOf(input.type) !== -1) {
-                    // circular reference
-                    let datatype = _.find(dataSource.datatypes, (dt) => {
-                        return dt.id === input.type
-                    })
-                    // return data[input.name] || 'Circular reference: <' + datatype.name + '>'
-                    return 'Circular reference: <' + datatype.name + '>'
-                }
-                traversedDataTypes.push(input.type)
-                traversedLayers++
-                let dataType = _.find(dataSource.datatypes, (dt) => {
-                    return dt.id === input.type
-                })
-                if (dataType.format === 1) {
-                    // enums
-                    tempResult = getEnumValue(getAttributesByType(input.type))
-                } else if (dataType.format === 2) {
-                    // array
-                    if (isSysType(dataType.subtype)) {
-                        tempResult = data[input.name]
-                    } else {
-                        tempResult = []
-                        data[input.name].forEach((obj, index) => {
-                            tempResult[index] = {}
-                            getAttributesByType(dataType.subtype).forEach((attr) => {
-                                tempResult[index][attr.name] = obj[attr.name]
-                            })
-                        })
-                    }
-                } else {
-                    getAttributesByType(input.type).forEach((attr) => {
-                        attr.isSysType = isSysType(attr.type)
-                        tempResult[attr.name] = getInputValue(attr, data[input.name] || {})
-                    })
-                }
-            }
-            return tempResult
-        }
-        let getData = (inputs, data) => {
-            inputs.forEach((input) => {
-                if (input.isPrimite) {
-                    result = data
-                } else {
-                    for (let i = 0; i < traversedLayers; i++) {
-                        traversedDataTypes.pop()
-                    }
-                    traversedLayers = 0
-                    result[input.name] = getInputValue(input, data || {})
-                }
-            })
-        }
-        getData(request.inputs, savedData)
-        return JSON.stringify(result, null, '\t')
-    },
-
     convertNEIInputsToJSON(request, dataSource, savedData, itemTemplate) {
         let result = []
         let error = false
@@ -485,8 +372,11 @@ let Util = {
                         parentValueType: 'array',
                         readonly: false
                     })
-                    if (Array.isArray(data) && data.length && data[0].values) {
-                        data[0].values.forEach((kv) => {
+                    let storedData = _.find(data, (d) => {
+                        return d.key === input.name
+                    })
+                    if (storedData && storedData.values) {
+                        storedData.values.forEach((kv) => {
                             let item = _.clone(arrItem)
                             item.value = kv.value
                             tempItem.values.push(item)
@@ -691,7 +581,7 @@ let Util = {
                             parentValueType: 'array',
                             readonly: false
                         })
-                        if (data[0]) {
+                        if (data[0] && Array.isArray(data[0].values)) {
                             data[0].values.forEach((kv) => {
                                 let tItem = Object.assign({}, objItem, {values: []})
                                 paramsInfo.values.forEach((obj) => {
@@ -1246,47 +1136,6 @@ let Util = {
                 return getVarValue()
             default:
                 return value
-        }
-    },
-
-    convertKVToJSON (kvs) {
-        let result = {}
-        let setData = (kvs, con) => {
-            kvs.forEach((kv) => {
-                if (kv.checked) {
-                    if (kv.value_type === 'array') {
-                        con[kv.key] = []
-                        if (kv.child_value_type === 'object') {
-                            kv.values.forEach((v, index) => {
-                                if (v.checked) {
-                                    con[kv.key][index] = {}
-                                    setData(v.values, con[kv.key][index])
-                                }
-                            })
-                        } else {
-                            kv.values.forEach((v) => {
-                                if (v.checked && v.value !== '') {
-                                    con[kv.key].push(this.getValueByType(v.value, kv.child_value_type))
-                                }
-                            })
-                        }
-                    } else if (kv.value_type === 'object') {
-                        con[kv.key] = {}
-                        setData(kv.values, con[kv.key])
-                    } else {
-                        if (kv.key) {
-                            con[kv.key] = this.getValueByType(kv.value || '', kv.value_type)
-                        }
-                    }
-                }
-            })
-        }
-        if (/^(string|number|boolean)$/.test(typeof kvs)) {
-            // is primite type
-            return kvs
-        } else {
-            setData(kvs, result)
-            return result
         }
     },
 
