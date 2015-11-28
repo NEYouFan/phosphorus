@@ -2,30 +2,445 @@
 
 let resChecker = [
     {
-        key: 'tree',
-        checked: true,
-        valueType: 'array',
-        childValueType: 'object',
-        values: [
+        "keyPlaceholder": "Key",
+        "valuePlaceholder": "Value",
+        "checked": true,
+        "key": "code",
+        "value": "",
+        "keyDataList": "",
+        "valueDataList": "",
+        "valueType": "number",
+        "childValueType": "string",
+        "values": [],
+        "typeChangeable": false,
+        "childTypeChangeable": false,
+        "readonly": true,
+        "title": "",
+        "index": "0"
+    },
+    {
+        "keyPlaceholder": "Key",
+        "valuePlaceholder": "Value",
+        "checked": true,
+        "key": "msg",
+        "value": "",
+        "keyDataList": "",
+        "valueDataList": "",
+        "valueType": "string",
+        "childValueType": "string",
+        "values": [],
+        "typeChangeable": false,
+        "childTypeChangeable": false,
+        "readonly": true,
+        "title": "",
+        "index": "1"
+    },
+    {
+        "keyPlaceholder": "Key",
+        "valuePlaceholder": "Value",
+        "checked": true,
+        "key": "result",
+        "value": "",
+        "keyDataList": "",
+        "valueDataList": "",
+        "valueType": "array",
+        "childValueType": "object",
+        "values": [
             {
-                key: 'id',
-                checked: true,
-                valueType: 'object',
-                childValueType: ''
-            },
-            {
-                key: 'name',
-                checked: true,
-                valueType: 'object',
-                childValueType: ''
+                "keyPlaceholder": "Key",
+                "valuePlaceholder": "Value",
+                "checked": true,
+                "key": "[[array item]]",
+                "value": "",
+                "keyDataList": "",
+                "valueDataList": "",
+                "valueType": "object",
+                "childValueType": "string",
+                "values": [
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "creatorId",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "number",
+                        "childValueType": "string",
+                        "values": [],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.0"
+                    },
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "creatorName",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "string",
+                        "childValueType": "string",
+                        "values": [],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.1"
+                    },
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "fromUsrGroup",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "string",
+                        "childValueType": "string",
+                        "values": [],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.2"
+                    },
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "id",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "number",
+                        "childValueType": "string",
+                        "values": [],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.3"
+                    },
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "name",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "string",
+                        "childValueType": "string",
+                        "values": [],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.4"
+                    },
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "type",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "number",
+                        "childValueType": "string",
+                        "values": [],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.5"
+                    },
+                    {
+                        "keyPlaceholder": "Key",
+                        "valuePlaceholder": "Value",
+                        "checked": true,
+                        "key": "projects",
+                        "value": "",
+                        "keyDataList": "",
+                        "valueDataList": "",
+                        "valueType": "array",
+                        "childValueType": "object",
+                        "values": [
+                            {
+                                "keyPlaceholder": "Key",
+                                "valuePlaceholder": "Value",
+                                "checked": true,
+                                "key": "[[array item]]",
+                                "value": "",
+                                "keyDataList": "",
+                                "valueDataList": "",
+                                "valueType": "object",
+                                "childValueType": "string",
+                                "values": [
+                                    {
+                                        "keyPlaceholder": "Key",
+                                        "valuePlaceholder": "Value",
+                                        "checked": true,
+                                        "key": "id",
+                                        "value": "",
+                                        "keyDataList": "",
+                                        "valueDataList": "",
+                                        "valueType": "number",
+                                        "childValueType": "string",
+                                        "values": [],
+                                        "typeChangeable": false,
+                                        "childTypeChangeable": false,
+                                        "readonly": true,
+                                        "title": "",
+                                        "index": "2.0.6.0.0"
+                                    },
+                                    {
+                                        "keyPlaceholder": "Key",
+                                        "valuePlaceholder": "Value",
+                                        "checked": true,
+                                        "key": "name",
+                                        "value": "",
+                                        "keyDataList": "",
+                                        "valueDataList": "",
+                                        "valueType": "string",
+                                        "childValueType": "string",
+                                        "values": [],
+                                        "typeChangeable": false,
+                                        "childTypeChangeable": false,
+                                        "readonly": true,
+                                        "title": "",
+                                        "index": "2.0.6.0.1"
+                                    },
+                                    {
+                                        "keyPlaceholder": "Key",
+                                        "valuePlaceholder": "Value",
+                                        "checked": true,
+                                        "key": "type",
+                                        "value": "",
+                                        "keyDataList": "",
+                                        "valueDataList": "",
+                                        "valueType": "number",
+                                        "childValueType": "string",
+                                        "values": [],
+                                        "typeChangeable": false,
+                                        "childTypeChangeable": false,
+                                        "readonly": true,
+                                        "title": "",
+                                        "index": "2.0.6.0.2"
+                                    },
+                                    {
+                                        "keyPlaceholder": "Key",
+                                        "valuePlaceholder": "Value",
+                                        "checked": true,
+                                        "key": "creatorId",
+                                        "value": "",
+                                        "keyDataList": "",
+                                        "valueDataList": "",
+                                        "valueType": "number",
+                                        "childValueType": "string",
+                                        "values": [],
+                                        "typeChangeable": false,
+                                        "childTypeChangeable": false,
+                                        "readonly": true,
+                                        "title": "",
+                                        "index": "2.0.6.0.3"
+                                    },
+                                    {
+                                        "keyPlaceholder": "Key",
+                                        "valuePlaceholder": "Value",
+                                        "checked": true,
+                                        "key": "creatorName",
+                                        "value": "",
+                                        "keyDataList": "",
+                                        "valueDataList": "",
+                                        "valueType": "string",
+                                        "childValueType": "string",
+                                        "values": [],
+                                        "typeChangeable": false,
+                                        "childTypeChangeable": false,
+                                        "readonly": true,
+                                        "title": "",
+                                        "index": "2.0.6.0.4"
+                                    },
+                                    {
+                                        "keyPlaceholder": "Key",
+                                        "valuePlaceholder": "Value",
+                                        "checked": true,
+                                        "key": "qbsId",
+                                        "value": "",
+                                        "keyDataList": "",
+                                        "valueDataList": "",
+                                        "valueType": "number",
+                                        "childValueType": "string",
+                                        "values": [],
+                                        "typeChangeable": false,
+                                        "childTypeChangeable": false,
+                                        "readonly": true,
+                                        "title": "",
+                                        "index": "2.0.6.0.5"
+                                    }
+                                ],
+                                "typeChangeable": false,
+                                "childTypeChangeable": false,
+                                "readonly": true,
+                                "parentValueType": "array",
+                                "index": "2.0.6.0"
+                            }
+                        ],
+                        "typeChangeable": false,
+                        "childTypeChangeable": false,
+                        "readonly": true,
+                        "title": "",
+                        "index": "2.0.6"
+                    }
+                ],
+                "typeChangeable": false,
+                "childTypeChangeable": false,
+                "readonly": true,
+                "parentValueType": "array",
+                "index": "2.0"
             }
-        ]
+        ],
+        "typeChangeable": false,
+        "childTypeChangeable": false,
+        "readonly": true,
+        "title": "",
+        "index": "2"
     }
 ]
 
-let resData = '121'
+let resData = {
+    "code": 200,
+    "msg": "成功",
+    "result": [
+        {
+            "id": 10019,
+            "name": "zxrtest3",
+            "creatorId": 10001,
+            "type": 0,
+            "fromUsrGroup": "0",
+            "creatorName": "张晓容",
+            "projects": [
+                {
+                    "id": 10046,
+                    "name": "JIRA6_REST_API",
+                    "type": 0,
+                    "creatorId": 10004,
+                    "creatorName": "包勇明",
+                    "qbsId": 168
+                },
+                {
+                    "id": 10036,
+                    "name": "proj1",
+                    "type": 0,
+                    "creatorId": 10001,
+                    "creatorName": "张晓容",
+                    "qbsId": 0
+                },
+                {
+                    "id": 10039,
+                    "name": "公共资源库",
+                    "type": 1,
+                    "creatorId": 10001,
+                    "creatorName": "张晓容",
+                    "qbsId": 0
+                }
+            ]
+        },
+        {
+            "id": 10014,
+            "name": "zxrtest",
+            "creatorId": 10001,
+            "type": 0,
+            "fromUsrGroup": "0",
+            "creatorName": "张晓容",
+            "projects": [
+                {
+                    "id": 10045,
+                    "name": "JIRA6_REST_API",
+                    "type": 0,
+                    "creatorId": 10004,
+                    "creatorName": "包勇明",
+                    "qbsId": 168
+                },
+                {
+                    "id": 10031,
+                    "name": "project",
+                    "type": 0,
+                    "creatorId": 10001,
+                    "creatorName": "张晓容",
+                    "qbsId": 0
+                },
+                {
+                    "id": 10030,
+                    "name": "公共资源库",
+                    "type": 1,
+                    "creatorId": 10001,
+                    "creatorName": "张晓容",
+                    "qbsId": 0
+                }
+            ]
+        },
+        {
+            "id": 10021,
+            "name": "M2-1",
+            "creatorId": 10004,
+            "type": 0,
+            "fromUsrGroup": "0",
+            "creatorName": "包勇明",
+            "projects": [
+                {
+                    "id": 10052,
+                    "name": "test",
+                    "type": 0,
+                    "creatorId": 10004,
+                    "creatorName": "包勇明",
+                    "qbsId": 0
+                },
+                {
+                    "id": 10048,
+                    "name": "公共资源库",
+                    "type": 1,
+                    "creatorId": 10004,
+                    "creatorName": "包勇明",
+                    "qbsId": 0
+                }
+            ]
+        },
+        {
+            "id": 10011,
+            "name": "默认分组",
+            "creatorId": 10004,
+            "type": 1,
+            "fromUsrGroup": "0",
+            "creatorName": "包勇明",
+            "projects": [
+                {
+                    "id": 10051,
+                    "name": "aaaa",
+                    "type": 0,
+                    "creatorId": 10004,
+                    "creatorName": "包勇明",
+                    "qbsId": 0
+                },
+                {
+                    "id": 10026,
+                    "name": 1111,
+                    "type": 1,
+                    "creatorId": 10004,
+                    "creatorName": "包勇明",
+                    "qbsId": 0
+                }
+            ]
+        }
+    ]
+}
 
-let resJSONType = 'boolean'
+let resJSONType = 'object'
 
 let checkResponseResult = (resChecker, resJSONType, resData) => {
     let getOrderExp = (index) => {
@@ -55,6 +470,13 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
                 let rc = checker[i]
                 let key = rc.key
                 if (!key || !rc.checked) {
+                    continue
+                }
+                if (rc.parentValueType === 'array') {
+                    let tempResult = checkData(rc.values, data)
+                    if (tempResult) {
+                        return tempResult
+                    }
                     continue
                 }
                 if (data.hasOwnProperty(key)) {

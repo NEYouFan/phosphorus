@@ -214,7 +214,6 @@ let actions = {
     }
 }
 
-
 let ReqTabStore = Object.assign({}, Events.EventEmitter.prototype, {
 
     getAll() {

@@ -731,10 +731,10 @@ let Util = {
                     })
                     if (childValueType === 'object') {
                         let childItem = Object.assign({}, itemTemplate, {
-                            value: '[[array item]]',
-                            keyVisible: false,
+                            key: '[[array item]]',
                             values: [],
-                            valueType: childValueType
+                            valueType: childValueType,
+                            parentValueType: 'array'
                         })
                         let childAttributes = _.filter(dataSource.attributes, (attr) => {
                             return attr.parentId === dataType.subtype
@@ -757,10 +757,10 @@ let Util = {
                     })
                     if (output.isArray) {
                         let childItem = Object.assign({}, itemTemplate, {
-                            value: '[[array item]]',
-                            keyVisible: false,
+                            key: '[[array item]]',
                             values: [],
-                            valueType: childValueType
+                            valueType: childValueType,
+                            parentValueType: 'array'
                         })
                         tempItem.values.push(childItem)
                         attributes.forEach((attr) => {
@@ -824,7 +824,7 @@ let Util = {
         return error || result
     },
 
-    checkResponseResult(resChecker, resData) {
+    checkResponseResult(resChecker, resJSONType, resData) {
         let getOrderExp = (index) => {
             let lastNum = String(index).substr(-1)
             switch (lastNum) {
@@ -852,6 +852,13 @@ let Util = {
                     let rc = checker[i]
                     let key = rc.key
                     if (!key || !rc.checked) {
+                        continue
+                    }
+                    if (rc.parentValueType === 'array') {
+                        let tempResult = checkData(rc.values, data)
+                        if (tempResult) {
+                            return tempResult
+                        }
                         continue
                     }
                     if (data.hasOwnProperty(key)) {
