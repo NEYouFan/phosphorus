@@ -433,7 +433,7 @@ let resData = {
                     "type": 1,
                     "creatorId": 10004,
                     "creatorName": "������",
-                    "qbsId": true
+                    "qbsId": 9
                 }
             ]
         }
@@ -463,7 +463,15 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
     let checkJSONObj = (checker, data) => {
         let keyPaths = []
         let getKeyPath = (key) => {
-            return keyPaths.length ? (keyPaths.join(' -> ') + ' -> ' + key) : key
+            let paths = ''
+            keyPaths.forEach((kp) => {
+                if (kp.index) {
+                    paths += '[' + kp.index + ']' + ' -> '
+                } else {
+                    paths += kp
+                }
+            })
+            return paths + key
         }
         let checkData = (checker, data) => {
             for (let i = 0, l = checker.length; i < l; i++) {
@@ -489,20 +497,24 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
                             if (rc.childValueType === 'object') {
                                 keyPaths.push(key)
                                 for (let j = 0, m = data[key].length; j < m; j++) {
+                                    keyPaths.push({index: j})
                                     let tempResult = checkData(rc.values, data[key][j])
                                     if (tempResult) {
                                         return tempResult
                                     }
+                                    keyPaths.pop()
                                 }
                                 keyPaths.pop()
                             } else if (rc.childValueType === 'parent') {
                                 // every element should be same as parent, this is mainly for checking `tree-like` data
                                 keyPaths.push(key)
                                 for (let j = 0, m = data[key].length; j < m; j++) {
+                                    keyPaths.push({index: j})
                                     let tempResult = checkData(checker, data[key][j])
                                     if (tempResult) {
                                         return tempResult
                                     }
+                                    keyPaths.pop()
                                 }
                                 keyPaths.pop()
                             } else {
