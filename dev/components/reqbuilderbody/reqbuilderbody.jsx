@@ -115,9 +115,6 @@ class ReqBuilderBody extends React.Component {
     getRawJSONCon() {
         let kvvt
         let jsonKVs = this.props.builders.bodyRawJSONKVs
-        if (jsonKVs === null) {
-            return kvvt
-        }
         if (jsonKVs.length === 0) {
             kvvt = (
                 <div className="tip-con">

@@ -96,6 +96,7 @@ class ReqTabCon extends React.Component {
                 reqBuilderHeaderProps.modClass = 'nei-reqbuilder-headers'
                 reqBuilderHeader = <NEIReqBuilderHeader {...reqBuilderHeaderProps}/>
                 // response checker
+                resCheckerProps.modClass = 'nei-res-checker'
                 resChecker = <NEIResChecker {...resCheckerProps} />
             } else {
                 // normal tab

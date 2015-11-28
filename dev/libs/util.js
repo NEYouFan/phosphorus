@@ -882,13 +882,49 @@ let Util = {
             }
         }
         let getData = (outputs) => {
-            outputs.forEach((output) => {
-                getItem(output, result)
-                for (let i = 0; i < traversedLayers; i++) {
-                    traversedDataTypes.pop()
+            let paramsInfo = this.getNEIParamsInfo(outputs, dataSource)
+            if (paramsInfo.valueType === 'object') {
+                // json object
+                outputs.forEach((output) => {
+                    getItem(output, result)
+                    for (let i = 0; i < traversedLayers; i++) {
+                        traversedDataTypes.pop()
+                    }
+                    traversedLayers = 0
+                })
+            } else {
+                if (paramsInfo.valueType === 'array') {
+                    // json array
+                    let item = Object.assign({}, itemTemplate, {
+                        key: '[[array]]',
+                        title: outputs[0].description,
+                        values: [],
+                        valueType: 'array',
+                        childValueType: paramsInfo.childValueType
+                    })
+                    if (paramsInfo.childValueType === 'object') {
+                        // array's element is object
+                        let objItem = Object.assign({}, itemTemplate, {
+                            key: '[[array item]]',
+                            values: [],
+                            valueType: paramsInfo.childValueType
+                        })
+                        paramsInfo.values.forEach((obj) => {
+                            getItem(obj, objItem.values)
+                        })
+                        item.values.push(objItem)
+                    }
+                    result.push(item)
+                } else {
+                    // json primitive
+                    let primitiveItem = Object.assign({}, itemTemplate, {
+                        key: `[[${paramsInfo.valueType}]]`,
+                        values: [],
+                        valueType: paramsInfo.valueType
+                    })
+                    result.push(primitiveItem)
                 }
-                traversedLayers = 0
-            })
+            }
         }
         getData(request.outputs)
         return error || result

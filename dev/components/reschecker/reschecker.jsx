@@ -21,8 +21,13 @@ class ResChecker extends React.Component {
         }
         let mainCon
         let kvs = this.props.builders.resCheckerKVs
-        if (kvs === null) {
-            mainCon = null
+        if (kvs.length === 0) {
+            mainCon = (
+                <div className="tip-con">
+                    <em className="glyphicon glyphicon-exclamation-sign"></em>
+                    <span>This request url has no outputs.</span>
+                </div>
+            )
         } else if (kvs === 'Circular Reference') {
             mainCon =
                 <div className="error-tip">
@@ -46,9 +51,10 @@ class ResChecker extends React.Component {
             'select-wrap': true,
             'show-list': this.props.showJSONTypeList
         })
+        let modClass = 'mod-res-checker ' + (this.props.modClass || '')
         return (
             <div className={className}>
-                <div className="mod-res-checker">
+                <div className={modClass}>
                     <div className="res-checker-tip">
                         <em className="glyphicon glyphicon-exclamation-sign"></em>
                         <span>Response Checker is mainly for checking JSON data response result. You can define your response JSON data's structure here.</span>

@@ -27,7 +27,16 @@ class NEIResChecker extends ResChecker {
     changeResCheckerKVValueType(rowIndex, value) {
         // do nothing
     }
+
     changeResCheckerKVChildValueType(rowIndex, value) {
+        // do nothing
+    }
+
+    toggleJSONTypeList(evt) {
+        // do nothing
+    }
+
+    onSelectJSONTypeValue(jsonType) {
         // do nothing
     }
 

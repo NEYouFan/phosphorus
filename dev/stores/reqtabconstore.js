@@ -228,7 +228,7 @@ let tabCons = {
     //reqMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COPY', 'HEAD', 'OPTIONS', 'LINKS', 'UNLINK', 'PURGE', 'LOCK', 'UNLOCK', 'PROPFIND', 'VIEW'],
     reqMethods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
     prettyTypes: ['JSON', 'XML', 'HTML', 'Text'],
-    jsonTypes: ['object', 'array', 'string', 'number', 'boolean', 'null'],
+    jsonTypes: ['object', 'array', 'string', 'number', 'boolean'],
     items: [_.cloneDeep(DEFAULT_CON_ITEM)],
     aceEditorId: 'brace-editor'
 }
@@ -377,6 +377,8 @@ let tabConActions = {
                     }))
                 }
             })
+            // set response json type
+            builders.resJSONType = Util.getNEIParamsInfo(request.outputs, dataSource).valueType
             // set response checker by it's outputs
             builders.resCheckerKVs = Util.convertNEIOutputsToJSON(request, dataSource, Object.assign({}, DEFAULT_RES_CHECKER_KV, {
                 readonly: true,
@@ -441,8 +443,6 @@ let tabConActions = {
                             key: `[[${builders.resJSONType} item]]`
                         })
                     }
-                } else {
-                    builders.resCheckerKVs = null
                 }
 
                 if (builders.bodyRawJSONKVs) {
@@ -468,8 +468,6 @@ let tabConActions = {
                     if (builders.bodyType.jsonType !== 'object') {
                         builders.bodyRawJSONKVs[0].duplicatable = false
                     }
-                } else {
-                    builders.bodyRawJSONKVs = null
                 }
             }
         }
@@ -970,10 +968,6 @@ let bodyRawJSONActions = {
                 builders.bodyRawJSONKVs = [newKV]
                 break
 
-            case 'null':
-                builders.bodyRawJSONKVs = null
-                break
-
             default:
                 break
         }
@@ -1210,10 +1204,6 @@ let resCheckerActions = {
                     valueType: jsonType
                 })
                 builders.resCheckerKVs = [newKV]
-                break
-
-            case 'null':
-                builders.resCheckerKVs = null
                 break
 
             default:
