@@ -464,14 +464,15 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
         let keyPaths = []
         let getKeyPath = (key) => {
             let paths = ''
-            keyPaths.forEach((kp) => {
-                if (kp.index) {
-                    paths += '[' + kp.index + ']' + ' -> '
+            keyPaths.push(key)
+            keyPaths.forEach((kp, index) => {
+                if (kp.hasOwnProperty('index')) {
+                    paths += '[' + kp.index + ']'
                 } else {
-                    paths += kp
+                    paths += (index !== 0 ? ' -> ' : '') + kp
                 }
             })
-            return paths + key
+            return paths
         }
         let checkData = (checker, data) => {
             for (let i = 0, l = checker.length; i < l; i++) {

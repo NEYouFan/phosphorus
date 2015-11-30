@@ -96,6 +96,9 @@ let Requester = {
             .then((data) => {
                 callback(res, data)
             })
+            .catch((err) => {
+                callback(res, err)
+            })
     },
 
     __getJSON(bodyRawJSONKVs, jsonType) {
