@@ -1430,6 +1430,7 @@ AppDispatcher.register((action) => {
         case AppConstants.REQ_BODY_CHANGE_TYPE_VALUE:
             actions.changeBodyTypeValue(action.bodyTypeValue)
             ReqTabConStore.emitChange()
+            ReqTabConStore.emitAceEditorUpdate()
             break
 
         case AppConstants.REQ_BODY_TOGGLE_TYPE_LIST:
