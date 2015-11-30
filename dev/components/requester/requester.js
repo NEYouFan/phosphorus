@@ -96,9 +96,6 @@ let Requester = {
             .then((data) => {
                 callback(res, data)
             })
-            .catch((err) => {
-                callback(res, err)
-            })
     },
 
     __getJSON(bodyRawJSONKVs, jsonType) {
@@ -191,10 +188,15 @@ let Requester = {
             }
             if (!result) {
                 let resCheckerKVs = Util.convertNEIOutputsToJSON(req, collection)
-                resCheckerKVs.forEach((kv) => {
-                    kv.checked = true
-                })
-                result = Util.checkResponseResult(resCheckerKVs, jsonData) === true
+                let checkedKVs = (kvs) => {
+                    kvs.forEach((kv) => {
+                        kv.checked = true
+                        checkedKVs(kv.values)
+                    })
+                }
+                checkedKVs(resCheckerKVs)
+                let paramsInfo = Util.getNEIParamsInfo(req.outputs, collection)
+                result = Util.checkResponseResult(resCheckerKVs, paramsInfo.valueType, jsonData) === true
             }
             if (result) {
                 succeedReqsNum++

@@ -429,6 +429,10 @@ let Util = {
                 // dataSource has bug, attributes maybe duplicated
                 attributes = _.uniq(attributes, 'id')
                 let childValueType = typeMap[dataType.subtype] || 'object'
+                let storedData = _.find(data, (d) => {
+                    return d.key === input.name
+                })
+                let storedValues = storedData && storedData.values || []
                 if (dataType.format === 1) {
                     //enums
                     let tempItem = Object.assign({}, itemTemplate, {
@@ -451,10 +455,6 @@ let Util = {
                         valueReadonly: true,
                         childValueType: childValueType
                     })
-                    let storedData = _.find(data, (d) => {
-                        return d.key === input.name
-                    })
-                    let storedValues = storedData && storedData.values || []
                     if (childValueType === 'object') {
                         let childItem = Object.assign({}, itemTemplate, {
                             valueType: tempItem.childValueType,
@@ -526,8 +526,8 @@ let Util = {
                             parentValueType: 'array',
                             readonly: false
                         })
-                        if (childValueType === 'object' && Array.isArray(data) && data.length && data[0].values) {
-                            data[0].values.forEach((kv) => {
+                        if (childValueType === 'object' && storedValues.length) {
+                            storedValues.forEach((kv) => {
                                 let item = _.clone(childItem)
                                 item.values = []
                                 attributes.forEach((attr, index) => {
@@ -537,14 +537,14 @@ let Util = {
                             })
                         }
                         if (!tempItem.values.length) {
+                            attributes.forEach((attr) => {
+                                getItem(attr, childItem.values)
+                            })
                             tempItem.values.push(childItem)
                         }
                     } else {
-                        let storedData = _.find(data, (d) => {
-                            return d.key === input.name
-                        })
                         attributes.forEach((attr) => {
-                            getItem(attr, tempItem.values, storedData && storedData.values || [])
+                            getItem(attr, tempItem.values, storedValues)
                         })
                     }
                     resultContainer.push(tempItem)
@@ -846,14 +846,15 @@ let Util = {
             let keyPaths = []
             let getKeyPath = (key) => {
                 let paths = ''
-                keyPaths.forEach((kp) => {
-                    if (kp.index) {
-                        paths += '[' + kp.index + ']' + ' -> '
+                keyPaths.push(key)
+                keyPaths.forEach((kp, index) => {
+                    if (kp.hasOwnProperty('index')) {
+                        paths += '[' + kp.index + ']'
                     } else {
-                        paths += kp
+                        paths += (index !== 0 ? ' -> ' : '') +  kp
                     }
                 })
-                return paths + key
+                return paths
             }
             let checkData = (checker, data) => {
                 for (let i = 0, l = checker.length; i < l; i++) {
@@ -913,7 +914,7 @@ let Util = {
                                 }
                             } else if (resultKeyType === 'object') {
                                 keyPaths.push(key)
-                                let tempResult = checkData(rc.valu, data[key])
+                                let tempResult = checkData(rc.values, data[key])
                                 if (tempResult) {
                                     return tempResult
                                 }

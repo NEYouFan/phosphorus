@@ -531,7 +531,7 @@ let checkResponseResult = (resChecker, resJSONType, resData) => {
                             }
                         } else if (resultKeyType === 'object') {
                             keyPaths.push(key)
-                            let tempResult = checkData(rc.valu, data[key])
+                            let tempResult = checkData(rc.values, data[key])
                             if (tempResult) {
                                 return tempResult
                             }

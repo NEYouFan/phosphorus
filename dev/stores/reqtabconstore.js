@@ -599,23 +599,25 @@ let tabConActions = {
                 builders.reqStatus = REQ_SUCCEEDED
                 tabCon.aceEditorConfig.show = true
                 builders.resShowType = Object.assign({}, DEFAULT_RES_SHOW_TYPE)
+                let jsonData
                 try {
-                    let jsonData = JSON.parse(data)
-                    builders.fetchResponseData = JSON.stringify(jsonData, null, '\t')
-                    builders.resShowType.prettyType = 'JSON'
-                    tabCon.aceEditorConfig.mode = 'json'
-                    builders.fetchResponseIsJSON = true
-                    // response checker
-                    builders.resCheckerResult = Util.checkResponseResult(builders.resCheckerKVs, builders.resJSONType, jsonData)
-                } catch (e) {
-                    //
-                    console.log(e)
+                    jsonData = JSON.parse(data)
+                } catch(err) {
+                    console.log(err)
                     builders.resCheckerResult = {
                         status: 'failed',
                         info: 'Response data is not a valid JSON'
                     }
                     builders.resShowType.prettyType = 'HTML'
                     tabCon.aceEditorConfig.mode = 'html'
+                }
+                if (jsonData) {
+                    builders.fetchResponseData = JSON.stringify(jsonData, null, '\t')
+                    builders.resShowType.prettyType = 'JSON'
+                    tabCon.aceEditorConfig.mode = 'json'
+                    builders.fetchResponseIsJSON = true
+                    // response checker
+                    builders.resCheckerResult = Util.checkResponseResult(builders.resCheckerKVs, builders.resJSONType, jsonData)
                 }
             }
             ReqTabConStore.emitChange()
