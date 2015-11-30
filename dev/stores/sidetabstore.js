@@ -252,11 +252,23 @@ let actions = {
                     }
                 })
             }
-            StorageArea.get('collections', (result) => {
-                let collections = result.collections || []
+            StorageArea.get(['collections', 'requests', 'hosts'], (result) => {
+                let collections = result.collections
+                let requests = result.requests
                 dealData(collections)
                 dealData(collectionsData)
-                StorageArea.set({'collections': collections}, () => {
+                // remove requests which has been deleted by nei
+                _.forEach(requests, (req) => {
+                    let found = _.find(collections, (c) => {
+                        return _.find(c.requests, (r) => {
+                            return r.id === req.id
+                        })
+                    })
+                    if (found) {
+                        delete result.requests[req.id]
+                    }
+                })
+                StorageArea.set({collections: collections, requests: requests}, () => {
                     tabs.loadingTip.text = 'Sync succeed'
                     setTimeout(() => {
                         tabs.loadingTip.show = false
