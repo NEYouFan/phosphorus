@@ -261,7 +261,7 @@ let actions = {
                 _.forEach(requests, (req) => {
                     let found = _.find(collections, (c) => {
                         return _.find(c.requests, (r) => {
-                            return r.id === req.id
+                            return r.id === req && req.id
                         })
                     })
                     if (found) {

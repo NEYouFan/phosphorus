@@ -1023,6 +1023,7 @@ let bodyRawJSONActions = {
                     item.valueReadonly = true
                     if (kv) {
                         // in NEI, the new added object item should be same as the first element
+                        item.value = _.cloneDeep(kv.values)
                         item.values = _.cloneDeep(kv.values)
                         item.values.forEach((kv) => {
                             if (!/^(object|array)$/.test(kv.valueType)) {

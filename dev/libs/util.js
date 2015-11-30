@@ -456,13 +456,16 @@ let Util = {
                         childValueType: childValueType
                     })
                     if (childValueType === 'object') {
+                        let subDataType = _.find(dataSource.datatypes, (dt) => {
+                            return dt.id === dataType.subtype
+                        })
                         let childItem = Object.assign({}, itemTemplate, {
                             valueType: tempItem.childValueType,
                             typeChangeable: false,
                             parentValueType: 'array',
                             valueReadonly: true,
-                            key: '[[array item]]',
-                            value: '[[array item]]',
+                            key: `[[${subDataType.name} item]]`,
+                            value: `[[${subDataType.name} item]]`,
                             keyVisible: false,
                             readonly: false
                         })
@@ -518,7 +521,7 @@ let Util = {
                         tempItem.keyVisible = false
                         tempItem.value = input.name
                         let childItem = Object.assign({}, itemTemplate, {
-                            value: '[[array item]]',
+                            value: `[[${dataType.name} item]]`,
                             keyVisible: false,
                             values: [],
                             valueReadonly: true,
@@ -576,8 +579,8 @@ let Util = {
                     })
                     if (paramsInfo.childValueType === 'object') {
                         let objItem = Object.assign({}, itemTemplate, {
-                            key: '[[array item]]',
-                            value: '[[array item]]',
+                            key: `[[${paramsInfo.childTypeName} item]]`,
+                            value: `[[${paramsInfo.childTypeName} item]]`,
                             valueReadonly: true,
                             values: [],
                             valueType: paramsInfo.childValueType,
@@ -607,7 +610,7 @@ let Util = {
                         }
                     } else {
                         let primitiveItem = Object.assign({}, itemTemplate, {
-                            key: '[[array item]]',
+                            key: `[[${paramsInfo.childTypeName} item]]`,
                             value: '',
                             values: [],
                             valueType: paramsInfo.childValueType,
@@ -730,8 +733,11 @@ let Util = {
                         childValueType: childValueType
                     })
                     if (childValueType === 'object') {
+                        let objItem = _.find(dataSource.datatypes, (dt) => {
+                            return dt.id === dataType.subtype
+                        })
                         let childItem = Object.assign({}, itemTemplate, {
-                            key: '[[array item]]',
+                            key: `[[${objItem.name} item]]`,
                             values: [],
                             valueType: childValueType,
                             parentValueType: 'array'
@@ -757,7 +763,7 @@ let Util = {
                     })
                     if (output.isArray) {
                         let childItem = Object.assign({}, itemTemplate, {
-                            key: '[[array item]]',
+                            key: `[[${dataType.name} item]]`,
                             values: [],
                             valueType: childValueType,
                             parentValueType: 'array'
@@ -799,7 +805,7 @@ let Util = {
                     if (paramsInfo.childValueType === 'object') {
                         // array's element is object
                         let objItem = Object.assign({}, itemTemplate, {
-                            key: '[[array item]]',
+                            key: `[[${paramsInfo.childTypeName} item]]`,
                             values: [],
                             valueType: paramsInfo.childValueType
                         })
@@ -851,7 +857,7 @@ let Util = {
                     if (kp.hasOwnProperty('index')) {
                         paths += '[' + kp.index + ']'
                     } else {
-                        paths += (index !== 0 ? ' -> ' : '') +  kp
+                        paths += (index !== 0 ? ' -> ' : '') + kp
                     }
                 })
                 return paths
@@ -1165,6 +1171,7 @@ let Util = {
         }
         let result = {
             valueType: 'object',
+            childTypeName: null,
             childValueType: null,
             values: [],
             dataTypeFormat: null
@@ -1188,6 +1195,7 @@ let Util = {
                             let subDataType = _.find(dataSource.datatypes, (dt) => {
                                 return dt.id === dataType.subtype
                             })
+                            result.childTypeName = subDataType.name
                             result.childValueType = typeMap[subDataType.id]
                             if (!result.childValueType) {
                                 result.childValueType = 'object'
