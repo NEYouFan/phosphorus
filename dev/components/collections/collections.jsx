@@ -4,25 +4,17 @@ import './collections.styl'
 import React from 'react'
 import classNames from 'classnames'
 import _ from 'lodash'
+import HTML5Backend from 'react-dnd-html5-backend'
+import {DragDropContext} from 'react-dnd'
 import Util from '../../libs/util'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
+import Req from './req.jsx'
 import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 import ModalAction from '../../actions/modalaction'
 
 class Collections extends React.Component {
-
-    getMethodUIName(methodName) {
-        let methodMap = {
-            'DELETE': 'DEL',
-            'OPTIONS': 'OPT',
-            'PROPFIND': 'PROP',
-            'UNLOCK': 'UNLCK',
-            'UNLINK': 'UNLNK'
-        }
-        return methodMap[methodName] || methodName
-    }
 
     render() {
         let className = classNames({
@@ -31,42 +23,16 @@ class Collections extends React.Component {
         let collections = this.props.sideTab.collections
         let collectionNodes
         let getReqNode = (req, collection, index) => {
-            let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
-            let classes = classNames({
-                'coll-req': true,
-                'active': this.props.sideTab.tabs.activeReqId === req.id
-            })
-            let reqURL = req.path
-            let displayName = req.name || reqURL
-            let reqActions
-            if (!req.isNEI) {
-                // nei collection only can `edit host`
-                reqActions = (
-                    <div className="coll-req-actions-wrap">
-                        <div className="coll-req-actions"
-                             onClick={(e)=>{this.toggleReqActionMenu(e)}}>
-                            <div className="coll-req-actions-menus">
-                                <em className="glyphicon glyphicon-option-horizontal"></em>
-                            </div>
-                        </div>
-                        <DropDownMenu
-                            menus={this.props.sideTab.actionMenus.request}
-                            onClickItem={(menuItem,e)=>{this.onClickReqMenuItem(menuItem,collection,req,e)}}/>
-                    </div>
-                )
-            }
             return (
-                <div
-                    key={index}
-                    onMouseLeave={(e)=>{this.onMouseLeaveReq(e)}}
-                    className={classes}
-                    onClick={(e)=>{this.onClickURL(req.id,collection,e)}}
-                    >
-                    {this.getRequestingStatus(req)}
-                    <div className={methodClasses}>{this.getMethodUIName(req.method)}</div>
-                    <div className="coll-req-url" title={reqURL}>{displayName}</div>
-                    {reqActions}
-                </div>
+                <Req
+                    req={req}
+                    reqTabs={this.props.reqTabs}
+                    activeReqTabIndex={this.props.activeReqTabIndex}
+                    collection={collection}
+                    index={index}
+                    activeReqId={this.props.sideTab.tabs.activeReqId}
+                    reqActionMenus={this.props.sideTab.actionMenus.request}
+                    />
             )
         }
         if (collections && collections.length) {
@@ -193,59 +159,22 @@ class Collections extends React.Component {
         return (
             <div className={className}>
                 <div className="mod-collection-actions">
-                    <span className="icon-wrap" onClick={(e)=>{this.clearLocalStorage(e)}} title="Clear all local storage data">
+                    <span className="icon-wrap" onClick={(e)=>{this.clearLocalStorage(e)}}
+                          title="Clear all local storage data">
                         <em className="glyphicon glyphicon-trash"></em>
                     </span>
                     <span className="icon-wrap" onClick={(e)=>{this.createCollection(e)}} title="Add new collection">
                         <em className="glyphicon glyphicon-briefcase"></em>
                         <em className="glyphicon glyphicon-plus"></em>
                     </span>
-                    <span className="icon-wrap" onClick={(e)=>{this.importCollection(e)}} title="Import collection from NEI">
+                    <span className="icon-wrap" onClick={(e)=>{this.importCollection(e)}}
+                          title="Import collection from NEI">
                         <em className="glyphicon glyphicon-import"></em>
                     </span>
                 </div>
                 <div className="mod-collections">{collectionNodes}</div>
             </div>
         )
-    }
-
-    getRequestingStatus(req) {
-        let cancelRequesting = (evt, req) => {
-            evt.stopPropagation()
-            delete req.reqStatus
-            evt.currentTarget.classList.add('hide')
-        }
-        switch (req.reqStatus) {
-            case 'waiting':
-                return (
-                    <div
-                        className="coll-req-status coll-req-wait"
-                        onClick={(e)=>{cancelRequesting(e,req)}}
-                        title="Skip this request">
-                        <em className="glyphicon glyphicon-minus-sign"></em>
-                    </div>
-                )
-            case 'fetching':
-                return (
-                    <div className="coll-req-status coll-req-ani" title="Request is sending...">
-                        <em className="glyphicon glyphicon-refresh"></em>
-                    </div>
-                )
-            case 'succeed':
-                return (
-                    <div className="coll-req-status coll-req-succeed" title="Request succeed">
-                        <em className="glyphicon glyphicon-ok"></em>
-                    </div>
-                )
-            case 'failed':
-                return (
-                    <div className="coll-req-status coll-req-failed" title="There is something wrong">
-                        <em className="glyphicon glyphicon-remove"></em>
-                    </div>
-                )
-            default:
-                return
-        }
     }
 
     toggleCollSlide(evt) {
@@ -314,13 +243,6 @@ class Collections extends React.Component {
         target.nextSibling.style.top = (target.offsetTop + 30) + 'px'
     }
 
-    toggleReqActionMenu(evt) {
-        evt.stopPropagation()
-        let target = evt.currentTarget
-        target.parentNode.parentNode.classList.toggle('show-action-menu')
-        target.nextSibling.style.top = (target.offsetTop + 26) + 'px'
-    }
-
     onClickCollectionMenuItem(menuItem, collection, evt) {
         evt.stopPropagation()
         evt.currentTarget.parentNode.parentNode.classList.remove('show-action-menu')
@@ -370,60 +292,11 @@ class Collections extends React.Component {
                 break
 
         }
-
-    }
-
-    onClickReqMenuItem(menuItem, collection, req, evt) {
-        evt.stopPropagation()
-        evt.currentTarget.parentNode.parentNode.parentNode.classList.remove('show-action-menu')
-        let data = Object.assign({
-            collectionId: collection.id
-        }, req)
-        switch (menuItem) {
-
-            case 'Edit':
-                return ModalAction.openEditReqModal(data)
-
-            case 'Move':
-                return ModalAction.openMoveReqModal(data)
-
-            case 'Delete':
-                return ModalAction.openDeleteReqModal(data)
-
-            default:
-                break
-
-        }
-
     }
 
     onMouseLeaveFolder(evt) {
         evt.stopPropagation()
         evt.currentTarget.classList.remove('show-action-menu')
-    }
-
-    onMouseLeaveReq(evt) {
-        evt.stopPropagation()
-        evt.currentTarget.classList.remove('show-action-menu')
-    }
-
-    onClickURL(reqId, collection, evt) {
-        let target = evt.currentTarget
-        if (target.classList.contains('active')) return
-        let request = _.find(collection.requests, (req) => {
-            return req.id === reqId
-        })
-        // check if tab is dirty
-        let activeReqTab = this.props.reqTabs[this.props.activeReqTabIndex]
-        if (activeReqTab.isDirty) {
-            return ModalAction.openLeavingDirtyTab({
-                reqId: reqId,
-                request: request,
-                collection: collection
-            })
-        }
-        SideTabAction.changeActiveReqId(reqId)
-        ReqTabConAction.updateConByRequest(request, collection)
     }
 
     createCollection(evt) {
@@ -440,4 +313,5 @@ class Collections extends React.Component {
 
 }
 
+//export default DragDropContext(HTML5Backend)(Collections)
 export default Collections
