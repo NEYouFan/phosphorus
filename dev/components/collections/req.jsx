@@ -9,9 +9,11 @@ import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 
+// drag variables, module scoped
 let dragged
-let draggedIndex
-let droppedIndex
+let draggedId
+let droppedId
+let dragPosition
 
 class Req extends React.Component {
 
@@ -55,9 +57,9 @@ class Req extends React.Component {
             <div
                 draggable={true}
                 onDragEnd={(e)=>{this.dragEnd(e)}}
-                onDragStart={(e)=>{this.dragStart(e, index)}}
+                onDragStart={(e)=>{this.dragStart(e, req.id)}}
                 onDragOver={(e)=>{this.dragOver(e)}}
-                onDragEnter={(e)=>{this.dragEnter(e, index)}}
+                onDragEnter={(e)=>{this.dragEnter(e, req.id)}}
                 onMouseLeave={(e)=>{this.onMouseLeaveReq(e)}}
                 className={classes}
                 onClick={(e)=>{this.onClickURL(req.id,collection,e)}}
@@ -164,26 +166,25 @@ class Req extends React.Component {
         }
     }
 
-    dragStart(evt, index) {
-        // http://webcloud.se/sortable-list-component-react-js/
+    dragStart(evt, reqId) {
         dragged = evt.currentTarget
         dragged.style.opacity = 0
-        draggedIndex = index
+        draggedId = reqId
     }
 
     dragEnd(evt) {
         dragged.style.opacity = 1
         dragged = null
-        SideTabAction.updateReqOrder(draggedIndex, droppedIndex, this.props.collection)
+        SideTabAction.updateReqOrder(draggedId, droppedId, dragPosition, this.props.folder, this.props.collection)
     }
 
-    dragEnter(evt, index) {
+    dragEnter(evt, reqId) {
         evt.preventDefault()
         let over = evt.currentTarget
         if(dragged === over || dragged.parentNode !== over.parentNode) {
             return
         }
-        droppedIndex = index
+        droppedId = reqId
         this.move(evt.currentTarget.parentNode, dragged, over)
     }
 
@@ -191,8 +192,10 @@ class Req extends React.Component {
         let overTop = over.getBoundingClientRect().top
         let draggedTop = dragged.getBoundingClientRect().top
         if (draggedTop > overTop) {
+            dragPosition = 'before'
             parentNode.insertBefore(dragged, over)
         } else {
+            dragPosition = 'after'
             parentNode.insertBefore(over, dragged)
         }
     }

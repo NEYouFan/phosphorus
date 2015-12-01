@@ -4,7 +4,7 @@
 import AppConstants from '../constants/constants'
 import AppDispatcher from '../dispatcher/dispatcher'
 
-class SideTabAction  {
+class SideTabAction {
 
     static switchTab(activeTabName) {
         AppDispatcher.dispatch({
@@ -147,8 +147,12 @@ class SideTabAction  {
         })
     }
 
-    static updateReqOrder(draggedIndex, droppedIndex, collection) {
-        
+    static updateReqOrder(draggedId, droppedId, dragPosition, folder, collection) {
+        console.log(draggedId)
+        console.log(droppedId)
+        console.log(dragPosition)
+        console.log(folder)
+        console.log(collection)
     }
 
 }
