@@ -9,6 +9,10 @@ import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 
+let dragged
+let draggedIndex
+let droppedIndex
+
 class Req extends React.Component {
 
     getMethodUIName(methodName) {
@@ -23,7 +27,7 @@ class Req extends React.Component {
     }
 
     render() {
-        const {req, activeReqId, reqActionMenus, collection} = this.props
+        const {req, activeReqId, reqActionMenus, collection, index} = this.props
         let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
         let classes = classNames({
             'coll-req': true,
@@ -49,10 +53,11 @@ class Req extends React.Component {
         }
         return (
             <div
-                //draggable={true}
-                //onDragEnd={(e)=>{this.dragEnd(e)}}
-                //onDragStart={(e)=>{this.dragStart(e)}}
-                //onDragOver={(e)=>{this.dragOver(e)}}
+                draggable={true}
+                onDragEnd={(e)=>{this.dragEnd(e)}}
+                onDragStart={(e)=>{this.dragStart(e, index)}}
+                onDragOver={(e)=>{this.dragOver(e)}}
+                onDragEnter={(e)=>{this.dragEnter(e, index)}}
                 onMouseLeave={(e)=>{this.onMouseLeaveReq(e)}}
                 className={classes}
                 onClick={(e)=>{this.onClickURL(req.id,collection,e)}}
@@ -159,27 +164,41 @@ class Req extends React.Component {
         }
     }
 
-    dragStart(evt) {
+    dragStart(evt, index) {
         // http://webcloud.se/sortable-list-component-react-js/
-        this.dragged = evt.currentTarget
-        this.dragged.style.opacity = 0
-        evt.dataTransfer.effectAllowed = 'move'
-        evt.dataTransfer.setData("text/html", evt.currentTarget)
+        dragged = evt.currentTarget
+        dragged.style.opacity = 0
+        draggedIndex = index
     }
 
     dragEnd(evt) {
-        this.dragged.style.opacity = 1
-        this.dragged = null
+        dragged.style.opacity = 1
+        dragged = null
+        SideTabAction.updateReqOrder(draggedIndex, droppedIndex, this.props.collection)
+    }
+
+    dragEnter(evt, index) {
+        evt.preventDefault()
+        let over = evt.currentTarget
+        if(dragged === over || dragged.parentNode !== over.parentNode) {
+            return
+        }
+        droppedIndex = index
+        this.move(evt.currentTarget.parentNode, dragged, over)
+    }
+
+    move(parentNode, dragged, over) {
+        let overTop = over.getBoundingClientRect().top
+        let draggedTop = dragged.getBoundingClientRect().top
+        if (draggedTop > overTop) {
+            parentNode.insertBefore(dragged, over)
+        } else {
+            parentNode.insertBefore(over, dragged)
+        }
     }
 
     dragOver(evt) {
         evt.preventDefault()
-        let over = evt.currentTarget
-        if(this.dragged === over) {
-            return
-        }
-        console.log(this.dragged)
-        evt.currentTarget.parentNode.insertBefore(this.dragged, over)
     }
 }
 

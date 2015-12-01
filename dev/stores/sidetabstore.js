@@ -58,9 +58,9 @@ let tabs = {
     }
 }
 
-//let NEI_SERVER_URL = 'http://nei.hz.netease.com'
+let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 //let NEI_SERVER_URL = 'http://127.0.0.1'
-let NEI_SERVER_URL = 'http://10.165.124.56:8080'
+//let NEI_SERVER_URL = 'http://10.165.124.56:8080'
 let historyData = []
 let collectionsData = []
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Synchronize', 'Run all', 'Delete']

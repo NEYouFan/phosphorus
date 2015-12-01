@@ -147,6 +147,10 @@ class SideTabAction  {
         })
     }
 
+    static updateReqOrder(draggedIndex, droppedIndex, collection) {
+        
+    }
+
 }
 
 export default SideTabAction

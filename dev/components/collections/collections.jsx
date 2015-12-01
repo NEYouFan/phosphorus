@@ -14,13 +14,14 @@ import ModalAction from '../../actions/modalaction'
 
 class Collections extends React.Component {
 
-    getReqNode(req, collection) {
+    getReqNode(req, collection, index) {
         return (
             <Req
                 req={req}
                 reqTabs={this.props.reqTabs}
                 activeReqTabIndex={this.props.activeReqTabIndex}
                 collection={collection}
+                index={index}
                 activeReqId={this.props.sideTab.tabs.activeReqId}
                 reqActionMenus={this.props.sideTab.actionMenus.request}
                 />
@@ -56,7 +57,7 @@ class Collections extends React.Component {
                         let request = _.find(collection.requests, (req) => {
                             return req.id === reqId
                         })
-                        return this.getReqNode(request, collection)
+                        return this.getReqNode(request, collection, index)
                     })
                     return (
                         <div className="coll-folder" key={index}>
@@ -91,7 +92,7 @@ class Collections extends React.Component {
                 if (notInFolderReqs.length) {
                     notInFolderReqNodes = notInFolderReqs.map((req, index) => {
                         foldersHeight += 30
-                        return this.getReqNode(req, collection)
+                        return this.getReqNode(req, collection, index)
                     })
                 }
                 let requestNum = collection.requests.length
