@@ -1,89 +1,15 @@
 //author @huntbao
 'use strict'
-import React, {Component, PropTypes} from 'react'
-import {findDOMNode} from 'react-dom'
+import React from 'react'
 import classNames from 'classnames'
-import {DragSource, DropTarget} from 'react-dnd'
+import _ from 'lodash'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import ModalAction from '../../actions/modalaction'
 import SideTabAction from '../../actions/sidtabaction'
 import ReqTabAction from '../../actions/reqtabaction'
 import ReqTabConAction from '../../actions/reqtabconaction'
 
-const reqSource = {
-    beginDrag(props) {
-        return {
-            id: props.id,
-            index: props.index
-        }
-    }
-}
-
-const reqTarget = {
-    hover(props, monitor, component) {
-        const dragIndex = monitor.getItem().index
-        const hoverIndex = props.index
-
-        // Don't replace items with themselves
-        if (dragIndex === hoverIndex) {
-            return
-        }
-
-        // Determine rectangle on screen
-        const hoverBoundingRect = findDOMNode(component).getBoundingClientRect()
-
-        // Get vertical middle
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-
-        // Determine mouse position
-        const clientOffset = monitor.getClientOffset()
-
-        // Get pixels to the top
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top
-
-        // Only perform the move when the mouse has crossed half of the items height
-        // When dragging downwards, only move when the cursor is below 50%
-        // When dragging upwards, only move when the cursor is above 50%
-
-        // Dragging downwards
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-            return
-        }
-
-        // Dragging upwards
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-            return
-        }
-
-        // Time to actually perform the action
-        props.moveCard(dragIndex, hoverIndex)
-
-        // Note: we're mutating the monitor item here!
-        // Generally it's better to avoid mutations,
-        // but it's good here for the sake of performance
-        // to avoid expensive index searches.
-        monitor.getItem().index = hoverIndex
-    }
-}
-
-//@DropTarget('REQ', reqTarget, connect => ({
-//    connectDropTarget: connect.dropTarget()
-//}))
-//
-//@DragSource('REQ', reqSource, (connect, monitor) => ({
-//    connectDragSource: connect.dragSource(),
-//    isDragging: monitor.isDragging()
-//}))
-
-function collect(connect, monitor) {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    }
-}
-
-class Req extends Component {
-
+class Req extends React.Component {
 
     getMethodUIName(methodName) {
         let methodMap = {
@@ -97,8 +23,7 @@ class Req extends Component {
     }
 
     render() {
-        const {req, activeReqId, reqActionMenus,index, collection} = this.props
-
+        const {req, activeReqId, reqActionMenus, collection} = this.props
         let methodClasses = 'coll-req-method method-' + req.method.toLowerCase()
         let classes = classNames({
             'coll-req': true,
@@ -124,7 +49,10 @@ class Req extends Component {
         }
         return (
             <div
-                key={index}
+                //draggable={true}
+                //onDragEnd={(e)=>{this.dragEnd(e)}}
+                //onDragStart={(e)=>{this.dragStart(e)}}
+                //onDragOver={(e)=>{this.dragOver(e)}}
                 onMouseLeave={(e)=>{this.onMouseLeaveReq(e)}}
                 className={classes}
                 onClick={(e)=>{this.onClickURL(req.id,collection,e)}}
@@ -230,18 +158,29 @@ class Req extends Component {
                 return
         }
     }
+
+    dragStart(evt) {
+        // http://webcloud.se/sortable-list-component-react-js/
+        this.dragged = evt.currentTarget
+        this.dragged.style.opacity = 0
+        evt.dataTransfer.effectAllowed = 'move'
+        evt.dataTransfer.setData("text/html", evt.currentTarget)
+    }
+
+    dragEnd(evt) {
+        this.dragged.style.opacity = 1
+        this.dragged = null
+    }
+
+    dragOver(evt) {
+        evt.preventDefault()
+        let over = evt.currentTarget
+        if(this.dragged === over) {
+            return
+        }
+        console.log(this.dragged)
+        evt.currentTarget.parentNode.insertBefore(this.dragged, over)
+    }
 }
 
-Req.propTypes = {
-    connectDragSource: PropTypes.func.isRequired,
-    connectDropTarget: PropTypes.func.isRequired,
-    index: PropTypes.number.isRequired,
-    isDragging: PropTypes.bool.isRequired,
-    id: PropTypes.any.isRequired,
-    text: PropTypes.string.isRequired,
-    moveReq: PropTypes.func.isRequired
-}
-
-//export default DropTarget('REQ', reqTarget, collect)(Req)
-//export default DragSource('REQ', reqSource, collect)(Req)
 export default Req

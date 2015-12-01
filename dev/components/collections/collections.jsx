@@ -4,8 +4,6 @@ import './collections.styl'
 import React from 'react'
 import classNames from 'classnames'
 import _ from 'lodash'
-import HTML5Backend from 'react-dnd-html5-backend'
-import {DragDropContext} from 'react-dnd'
 import Util from '../../libs/util'
 import DropDownMenu from '../dropdownmenu/dropdownmenu.jsx'
 import Req from './req.jsx'
@@ -16,25 +14,25 @@ import ModalAction from '../../actions/modalaction'
 
 class Collections extends React.Component {
 
+    getReqNode(req, collection) {
+        return (
+            <Req
+                req={req}
+                reqTabs={this.props.reqTabs}
+                activeReqTabIndex={this.props.activeReqTabIndex}
+                collection={collection}
+                activeReqId={this.props.sideTab.tabs.activeReqId}
+                reqActionMenus={this.props.sideTab.actionMenus.request}
+                />
+        )
+    }
+
     render() {
         let className = classNames({
             hide: this.props.sideTab.tabs.activeTabName !== 'Collections'
         })
         let collections = this.props.sideTab.collections
         let collectionNodes
-        let getReqNode = (req, collection, index) => {
-            return (
-                <Req
-                    req={req}
-                    reqTabs={this.props.reqTabs}
-                    activeReqTabIndex={this.props.activeReqTabIndex}
-                    collection={collection}
-                    index={index}
-                    activeReqId={this.props.sideTab.tabs.activeReqId}
-                    reqActionMenus={this.props.sideTab.actionMenus.request}
-                    />
-            )
-        }
         if (collections && collections.length) {
             collectionNodes = collections.map((collection, index) => {
                 let collectionActionMenu = this.props.sideTab.actionMenus.collection
@@ -58,7 +56,7 @@ class Collections extends React.Component {
                         let request = _.find(collection.requests, (req) => {
                             return req.id === reqId
                         })
-                        return getReqNode(request, collection, index)
+                        return this.getReqNode(request, collection)
                     })
                     return (
                         <div className="coll-folder" key={index}>
@@ -93,7 +91,7 @@ class Collections extends React.Component {
                 if (notInFolderReqs.length) {
                     notInFolderReqNodes = notInFolderReqs.map((req, index) => {
                         foldersHeight += 30
-                        return getReqNode(req, collection, index)
+                        return this.getReqNode(req, collection)
                     })
                 }
                 let requestNum = collection.requests.length
@@ -313,5 +311,4 @@ class Collections extends React.Component {
 
 }
 
-//export default DragDropContext(HTML5Backend)(Collections)
 export default Collections

@@ -28,10 +28,8 @@
     "keymirror": "^0.1.1",
     "lodash": "^3.10.1",
     "node-uuid": "^1.4.3",
-    "react": "^0.14.2",
-    "react-dnd": "^2.0.2",
-    "react-dnd-html5-backend": "^2.0.0",
-    "react-dom": "^0.14.0",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
     "stylus-loader": "^1.4.0"
   },
   "devDependencies": {
@@ -40,7 +38,7 @@
     "css-loader": "^0.21.0",
     "http-server": "~0.7.1",
     "style-loader": "^0.13.0",
-    "webpack": "~1.4.4",
-    "webpack-dev-server": "~1.6.5"
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
   }
 }
