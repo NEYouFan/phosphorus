@@ -48,10 +48,8 @@ class ReqTab extends React.Component {
     mouseUp(evt, tabIndex) {
         let tab = evt.currentTarget.parentNode
         if (evt.button === 1) {
-            if (this.props.tabs.length > 1) {
-                evt.stopPropagation()
-                this.removeTab(tab, tabIndex)
-            }
+            evt.stopPropagation()
+            this.removeTab(tab, tabIndex)
         } else {
             if (tab.classList.contains('active')) return
             this.switchTab(tabIndex)
