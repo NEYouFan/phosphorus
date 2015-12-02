@@ -9,7 +9,7 @@ A tool like Postman.
 
 ## Online install
 
-Coming soon...
+[Google chrome web store install address](https://chrome.google.com/webstore/detail/phosphorus/piaeaaejbhdohaihefehocabkanhlpoh)
 
 
 ## Build
