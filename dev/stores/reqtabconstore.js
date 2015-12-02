@@ -266,6 +266,48 @@ let tabConActions = {
     __dealRequest(request, dataSource, savedRequest, newTabCon) {
         let builders = newTabCon.builders
         let tabUrl = request.path
+        let dealUrlParams = (includeInputs) => {
+            builders.paramKVs = []
+            let urlParams = Util.getUrlParams(request.path)
+            urlParams.forEach((urlParam) => {
+                if (urlParam.isPV) {
+                    builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV, {
+                        key: urlParam.key,
+                        checked: true,
+                        readonly: true,
+                        isPV: true
+                    }))
+                }
+            })
+            if (includeInputs) {
+                // url param kvs
+                request.inputs.forEach((urlParam) => {
+                    builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV, {
+                        key: urlParam.name,
+                        title: urlParam.description,
+                        checked: true
+                    }))
+                })
+            }
+            let savedURLParams = savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey]
+            // set saved url param value
+            _.each(builders.paramKVs, (kv) => {
+                let foundSavedPV
+                if (kv.isPV) {
+                    foundSavedPV = _.find(savedURLParams, (p) => {
+                        return p.is_pv && p.key === kv.key
+                    })
+                } else if (includeInputs) {
+                    foundSavedPV = _.find(savedURLParams, (p) => {
+                        return !p.is_pv && p.key === kv.key
+                    })
+                }
+                if (foundSavedPV) {
+                    kv.value = foundSavedPV.value
+                }
+            })
+            tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
+        }
         if (request.isNEI) {
             builders.bodyTypes.forEach((bodyType) => {
                 bodyType.disabled = true
@@ -274,6 +316,7 @@ let tabConActions = {
             savedRequest = savedRequest || {}
             // nei request special logic
             if (!Util.isNoBodyMethod(request.method)) {
+                dealUrlParams(false)
                 if (request.isRest) {
                     // rest header is default set, nei need not set this header
                     builders.headerKVs.push(Object.assign({}, DEFAULT_JSON_HEADER_KV, {
@@ -323,45 +366,7 @@ let tabConActions = {
                     })
                 }
             } else {
-                // get path varible first
-                builders.paramKVs = []
-                let urlParams = Util.getUrlParams(request.path)
-                urlParams.forEach((urlParam) => {
-                    if (urlParam.isPV) {
-                        builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV, {
-                            key: urlParam.key,
-                            checked: true,
-                            readonly: true,
-                            isPV: true
-                        }))
-                    }
-                })
-                // url param kvs
-                request.inputs.forEach((urlParam) => {
-                    builders.paramKVs.push(Object.assign({}, DEFAULT_PARAMS_KV, {
-                        key: urlParam.name,
-                        title: urlParam.description,
-                        checked: true
-                    }))
-                })
-                let savedURLParams = savedRequest && savedRequest[RequestDataMap.paramKVs.saveKey]
-                // set saved url param value
-                _.each(builders.paramKVs, (kv) => {
-                    let foundSavedPV
-                    if (kv.isPV) {
-                        foundSavedPV = _.find(savedURLParams, (p) => {
-                            return p.is_pv && p.key === kv.key
-                        })
-                    } else {
-                        foundSavedPV = _.find(savedURLParams, (p) => {
-                            return !p.is_pv && p.key === kv.key
-                        })
-                    }
-                    if (foundSavedPV) {
-                        kv.value = foundSavedPV.value
-                    }
-                })
-                tabUrl = Util.getURLByQueryParams(request.path, builders.paramKVs)
+                dealUrlParams(true)
             }
             // set headers
             _.each(request.headers, (header) => {
@@ -483,7 +488,6 @@ let tabConActions = {
             collectionId: request.collectionId
         }
         ReqTabAction.changeTab(tab)
-
     },
 
     toggleReqMethodsList() {

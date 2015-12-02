@@ -245,7 +245,7 @@ let actions = {
                 }, 5000)
                 return callback()
             }
-            let dealData = (collections) => {
+            let dealData = (collections, hosts) => {
                 collections.forEach((c, index, collections) => {
                     if (c.id === options.id) {
                         let oldReqOrders = collections[index].requests.map((req) => {
@@ -265,6 +265,7 @@ let actions = {
                             }
                         })
                         collection.requests = newRequests.concat(collection.requests)
+                        collection.host = hosts.collections[collection.id]
                         collections[index] = collection
                     }
                 })
@@ -272,8 +273,9 @@ let actions = {
             StorageArea.get(['collections', 'requests', 'hosts'], (result) => {
                 let collections = result.collections
                 let requests = result.requests
-                dealData(collections)
-                dealData(collectionsData)
+                let hosts = result.hosts
+                dealData(collections, hosts)
+                dealData(collectionsData, hosts)
                 // remove requests which has been deleted by nei
                 _.forEach(requests, (req) => {
                     let found = _.find(collections, (c) => {
