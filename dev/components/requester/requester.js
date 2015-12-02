@@ -50,13 +50,7 @@ let Requester = {
                     fetchOptions.body = fd
                     break
                 case 'x-www-form-urlencoded':
-                    let fd1 = new FormData()
-                    tabCon.builders.bodyXFormKVs.map((kv) => {
-                        if (kv.key && kv.value) {
-                            fd1.append(kv.key, kv.value)
-                        }
-                    })
-                    fetchOptions.body = fd1
+                    fetchOptions.body = Util.serializeXFormData(tabCon.builders.bodyXFormKVs)
                     break
                 case 'raw':
                     if (bodyType.value === 'application/json') {
@@ -328,14 +322,14 @@ let Requester = {
         }
         let getNEIXFormData = () => {
             let savedXFormData = savedRequest['body_x_form_data'] || {}
-            let fd = new FormData()
-            _.forEach(req.inputs, (input) => {
+            let paramArr = []
+            _.forEach(req.inputs, (input, index) => {
                 let savedField = _.find(savedXFormData, (kv) => {
                     return kv.key === input.name
                 })
-                fd.append(input.name, savedField && savedField.value || '')
+                paramArr.push(encodeURIComponent(input.name) + '=' + encodeURIComponent(savedField && savedField.value || ''))
             })
-            return fd
+            return paramArr.join('&')
         }
         let getBodyRawJSON = () => {
             let savedBodyRawJSONKVs = savedRequest['body_raw_json'] || []
@@ -345,13 +339,7 @@ let Requester = {
         }
         let getXFormData = () => {
             let savedXFormData = savedRequest['body_x_form_data'] || {}
-            let fd = new FormData()
-            _.forEach(savedXFormData, (kv) => {
-                if (kv.checked && kv.key) {
-                    fd.append(kv.key, kv.value)
-                }
-            })
-            return fd
+            return Util.serializeXFormData(savedXFormData)
         }
         let getFormData = () => {
             let savedFormData = savedRequest['body_form_data'] || {}
@@ -369,7 +357,7 @@ let Requester = {
                     options.headers['Content-Type'] = 'application/json'
                     options.body = getNEIBodyRawJSON()
                 } else {
-                    options.headers['Content-Type'] = 'x-www-form-urlencoded'
+                    options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
                     options.body = getNEIXFormData()
                 }
                 req.headers && req.headers.forEach((header) => {

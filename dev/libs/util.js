@@ -1209,6 +1209,17 @@ let Util = {
             }
         }
         return result
+    },
+
+    serializeXFormData(kvs) {
+        let kvArr = []
+        kvs.map((kv, index) => {
+            if (kv.checked && kv.key) {
+                kvArr.push(encodeURIComponent(kv.key) + '=' + encodeURIComponent(kv.value || ''))
+            }
+        })
+        return kvArr.join('&')
+
     }
 }
 
