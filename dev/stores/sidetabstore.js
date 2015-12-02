@@ -58,9 +58,9 @@ let tabs = {
     }
 }
 
-let NEI_SERVER_URL = 'http://nei.hz.netease.com'
+//let NEI_SERVER_URL = 'http://nei.hz.netease.com'
 //let NEI_SERVER_URL = 'http://127.0.0.1'
-//let NEI_SERVER_URL = 'http://10.165.124.56:8080'
+let NEI_SERVER_URL = 'http://10.165.124.56:8080'
 let historyData = []
 let collectionsData = []
 let collectionActionMenus = ['Edit host', 'Add folder', 'Edit', 'Synchronize', 'Run all', 'Delete']
@@ -216,7 +216,7 @@ let actions = {
                 collections.unshift(collection)
             }
             StorageArea.get('collections', (result) => {
-                let collections = result.collections || []
+                let collections = result.collections
                 dealData(collections)
                 dealData(collectionsData)
                 StorageArea.set({'collections': collections}, () => {
@@ -248,6 +248,23 @@ let actions = {
             let dealData = (collections) => {
                 collections.forEach((c, index, collections) => {
                     if (c.id === options.id) {
+                        let oldReqOrders = collections[index].requests.map((req) => {
+                            return req.id
+                        })
+                        let newRequests = []
+                        oldReqOrders.forEach((reqId) => {
+                            let req = _.find(collection.requests, (req) => {
+                                return req.id === reqId
+                            })
+                            // request exist
+                            if (req) {
+                                newRequests.push(req)
+                                _.remove(collection.requests, (req) => {
+                                    return req.id === reqId
+                                })
+                            }
+                        })
+                        collection.requests = newRequests.concat(collection.requests)
                         collections[index] = collection
                     }
                 })
@@ -688,6 +705,61 @@ let actions = {
                 callback()
             })
         })
+    },
+
+    dragReq(options, callback) {
+        if (!options || !options.draggedId || !options.droppedId) {
+            return callback()
+        }
+        let dealData = (collections) => {
+            let collection = _.find(collections, (c) => {
+                return c.id === options.collection.id
+            })
+            if (options.folder) {
+                // dragged req is in folder
+                let folder = _.find(collection.folders, (folder) => {
+                    return folder.id === options.folder.id
+                })
+                let orders = folder.orders
+                _.remove(orders, (order) => {
+                    return order === options.draggedId
+                })
+                for (let i = 0, l = orders.length; i < l; i++) {
+                    if (orders[i] === options.droppedId) {
+                        if (options.dragPosition === 'before') {
+                            orders.splice(i, 0, options.draggedId)
+                        } else if (options.dragPosition === 'after') {
+                            orders.splice(i + 1, 0, options.draggedId)
+                        }
+                        break
+                    }
+                }
+            } else {
+                // dragged req is not in folder
+                let reqs = _.remove(collection.requests, (req) => {
+                    return req.id === options.draggedId
+                })
+                let draggedReq = reqs[0]
+                for (let i = 0, l = collection.requests.length; i < l; i++) {
+                    if (collection.requests[i].id === options.droppedId) {
+                        if (options.dragPosition === 'before') {
+                            collection.requests.splice(i, 0, draggedReq)
+                        } else if (options.dragPosition === 'after') {
+                            collection.requests.splice(i + 1, 0, draggedReq)
+                        }
+                        break
+                    }
+                }
+            }
+        }
+        StorageArea.get(['collections'], (result) => {
+            let collections = result.collections
+            dealData(collectionsData)
+            dealData(collections)
+            StorageArea.set({
+                collections: collections
+            }, callback)
+        })
     }
 }
 
@@ -854,6 +926,12 @@ AppDispatcher.register((action) => {
         case AppConstants.SIDE_SET_LOADING_TIP:
             actions.setLoadingTip(action.data)
             SideTabStore.emitChange()
+            break
+
+        case AppConstants.SIDE_DRAG_REQ:
+            actions.dragReq(action.data, () => {
+                SideTabStore.emitChange()
+            })
             break
 
         default:

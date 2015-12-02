@@ -11,6 +11,7 @@ import ReqTabConAction from '../../actions/reqtabconaction'
 
 // drag variables, module scoped
 let dragged
+let draggedNextSibling
 let draggedId
 let droppedId
 let dragPosition
@@ -168,13 +169,21 @@ class Req extends React.Component {
 
     dragStart(evt, reqId) {
         dragged = evt.currentTarget
-        dragged.style.opacity = 0
+        draggedNextSibling = dragged.nextSibling
+        dragged.classList.add('dragging')
         draggedId = reqId
     }
 
     dragEnd(evt) {
-        dragged.style.opacity = 1
+        dragged.classList.remove('dragging')
+        // reset position
+        if (draggedNextSibling) {
+            dragged.parentNode.insertBefore(dragged, draggedNextSibling)
+        } else {
+            dragged.parentNode.appendChild(dragged)
+        }
         dragged = null
+        draggedNextSibling = null
         SideTabAction.updateReqOrder(draggedId, droppedId, dragPosition, this.props.folder, this.props.collection)
     }
 

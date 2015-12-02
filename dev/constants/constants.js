@@ -25,6 +25,7 @@ let AppConstants = keyMirror({
     SIDE_EDIT_REQUEST: null,
     SIDE_MOVE_REQUEST: null,
     SIDE_SET_LOADING_TIP: null,
+    SIDE_DRAG_REQ: null,
     // req tab action
     REQ_TAB_ADD: null,
     REQ_TAB_REMOVE: null,

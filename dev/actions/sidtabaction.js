@@ -148,11 +148,16 @@ class SideTabAction {
     }
 
     static updateReqOrder(draggedId, droppedId, dragPosition, folder, collection) {
-        console.log(draggedId)
-        console.log(droppedId)
-        console.log(dragPosition)
-        console.log(folder)
-        console.log(collection)
+        AppDispatcher.dispatch({
+            actionType: AppConstants.SIDE_DRAG_REQ,
+            data: {
+                draggedId: draggedId,
+                droppedId: droppedId,
+                dragPosition: dragPosition,
+                folder: folder,
+                collection: collection
+            }
+        })
     }
 
 }
