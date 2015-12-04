@@ -13,21 +13,14 @@ module.exports = {
                 loader: 'babel'
             },
             {
-                test: /\.less$/,
-                loader: 'style!css!less'
-            },
-            {
                 test: /\.styl$/,
                 exclude: /(node_modules)/,
                 loader: 'style-loader!css-loader!stylus-loader'
             },
             {
-                test: /\.scss$/,
-                loader: 'style!css!sass'
-            },
-            {
-                test: /\.css$/,
-                loader: 'style!css'
+                test: /\.png$/,
+                exclude: /(node_modules)/,
+                loader: "url-loader?limit=100000"
             }
         ]
     },
