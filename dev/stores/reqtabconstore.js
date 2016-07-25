@@ -986,7 +986,8 @@ let bodyRawJSONActions = {
         let targetRow = bodyRawJSONKVs
         for (let i = 0; i < indexes.length; i++) {
             parentRow = targetRow
-            targetRow = (targetRow.values || targetRow)[indexes[i]]
+            // chrome 更新后, 数组也有 values 方法, 导致异常
+            targetRow = (targetRow.hasOwnProperty('values') ? targetRow.values : targetRow)[indexes[i]]
         }
         return {
             targetIndex: indexes[indexes.length - 1],
@@ -1114,7 +1115,8 @@ let resCheckerActions = {
         let targetRow = resCheckerKVs
         for (let i = 0; i < indexes.length; i++) {
             parentRow = targetRow
-            targetRow = (targetRow.values || targetRow)[indexes[i]]
+            // chrome 更新后, 数组也有 values 方法, 导致异常
+            targetRow = (targetRow.hasOwnProperty('values') ? targetRow.values : targetRow)[indexes[i]]
         }
         return {
             targetIndex: indexes[indexes.length - 1],
