@@ -31,4 +31,4 @@ Phosphorus 是一款类似于 [Postman](https://www.getpostman.com/) 的异步�
 
 ## 在线安装
 
-[去谷歌 Chrome 应用商城安装](https://chrome.google.com/webstore/detail/phosphorus/piaeaaejbhdohaihefehocabkanhlpoh)
+[去谷歌 Chrome 应用商城安装](https://chrome.google.com/webstore/detail/phosphorus/jpjalckgagoebabfphdnaeeilicepjnj)
